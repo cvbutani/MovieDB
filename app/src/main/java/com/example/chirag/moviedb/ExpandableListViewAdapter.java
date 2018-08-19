@@ -2,12 +2,17 @@ package com.example.chirag.moviedb;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.chirag.moviedb.Data.ChildItems;
+import com.example.chirag.moviedb.Data.HeaderItems;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +25,9 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
     private List<HeaderItems> mListDataHeader;
-    private HashMap<String, List<String>> mListHashMap;
+    private HashMap<String, List<ChildItems>> mListHashMap;
 
-    public ExpandableListViewAdapter(Context mContext, List<HeaderItems> mListDataHeader, HashMap<String, List<String>> mListHashMap) {
+    ExpandableListViewAdapter(Context mContext, List<HeaderItems> mListDataHeader, HashMap<String, List<ChildItems>> mListHashMap) {
         this.mContext = mContext;
         this.mListDataHeader = mListDataHeader;
         this.mListHashMap = mListHashMap;
@@ -45,7 +50,9 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int j) {
-        return mListHashMap.get(mListDataHeader.get(i).getTitle()).get(j);
+        Log.i("CHILD: ", "CHILD: " + j);
+        return mListHashMap.get(mListDataHeader.get(i).getTitle()).size();
+
     }
 
     @Override
@@ -65,31 +72,35 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        String headerTitle = (String) mListDataHeader.get(i).getTitle();
+        String headerTitle = mListDataHeader.get(i).getTitle();
         float headerRating = mListDataHeader.get(i).getRating();
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expandable_list_group, null);
         }
 
-        TextView listViewHeader = view.findViewById(R.id.listview_header);
-        RatingBar ratingBar = view.findViewById(R.id.listview_header_rating);
-        ratingBar.setRating(headerRating);
-        listViewHeader.setTypeface(null, Typeface.BOLD);
-        listViewHeader.setText(headerTitle);
+        TextView tvHeader = view.findViewById(R.id.listview_header);
+        RatingBar ratingHeader = view.findViewById(R.id.listview_header_rating);
+        ratingHeader.setRating(headerRating);
+        tvHeader.setTypeface(null, Typeface.BOLD);
+        tvHeader.setText(headerTitle);
         return view;
     }
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        String headerChildText = (String) getChild(i,i1);
+        String headerChildText = (String) mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDescription();
+        int headerChildImage = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getImage();
+        Log.i("CHILD", headerChildText);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expandable_list_item, null);
         }
 
-        TextView tvChildList = view.findViewById(R.id.listview_item);
+        TextView tvChildList = view.findViewById(R.id.listview_item_description);
+        ImageView ivChildList = view.findViewById(R.id.listview_item_image);
         tvChildList.setText(headerChildText);
+        ivChildList.setImageResource(headerChildImage);
         return view;
     }
 

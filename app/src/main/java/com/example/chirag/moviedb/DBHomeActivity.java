@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
+import com.example.chirag.moviedb.Data.ChildItems;
+import com.example.chirag.moviedb.Data.HeaderItems;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +27,7 @@ public class DBHomeActivity extends AppCompatActivity
     private ExpandableListView mExpandableListView;
     private ExpandableListViewAdapter mExpandableListViewAdapter;
     private List<HeaderItems> mViewheader;
-    private HashMap<String,List<String>> mHeaderTitle;
+    private HashMap<String, List<ChildItems>> mHeaderTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,15 +117,19 @@ public class DBHomeActivity extends AppCompatActivity
         return true;
     }
 
-    private void initData(){
+    private void initData() {
         mHeaderTitle = new HashMap<>();
         mViewheader = new ArrayList<>();
-        HeaderItems items = new HeaderItems("DeathWish", 4.5f);
+        HeaderItems items = new HeaderItems("Death Wish", 4.5f);
         mViewheader.add(items);
 
-        List<String> deathWish = new ArrayList<>();
-        deathWish.add("Dr. Paul Kersey is an experienced trauma surgeon, a man who has spent his life saving lives. After an attack on his family, Paul embarks on his own mission for justice.");
-//
+        String deathWish = "Dr. Paul Kersey is an experienced trauma surgeon, a man who has spent his life saving lives. After an attack on his family, Paul embarks on his own mission for justice.";
+        String deathWishDirctor = "Eli Roth";
+        String deathWishCast = "Bruce Willis, Vincent D'Onofrio, Elisabeth Shue";
+
+        ChildItems childItems = new ChildItems(deathWish, R.drawable.deathwish, deathWishDirctor, deathWishCast);
+        List<ChildItems> itemsList = new ArrayList<>();
+        itemsList.add(childItems);
 //        List<String> theNun = new ArrayList<>();
 //        theNun.add("A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.");
 //
@@ -132,6 +139,6 @@ public class DBHomeActivity extends AppCompatActivity
 //        List<String> babyDayOut = new ArrayList<>();
 //        babyDayOut.add("Baby Bink couldn't ask for more; he has adoring (if somewhat sickly-sweet) parents, he lives in a huge mansion, and he's just about to appear in the social pages of the paper.");
 
-        mHeaderTitle.put(mViewheader.get(0).getTitle(), deathWish);
+        mHeaderTitle.put(mViewheader.get(0).getTitle(), itemsList);
     }
 }
