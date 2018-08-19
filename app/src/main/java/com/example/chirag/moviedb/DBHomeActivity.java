@@ -23,8 +23,8 @@ public class DBHomeActivity extends AppCompatActivity
 
     private ExpandableListView mExpandableListView;
     private ExpandableListViewAdapter mExpandableListViewAdapter;
-    private List<String> mViewheader;
-    private HashMap<String,List<String>> mHeaderItem;
+    private List<HeaderItems> mViewheader;
+    private HashMap<String,List<String>> mHeaderTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class DBHomeActivity extends AppCompatActivity
 
         mExpandableListView = findViewById(R.id.expandable_listview);
         initData();
-        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mHeaderItem);
+        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mHeaderTitle);
         mExpandableListView.setAdapter(mExpandableListViewAdapter);
     }
 
@@ -115,29 +115,23 @@ public class DBHomeActivity extends AppCompatActivity
     }
 
     private void initData(){
-        mHeaderItem = new HashMap<>();
+        mHeaderTitle = new HashMap<>();
         mViewheader = new ArrayList<>();
-
-        mViewheader.add("Death Wish");
-        mViewheader.add("The Nun");
-        mViewheader.add("Jumanji");
-        mViewheader.add("Baby's Day Out");
+        HeaderItems items = new HeaderItems("DeathWish", 4.5f);
+        mViewheader.add(items);
 
         List<String> deathWish = new ArrayList<>();
         deathWish.add("Dr. Paul Kersey is an experienced trauma surgeon, a man who has spent his life saving lives. After an attack on his family, Paul embarks on his own mission for justice.");
+//
+//        List<String> theNun = new ArrayList<>();
+//        theNun.add("A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.");
+//
+//        List<String> jumanji = new ArrayList<>();
+//        jumanji.add("Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish the game.");
+//
+//        List<String> babyDayOut = new ArrayList<>();
+//        babyDayOut.add("Baby Bink couldn't ask for more; he has adoring (if somewhat sickly-sweet) parents, he lives in a huge mansion, and he's just about to appear in the social pages of the paper.");
 
-        List<String> theNun = new ArrayList<>();
-        theNun.add("A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.");
-
-        List<String> jumanji = new ArrayList<>();
-        jumanji.add("Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish the game.");
-
-        List<String> babyDayOut = new ArrayList<>();
-        babyDayOut.add("Baby Bink couldn't ask for more; he has adoring (if somewhat sickly-sweet) parents, he lives in a huge mansion, and he's just about to appear in the social pages of the paper.");
-
-        mHeaderItem.put(mViewheader.get(0), deathWish);
-        mHeaderItem.put(mViewheader.get(1), theNun);
-        mHeaderItem.put(mViewheader.get(2), jumanji);
-        mHeaderItem.put(mViewheader.get(3), babyDayOut);
+        mHeaderTitle.put(mViewheader.get(0).getTitle(), deathWish);
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -18,10 +19,10 @@ import java.util.List;
 public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
-    private List<String> mListDataHeader;
+    private List<HeaderItems> mListDataHeader;
     private HashMap<String, List<String>> mListHashMap;
 
-    public ExpandableListViewAdapter(Context mContext, List<String> mListDataHeader, HashMap<String, List<String>> mListHashMap) {
+    public ExpandableListViewAdapter(Context mContext, List<HeaderItems> mListDataHeader, HashMap<String, List<String>> mListHashMap) {
         this.mContext = mContext;
         this.mListDataHeader = mListDataHeader;
         this.mListHashMap = mListHashMap;
@@ -34,7 +35,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return mListHashMap.get(mListDataHeader.get(i)).size();
+        return mListHashMap.get(mListDataHeader.get(i).getTitle()).size();
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int j) {
-        return mListHashMap.get(mListDataHeader.get(i)).get(j);
+        return mListHashMap.get(mListDataHeader.get(i).getTitle()).get(j);
     }
 
     @Override
@@ -64,13 +65,16 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        String headerTitle = (String) getGroup(i);
+        String headerTitle = (String) mListDataHeader.get(i).getTitle();
+        float headerRating = mListDataHeader.get(i).getRating();
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expandable_list_group, null);
         }
 
         TextView listViewHeader = view.findViewById(R.id.listview_header);
+        RatingBar ratingBar = view.findViewById(R.id.listview_header_rating);
+        ratingBar.setRating(headerRating);
         listViewHeader.setTypeface(null, Typeface.BOLD);
         listViewHeader.setText(headerTitle);
         return view;
