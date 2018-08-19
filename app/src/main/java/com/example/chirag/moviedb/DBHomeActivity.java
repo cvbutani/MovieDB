@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.widget.ExpandableListView;
 
 import com.example.chirag.moviedb.Data.ChildItems;
 import com.example.chirag.moviedb.Data.HeaderItems;
+import com.example.chirag.moviedb.Utilities.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +31,7 @@ public class DBHomeActivity extends AppCompatActivity
     private List<HeaderItems> mViewheader;
     private HashMap<String, List<ChildItems>> mHeaderTitle;
     private int lastExpandedPosition = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +113,14 @@ public class DBHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    NetworkUtils.fetchHeaderItems("https://api.themoviedb.org/3/movie/299536/credits?api_key=51b4547daeeca9a0a1dec36a7013b1ad");
+                    NetworkUtils.fetchHeaderItems("https://api.themoviedb.org/3/movie/299536?api_key=51b4547daeeca9a0a1dec36a7013b1ad&language=en-US&page=1");
+
+                }
+            });
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

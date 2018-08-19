@@ -1,7 +1,15 @@
 package com.example.chirag.moviedb.Utilities;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.chirag.moviedb.Data.ChildItems;
+import com.example.chirag.moviedb.Data.HeaderItems;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MovieDB
@@ -20,7 +30,21 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    private static StringBuilder poster;
+
     public NetworkUtils() {
+    }
+
+    public static List<HeaderItems> fetchHeaderItems(String requestUrl) {
+        URL url = getUrl(requestUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.i(TAG, "PROBLEM MAKING HTTP REQUEST" + e);
+        }
+        return extractChildInfo(jsonResponse);
     }
 
     /**
@@ -122,5 +146,90 @@ public class NetworkUtils {
         return output.toString();
     }
 
+    private static List<HeaderItems> extractHeaderInfo(String headerJson) {
+        if (TextUtils.isEmpty(headerJson)) {
+            return null;
+        }
+        List<HeaderItems> headerDetails = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(headerJson);
+            JSONArray resultsArray = null;
+
+            if (jsonObject.has("results")) {
+                resultsArray = jsonObject.getJSONArray("results");
+            }
+
+            if (resultsArray != null) {
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject elementsInItem = resultsArray.getJSONObject(i);
+                    String title = "";
+                    if (elementsInItem.has("title")) {
+                        title = elementsInItem.getString("title");
+                    }
+                    int id = 0;
+                    if (elementsInItem.has("id")) {
+                        id = elementsInItem.getInt("id");
+                    }
+                    double rating = 0;
+                    if (elementsInItem.has("vote_average")) {
+                        rating = elementsInItem.getDouble("vote_average");
+                    }
+                    Log.i(TAG, title + " - ID: " + id + " - RATING: " + rating);
+                }
+            }
+        } catch (JSONException e) {
+            Log.i(TAG, "LOG PARSING DATA FROM JSON", e);
+        }
+        return headerDetails;
+    }
+
+    private static List<HeaderItems> extractChildInfo(String childJson) {
+        if (TextUtils.isEmpty(childJson)) {
+            return null;
+        }
+        List<HeaderItems> headerDetails = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(childJson);
+            String overview = "";
+            if (jsonObject.has("overview")) {
+                overview = jsonObject.getString("overview");
+            }
+            poster = new StringBuilder();
+
+
+            if (jsonObject.has("poster_path")) {
+                poster.append("http://image.tmdb.org/t/p/w185/");
+                poster.append(jsonObject.getString("poster_path"));
+            }
+            JSONArray crewArray = null;
+            if (jsonObject.has("crew")) {
+                crewArray = jsonObject.getJSONArray("crew");
+            }
+            String constant_director = "Director";
+            String director = "";
+            StringBuilder allDirector = new StringBuilder();
+            if (crewArray != null) {
+                for (int i = 0; i < crewArray.length(); i++) {
+                    JSONObject crewElement = crewArray.getJSONObject(i);
+                    if (crewElement.has("job")) {
+                        director = crewElement.getString("job");
+                        if (director.equals(constant_director)) {
+                            if (crewElement.has("name")) {
+                                allDirector.append(crewElement.getString("name")).append(", ");
+                            }
+                        }
+                    }
+                }
+            }
+            Log.i(TAG, overview);
+            Log.i(TAG, poster + " --------- " + allDirector.toString());
+
+        } catch (JSONException e) {
+            Log.i(TAG, "LOG PARSING DATA FROM JSON", e);
+        }
+        return headerDetails;
+    }
 
 }
