@@ -28,7 +28,7 @@ public class DBHomeActivity extends AppCompatActivity
     private ExpandableListViewAdapter mExpandableListViewAdapter;
     private List<HeaderItems> mViewheader;
     private HashMap<String, List<ChildItems>> mHeaderTitle;
-
+    private int lastExpandedPosition = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,17 @@ public class DBHomeActivity extends AppCompatActivity
         initData();
         mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mHeaderTitle);
         mExpandableListView.setAdapter(mExpandableListViewAdapter);
+
+        mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+            @Override
+            public void onGroupExpand(int i) {
+                if (lastExpandedPosition != -1 && i != lastExpandedPosition) {
+                    mExpandableListView.collapseGroup(lastExpandedPosition);
+                }
+                lastExpandedPosition = i;
+            }
+        });
     }
 
     @Override
@@ -122,6 +133,7 @@ public class DBHomeActivity extends AppCompatActivity
         mViewheader = new ArrayList<>();
         HeaderItems items = new HeaderItems("Death Wish", 4.5f);
         mViewheader.add(items);
+        mViewheader.add(items);
 
         String deathWish = "Dr. Paul Kersey is an experienced trauma surgeon, a man who has spent his life saving lives. After an attack on his family, Paul embarks on his own mission for justice.";
         String deathWishDirctor = "Eli Roth";
@@ -130,7 +142,10 @@ public class DBHomeActivity extends AppCompatActivity
         ChildItems childItems = new ChildItems(deathWish, R.drawable.deathwish, deathWishDirctor, deathWishCast);
         List<ChildItems> itemsList = new ArrayList<>();
         itemsList.add(childItems);
-//        List<String> theNun = new ArrayList<>();
+        List<ChildItems> itemsList1 = new ArrayList<>();
+        itemsList1.add(childItems);
+
+//          List<String> theNun = new ArrayList<>();
 //        theNun.add("A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.");
 //
 //        List<String> jumanji = new ArrayList<>();
@@ -140,5 +155,6 @@ public class DBHomeActivity extends AppCompatActivity
 //        babyDayOut.add("Baby Bink couldn't ask for more; he has adoring (if somewhat sickly-sweet) parents, he lives in a huge mansion, and he's just about to appear in the social pages of the paper.");
 
         mHeaderTitle.put(mViewheader.get(0).getTitle(), itemsList);
+        mHeaderTitle.put(mViewheader.get(1).getTitle(), itemsList1);
     }
 }
