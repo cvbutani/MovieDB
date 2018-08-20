@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
+import com.example.chirag.moviedb.Constant.PublicKeys;
+import com.example.chirag.moviedb.Constant.UriBuilder;
 import com.example.chirag.moviedb.Data.ChildItems;
 import com.example.chirag.moviedb.Data.HeaderItems;
 import com.example.chirag.moviedb.Utilities.NetworkUtils;
@@ -31,6 +34,7 @@ public class DBHomeActivity extends AppCompatActivity
     private List<HeaderItems> mViewheader;
     private HashMap<String, List<ChildItems>> mHeaderTitle;
     private int lastExpandedPosition = -1;
+    private UriBuilder mUriBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +60,8 @@ public class DBHomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        mExpandableListView = findViewById(R.id.expandable_listview);
         initData();
+        mExpandableListView = findViewById(R.id.expandable_listview);
         mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mHeaderTitle);
         mExpandableListView.setAdapter(mExpandableListViewAdapter);
 
@@ -72,6 +75,7 @@ public class DBHomeActivity extends AppCompatActivity
                 lastExpandedPosition = i;
             }
         });
+
     }
 
     @Override
@@ -113,12 +117,14 @@ public class DBHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
+            mUriBuilder = new UriBuilder();
+            final String finalUrl = mUriBuilder.headerUriBuilder(PublicKeys.POPULAR);
+
+            Log.i(this.getClass().getSimpleName().toUpperCase(), finalUrl);
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    NetworkUtils.fetchHeaderItems("https://api.themoviedb.org/3/movie/299536/credits?api_key=51b4547daeeca9a0a1dec36a7013b1ad");
-                    NetworkUtils.fetchHeaderItems("https://api.themoviedb.org/3/movie/299536?api_key=51b4547daeeca9a0a1dec36a7013b1ad&language=en-US&page=1");
-
+                    mViewheader = NetworkUtils.fetchHeaderItems(finalUrl);
                 }
             });
         } else if (id == R.id.nav_gallery) {
@@ -138,33 +144,55 @@ public class DBHomeActivity extends AppCompatActivity
         return true;
     }
 
+    //
     private void initData() {
-        mHeaderTitle = new HashMap<>();
+
+//        mHeaderTitle = new HashMap<>();
         mViewheader = new ArrayList<>();
-        HeaderItems items = new HeaderItems("Death Wish", 4.5f);
+        HeaderItems items = new HeaderItems(123456,"Death Wish", 4.5f);
         mViewheader.add(items);
-        mViewheader.add(items);
-
-        String deathWish = "Dr. Paul Kersey is an experienced trauma surgeon, a man who has spent his life saving lives. After an attack on his family, Paul embarks on his own mission for justice.";
-        String deathWishDirctor = "Eli Roth";
-        String deathWishCast = "Bruce Willis, Vincent D'Onofrio, Elisabeth Shue";
-
-        ChildItems childItems = new ChildItems(deathWish, R.drawable.deathwish, deathWishDirctor, deathWishCast);
-        List<ChildItems> itemsList = new ArrayList<>();
-        itemsList.add(childItems);
-        List<ChildItems> itemsList1 = new ArrayList<>();
-        itemsList1.add(childItems);
-
-//          List<String> theNun = new ArrayList<>();
-//        theNun.add("A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.");
+//        mViewheader.add(items);
 //
-//        List<String> jumanji = new ArrayList<>();
-//        jumanji.add("Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish the game.");
+//        String deathWish = "Dr. Paul Kersey is an experienced trauma surgeon, a man who has spent his life saving lives. After an attack on his family, Paul embarks on his own mission for justice.";
+//        String deathWishDirctor = "Eli Roth";
+//        String deathWishCast = "Bruce Willis, Vincent D'Onofrio, Elisabeth Shue";
 //
-//        List<String> babyDayOut = new ArrayList<>();
-//        babyDayOut.add("Baby Bink couldn't ask for more; he has adoring (if somewhat sickly-sweet) parents, he lives in a huge mansion, and he's just about to appear in the social pages of the paper.");
+//        ChildItems childItems = new ChildItems(deathWish, R.drawable.deathwish, deathWishDirctor, deathWishCast);
+//        List<ChildItems> itemsList = new ArrayList<>();
+//        itemsList.add(childItems);
+//        List<ChildItems> itemsList1 = new ArrayList<>();
+//        itemsList1.add(childItems);
+//
+////          List<String> theNun = new ArrayList<>();
+////        theNun.add("A priest with a haunted past and a novice on the threshold of her final vows are sent by the Vatican to investigate the death of a young nun in Romania and confront a malevolent force in the form of a demonic nun.");
+////
+////        List<String> jumanji = new ArrayList<>();
+////        jumanji.add("Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish the game.");
+////
+////        List<String> babyDayOut = new ArrayList<>();
+////        babyDayOut.add("Baby Bink couldn't ask for more; he has adoring (if somewhat sickly-sweet) parents, he lives in a huge mansion, and he's just about to appear in the social pages of the paper.");
+//
+//        mHeaderTitle.put(mViewheader.get(0).getTitle(), itemsList);
+//        mHeaderTitle.put(mViewheader.get(1).getTitle(), itemsList1);
+    }
 
-        mHeaderTitle.put(mViewheader.get(0).getTitle(), itemsList);
-        mHeaderTitle.put(mViewheader.get(1).getTitle(), itemsList1);
+    @Override
+    protected void onResume() {
+        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mHeaderTitle);
+        mExpandableListView.setAdapter(mExpandableListViewAdapter);
+
+        mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+            @Override
+            public void onGroupExpand(int i) {
+                if (lastExpandedPosition != -1 && i != lastExpandedPosition) {
+                    mExpandableListView.collapseGroup(lastExpandedPosition);
+                }
+                lastExpandedPosition = i;
+            }
+        });
+
+        super.onResume();
     }
 }
+

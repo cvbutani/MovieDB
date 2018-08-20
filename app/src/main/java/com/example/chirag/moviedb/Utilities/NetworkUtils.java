@@ -44,7 +44,7 @@ public class NetworkUtils {
         } catch (IOException e) {
             Log.i(TAG, "PROBLEM MAKING HTTP REQUEST" + e);
         }
-        return extractChildInfo(jsonResponse);
+        return extractHeaderInfo(jsonResponse);
     }
 
     /**
@@ -163,25 +163,29 @@ public class NetworkUtils {
             if (resultsArray != null) {
                 for (int i = 0; i < resultsArray.length(); i++) {
                     JSONObject elementsInItem = resultsArray.getJSONObject(i);
-                    String title = "";
-                    if (elementsInItem.has("title")) {
-                        title = elementsInItem.getString("title");
-                    }
-                    int id = 0;
-                    if (elementsInItem.has("id")) {
-                        id = elementsInItem.getInt("id");
-                    }
-                    double rating = 0;
-                    if (elementsInItem.has("vote_average")) {
-                        rating = elementsInItem.getDouble("vote_average");
-                    }
-                    Log.i(TAG, title + " - ID: " + id + " - RATING: " + rating);
+                    //  MOVIE TITLE
+                    String title = extractValue(elementsInItem, "title");
+                    //  MOVIE ID
+                    int id = Integer.parseInt(extractValue(elementsInItem, "id"));
+                    //  MOVIE RATING
+                    float rating = Float.parseFloat(extractValue(elementsInItem, "vote_average"));
+
+                    HeaderItems items = new HeaderItems(id, title, rating);
+                    headerDetails.add(items);
                 }
             }
         } catch (JSONException e) {
             Log.i(TAG, "LOG PARSING DATA FROM JSON", e);
         }
         return headerDetails;
+    }
+
+    private static String extractValue(JSONObject object, String key) throws JSONException {
+        String value = "";
+        if (object.has(key)) {
+            value = object.getString(key);
+        }
+        return value;
     }
 
     private static List<HeaderItems> extractChildInfo(String childJson) {

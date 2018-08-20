@@ -7,11 +7,21 @@ package com.example.chirag.moviedb.Data;
 public class HeaderItems {
 
     private String title;
+    private int id;
     private float rating;
 
-    public HeaderItems(String title, float rating) {
+    public HeaderItems(int id, String title, float rating) {
+        this.id = id;
         this.title = title;
         this.rating = rating;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

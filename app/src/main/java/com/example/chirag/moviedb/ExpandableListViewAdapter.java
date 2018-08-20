@@ -34,13 +34,13 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public int getGroupCount() {
+    public int getGroupCount()  {
         return mListDataHeader.size();
     }
 
     @Override
     public int getChildrenCount(int i) {
-        return mListHashMap.get(mListDataHeader.get(i).getTitle()).size();
+        return 0;
     }
 
     @Override
@@ -50,8 +50,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int j) {
-        Log.i("CHILD: ", "CHILD: " + j);
-        return mListHashMap.get(mListDataHeader.get(i).getTitle()).size();
+        return null;
 
     }
 
@@ -62,7 +61,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int i, int j) {
-        return j;
+        return 0;
     }
 
     @Override
@@ -89,25 +88,25 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        String headerChildText = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDescription();
-        int headerChildImage = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getImage();
-        String headerChildCast = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getCast();
-        String headerChildDirector = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDirctor();
-
-        if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.expandable_list_item, null);
-        }
-
-        TextView tvChildList = view.findViewById(R.id.listview_item_description);
-        ImageView ivChildList = view.findViewById(R.id.listview_item_image);
-        TextView tvChildItemCast = view.findViewById(R.id.listview_item_cast);
-        TextView tvChildItemDirector = view.findViewById(R.id.listview_item_director);
-
-        tvChildItemCast.setText(headerChildCast);
-        tvChildItemDirector.setText(headerChildDirector);
-        tvChildList.setText(headerChildText);
-        ivChildList.setImageResource(headerChildImage);
+//        String headerChildText = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDescription();
+//        int headerChildImage = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getImage();
+//        String headerChildCast = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getCast();
+//        String headerChildDirector = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDirctor();
+//
+//        if (view == null) {
+//            LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            view = inflater.inflate(R.layout.expandable_list_item, null);
+//        }
+//
+//        TextView tvChildList = view.findViewById(R.id.listview_item_description);
+//        ImageView ivChildList = view.findViewById(R.id.listview_item_image);
+//        TextView tvChildItemCast = view.findViewById(R.id.listview_item_cast);
+//        TextView tvChildItemDirector = view.findViewById(R.id.listview_item_director);
+//
+//        tvChildItemCast.setText(headerChildCast);
+//        tvChildItemDirector.setText(headerChildDirector);
+//        tvChildList.setText(headerChildText);
+//        ivChildList.setImageResource(headerChildImage);
         return view;
     }
 
