@@ -18,8 +18,8 @@ import android.widget.ExpandableListView;
 
 import com.example.chirag.moviedb.Constant.PublicKeys;
 import com.example.chirag.moviedb.Constant.UriBuilder;
-import com.example.chirag.moviedb.Data.ChildItems;
-import com.example.chirag.moviedb.Data.HeaderItems;
+import com.example.chirag.moviedb.data.ChildItems;
+import com.example.chirag.moviedb.data.HeaderItems;
 import com.example.chirag.moviedb.Utilities.NetworkUtils;
 
 import java.util.ArrayList;

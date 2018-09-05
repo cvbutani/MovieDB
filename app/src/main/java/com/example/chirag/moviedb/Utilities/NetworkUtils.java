@@ -1,11 +1,9 @@
 package com.example.chirag.moviedb.Utilities;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.chirag.moviedb.Data.ChildItems;
-import com.example.chirag.moviedb.Data.HeaderItems;
+import com.example.chirag.moviedb.data.HeaderItems;
 
 import org.json.JSONArray;
 import org.json.JSONException;

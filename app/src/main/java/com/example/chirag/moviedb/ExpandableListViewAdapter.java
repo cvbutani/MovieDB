@@ -2,17 +2,15 @@ package com.example.chirag.moviedb;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.chirag.moviedb.Data.ChildItems;
-import com.example.chirag.moviedb.Data.HeaderItems;
+import com.example.chirag.moviedb.data.ChildItems;
+import com.example.chirag.moviedb.data.HeaderItems;
 
 import java.util.HashMap;
 import java.util.List;
