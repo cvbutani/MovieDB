@@ -3,7 +3,6 @@ package com.example.chirag.moviedb.data;
 import com.example.chirag.moviedb.GetDataService;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
-import com.example.chirag.retrofit.network.RetrofitClientInstance;
 
 import java.util.List;
 
