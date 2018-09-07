@@ -1,5 +1,7 @@
 package com.example.chirag.moviedb.network;
 
+import android.util.Log;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -10,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceInstance {
 
     private static Retrofit mRetrofit;
-    private static final String BASE_URL = "https://api.themoviedb.org/3/movie/popular?api_key=51b4547daeeca9a0a1dec36a7013b1ad&language=en-US&page=1";
+    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
 
     public static Retrofit getServiceInstance() {
         if (mRetrofit == null) {

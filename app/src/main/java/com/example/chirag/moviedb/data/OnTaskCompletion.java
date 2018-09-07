@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface OnTaskCompletion {
 
-    void onSuccess(List<HeaderItem> data);
+    void onSuccess(HeaderItem data);
 
     void onFailure(String errorMessage);
 }

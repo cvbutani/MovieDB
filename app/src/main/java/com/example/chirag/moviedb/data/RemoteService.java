@@ -1,6 +1,6 @@
 package com.example.chirag.moviedb.data;
 
-import com.example.chirag.moviedb.GetDataService;
+import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
 
@@ -22,16 +22,16 @@ public class RemoteService {
     void getData(final OnTaskCompletion callback) {
         GetDataService service = ServiceInstance.getServiceInstance().create(GetDataService.class);
 
-        Call<List<HeaderItem>> call = service.getAllMovieInfo();
+        Call<HeaderItem> call = service.getAllMovieInfo();
 
-        call.enqueue(new Callback<List<HeaderItem>>() {
+        call.enqueue(new Callback<HeaderItem>() {
             @Override
-            public void onResponse(Call<List<HeaderItem>> call, Response<List<HeaderItem>> response) {
+            public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
                 callback.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<HeaderItem>> call, Throwable t) {
+            public void onFailure(Call<HeaderItem> call, Throwable t) {
                 callback.onFailure(t.getMessage());
             }
         });

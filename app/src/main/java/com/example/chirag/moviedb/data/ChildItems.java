@@ -1,9 +1,12 @@
+
 package com.example.chirag.moviedb.data;
+
 
 /**
  * MovieDB
  * Created by Chirag on 18/08/18.
  */
+
 public class ChildItems {
 
     private String description;

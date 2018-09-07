@@ -21,13 +21,14 @@ import com.example.chirag.moviedb.Constant.UriBuilder;
 import com.example.chirag.moviedb.data.ChildItems;
 import com.example.chirag.moviedb.data.HeaderItems;
 import com.example.chirag.moviedb.Utilities.NetworkUtils;
+import com.example.chirag.moviedb.model.HeaderItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class DBHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DbHomeContract.View {
 
     private ExpandableListView mExpandableListView;
     private ExpandableListViewAdapter mExpandableListViewAdapter;
@@ -40,6 +41,10 @@ public class DBHomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dbhome);
+
+        DbHomePresenter presenter = new DbHomePresenter();
+        presenter.attachView(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,6 +62,8 @@ public class DBHomeActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -193,6 +200,16 @@ public class DBHomeActivity extends AppCompatActivity
         });
 
         super.onResume();
+    }
+
+    @Override
+    public void onResult(HeaderItem data) {
+        Log.i("RESULT: ", data.getResults().get(0).getTitle());
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        Log.i("RESULT: ", "SOMETHING WENT WRONG" + errorMessage);
     }
 }
 
