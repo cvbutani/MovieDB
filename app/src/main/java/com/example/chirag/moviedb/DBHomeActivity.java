@@ -21,7 +21,7 @@ import com.example.chirag.moviedb.Constant.UriBuilder;
 import com.example.chirag.moviedb.data.ChildItems;
 import com.example.chirag.moviedb.data.HeaderItems;
 import com.example.chirag.moviedb.Utilities.NetworkUtils;
-import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,8 @@
 package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.service.GetDataService;
-import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

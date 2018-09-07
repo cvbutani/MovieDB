@@ -1,8 +1,6 @@
 package com.example.chirag.moviedb;
 
-import com.example.chirag.moviedb.model.HeaderItem;
-
-import java.util.List;
+import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 /**
  * MovieDB

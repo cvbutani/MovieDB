@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.model;
+package com.example.chirag.moviedb.model.headeritem;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,9 +28,5 @@ public class HeaderItem {
 
     public List<ResultHeaderItem> getResults() {
         return results;
-    }
-
-    public void setResults(List<ResultHeaderItem> results) {
-        this.results = results;
     }
 }

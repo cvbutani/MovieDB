@@ -1,15 +1,9 @@
 package com.example.chirag.moviedb.service;
 
-import android.util.Log;
-
-import com.example.chirag.moviedb.model.HeaderItem;
-
-import java.util.List;
+import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * MovieDB
