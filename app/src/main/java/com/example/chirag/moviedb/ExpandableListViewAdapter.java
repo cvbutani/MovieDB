@@ -2,6 +2,7 @@ package com.example.chirag.moviedb;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.chirag.moviedb.data.ChildItems;
 import com.example.chirag.moviedb.data.HeaderItems;
+import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,18 +24,17 @@ import java.util.List;
 public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
-    private List<HeaderItems> mListDataHeader;
+    private HeaderItem mListDataHeader;
     private HashMap<String, List<ChildItems>> mListHashMap;
 
-    ExpandableListViewAdapter(Context mContext, List<HeaderItems> mListDataHeader, HashMap<String, List<ChildItems>> mListHashMap) {
+    ExpandableListViewAdapter(Context mContext, HeaderItem mListDataHeader) {
         this.mContext = mContext;
         this.mListDataHeader = mListDataHeader;
-        this.mListHashMap = mListHashMap;
     }
 
     @Override
     public int getGroupCount()  {
-        return mListDataHeader.size();
+        return mListDataHeader.getResults().size();
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int i) {
-        return mListDataHeader.get(i);
+        return mListDataHeader.getResults().get(i);
     }
 
     @Override
@@ -69,8 +70,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        String headerTitle = mListDataHeader.get(i).getTitle();
-        float headerRating = mListDataHeader.get(i).getRating();
+        String headerTitle = mListDataHeader.getResults().get(i).getTitle();
+        double headerRating = mListDataHeader.getResults().get(i).getVoteAverage();
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expandable_list_group, null);
@@ -78,7 +79,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
         TextView tvHeader = view.findViewById(R.id.listview_header);
         RatingBar ratingHeader = view.findViewById(R.id.listview_header_rating);
-        ratingHeader.setRating(headerRating);
+        ratingHeader.setRating((float)headerRating);
         tvHeader.setTypeface(null, Typeface.BOLD);
         tvHeader.setText(headerTitle);
         return view;
