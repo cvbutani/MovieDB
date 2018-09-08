@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data;
 
+import com.example.chirag.moviedb.model.childitem.ChildItem;
 import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 /**
@@ -8,7 +9,12 @@ import com.example.chirag.moviedb.model.headeritem.HeaderItem;
  */
 public interface OnTaskCompletion {
 
-    void onSuccess(HeaderItem data);
+    void onHeaderItemSuccess(HeaderItem data);
 
-    void onFailure(String errorMessage);
+    void onHeaderItemFailure(String errorMessage);
+
+    void onChildItemSuccess(ChildItem data);
+
+    void onChildItemFailure(String errorMessage);
+
 }

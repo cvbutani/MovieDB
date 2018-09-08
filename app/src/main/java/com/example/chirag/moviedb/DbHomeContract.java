@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb;
 
+import com.example.chirag.moviedb.model.childitem.ChildItem;
 import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 /**
@@ -9,9 +10,13 @@ import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 public interface DbHomeContract {
 
     interface View {
-        void onResult(HeaderItem data);
+        void onHeaderResultSuccess(HeaderItem data);
 
-        void onError(String errorMessage);
+        void onHeaderResultFailure(String errorMessage);
+
+        void onChildResultSuccess(ChildItem data);
+
+        void onChildResultFailure(String errorMessage);
     }
 
     interface Presenter {

@@ -21,6 +21,7 @@ import com.example.chirag.moviedb.Constant.UriBuilder;
 import com.example.chirag.moviedb.data.ChildItems;
 import com.example.chirag.moviedb.data.HeaderItems;
 import com.example.chirag.moviedb.Utilities.NetworkUtils;
+import com.example.chirag.moviedb.model.childitem.ChildItem;
 import com.example.chirag.moviedb.model.headeritem.HeaderItem;
 
 import java.util.ArrayList;
@@ -62,7 +63,6 @@ public class DBHomeActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -156,7 +156,7 @@ public class DBHomeActivity extends AppCompatActivity
 
 //        mHeaderTitle = new HashMap<>();
         mViewheader = new ArrayList<>();
-        HeaderItems items = new HeaderItems(123456,"Death Wish", 4.5f);
+        HeaderItems items = new HeaderItems(123456, "Death Wish", 4.5f);
         mViewheader.add(items);
 //        mViewheader.add(items);
 //
@@ -203,13 +203,24 @@ public class DBHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResult(HeaderItem data) {
+    public void onHeaderResultSuccess(HeaderItem data) {
         Log.i("RESULT: ", data.getResults().get(0).getTitle());
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onHeaderResultFailure(String errorMessage) {
         Log.i("RESULT: ", "SOMETHING WENT WRONG" + errorMessage);
+    }
+
+    @Override
+    public void onChildResultSuccess(ChildItem data) {
+        Log.i("CHILD ITEM CAST ", data.getCast().get(0).getName());
+        Log.i("CHILD ITEM CREW ", data.getCrew().get(0).getJob());
+    }
+
+    @Override
+    public void onChildResultFailure(String errorMessage) {
+
     }
 }
 
