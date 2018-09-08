@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.data.ChildItems;
 import com.example.chirag.moviedb.data.HeaderItems;
 import com.example.chirag.moviedb.model.headeritem.HeaderItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int j) {
-        return null;
+        return mListDataHeader.getResults().get(i);
 
     }
 
@@ -87,25 +89,31 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-//        String headerChildText = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDescription();
-//        int headerChildImage = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getImage();
-//        String headerChildCast = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getCast();
-//        String headerChildDirector = mListHashMap.get(mListDataHeader.get(i).getTitle()).get(i1).getDirctor();
-//
-//        if (view == null) {
-//            LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            view = inflater.inflate(R.layout.expandable_list_item, null);
-//        }
-//
-//        TextView tvChildList = view.findViewById(R.id.listview_item_description);
-//        ImageView ivChildList = view.findViewById(R.id.listview_item_image);
-//        TextView tvChildItemCast = view.findViewById(R.id.listview_item_cast);
-//        TextView tvChildItemDirector = view.findViewById(R.id.listview_item_director);
-//
-//        tvChildItemCast.setText(headerChildCast);
-//        tvChildItemDirector.setText(headerChildDirector);
-//        tvChildList.setText(headerChildText);
-//        ivChildList.setImageResource(headerChildImage);
+        String headerChildText = mListDataHeader.getResults().get(i).getDescription();
+        StringBuilder image = new StringBuilder();
+        String headerChildImage = mListDataHeader.getResults().get(i).getPoster();
+
+        image.append("http://image.tmdb.org/t/p/w185/").append(headerChildImage);
+
+        String image1 = image.toString();
+
+        String headerChildCast = mListDataHeader.getResults().get(i).getReleaseDate();
+        String headerChildDirector =mListDataHeader.getResults().get(i).getReleaseDate();
+
+        if (view == null) {
+            LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.expandable_list_item, null);
+        }
+
+        TextView tvChildList = view.findViewById(R.id.listview_item_description);
+        ImageView ivChildList = view.findViewById(R.id.listview_item_image);
+        TextView tvChildItemCast = view.findViewById(R.id.listview_item_cast);
+        TextView tvChildItemDirector = view.findViewById(R.id.listview_item_director);
+
+        tvChildItemCast.setText(headerChildCast);
+        tvChildItemDirector.setText(headerChildDirector);
+        tvChildList.setText(headerChildText);
+        Picasso.get().load(image1).into(ivChildList);
         return view;
     }
 
