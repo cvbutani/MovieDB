@@ -3,13 +3,14 @@ package com.example.chirag.moviedb.model.headeritem;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-public class ResultHeaderItem {
+public class ResultHeaderItem implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -29,6 +30,9 @@ public class ResultHeaderItem {
     @SerializedName("genre_ids")
     @Expose
     private List<Integer> genreIds = null;
+    @SerializedName("backdrop_path")
+    @Expose
+    private String backdropPath;
     @SerializedName("overview")
     @Expose
     private String description;
@@ -42,13 +46,14 @@ public class ResultHeaderItem {
     public ResultHeaderItem() {
     }
 
-    public ResultHeaderItem(Integer id, Double voteAverage, String title, String poster, String originalLanguage, List<Integer> genreIds, String overview, String releaseDate) {
+    public ResultHeaderItem(Integer id, Double voteAverage, String title, String poster, String originalLanguage, List<Integer> genreIds,String backdropPath, String overview, String releaseDate) {
         this.id = id;
         this.voteAverage = voteAverage;
         this.title = title;
         this.poster = poster;
         this.originalLanguage = originalLanguage;
         this.genreIds = genreIds;
+        this.backdropPath = backdropPath;
         this.description = overview;
         this.releaseDate = releaseDate;
     }
@@ -105,6 +110,14 @@ public class ResultHeaderItem {
 
     public void setGenreIds(List<Integer> genreIds) {
         this.genreIds = genreIds;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     public String getDescription() {

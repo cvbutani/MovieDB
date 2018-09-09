@@ -73,15 +73,13 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         String headerTitle = mListDataHeader.getResults().get(i).getTitle();
-        double headerRating = mListDataHeader.getResults().get(i).getVoteAverage();
+        String headerYear = mListDataHeader.getResults().get(i).getReleaseDate();
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expandable_list_group, null);
         }
 
         TextView tvHeader = view.findViewById(R.id.listview_header);
-        RatingBar ratingHeader = view.findViewById(R.id.listview_header_rating);
-        ratingHeader.setRating((float)headerRating);
         tvHeader.setTypeface(null, Typeface.BOLD);
         tvHeader.setText(headerTitle);
         return view;
@@ -89,16 +87,17 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        String headerChildText = mListDataHeader.getResults().get(i).getDescription();
+        String headerChildText = mListDataHeader.getResults().get(i).getGenreIds();
         StringBuilder image = new StringBuilder();
+
         String headerChildImage = mListDataHeader.getResults().get(i).getPoster();
-
         image.append("http://image.tmdb.org/t/p/w185/").append(headerChildImage);
-
         String image1 = image.toString();
 
         String headerChildCast = mListDataHeader.getResults().get(i).getReleaseDate();
-        String headerChildDirector =mListDataHeader.getResults().get(i).getReleaseDate();
+        String headerChildDirector =mListDataHeader.getResults().get(i).getOriginalLanguage();
+
+        double rating = mListDataHeader.getResults().get(i).getVoteAverage();
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -109,11 +108,13 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         ImageView ivChildList = view.findViewById(R.id.listview_item_image);
         TextView tvChildItemCast = view.findViewById(R.id.listview_item_cast);
         TextView tvChildItemDirector = view.findViewById(R.id.listview_item_director);
+        TextView tvItemRating = view.findViewById(R.id.listview_item_rating);
 
         tvChildItemCast.setText(headerChildCast);
         tvChildItemDirector.setText(headerChildDirector);
         tvChildList.setText(headerChildText);
         Picasso.get().load(image1).into(ivChildList);
+        tvItemRating.setText(String.valueOf(rating) + "/10");
         return view;
     }
 

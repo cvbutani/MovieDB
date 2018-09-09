@@ -10,36 +10,20 @@
         android:layout_height="40dp"
         android:gravity="center"
         android:textSize="24sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:maxLength="30"
         tools:text="AWESOME" />
 
     <TextView
+        android:id="@+id/listview_header_year"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/listview_header"
         android:layout_toRightOf="@+id/listview_header"
         android:gravity="center"
-        android:text="(2018)"
+        tools:text="(2018)"
         android:textSize="16sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_toLeftOf="@+id/listview_header_rating"
-        android:layout_toStartOf="@+id/listview_header_rating"
-        android:gravity="center"
-        android:text="4.5"
-        android:textSize="16sp" />
-
-    <RatingBar
-        android:id="@+id/listview_header_rating"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerInParent="true" />
 
 </RelativeLayout>
