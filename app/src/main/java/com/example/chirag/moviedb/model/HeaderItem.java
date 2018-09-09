@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.model.headeritem;
+package com.example.chirag.moviedb.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

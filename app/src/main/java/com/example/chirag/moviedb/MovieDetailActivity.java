@@ -3,11 +3,9 @@ package com.example.chirag.moviedb;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.example.chirag.moviedb.model.headeritem.HeaderItem;
-import com.example.chirag.moviedb.model.headeritem.ResultHeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity {

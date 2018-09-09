@@ -2,7 +2,7 @@ package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.model.childitem.ChildItem;
 import com.example.chirag.moviedb.service.GetDataService;
-import com.example.chirag.moviedb.model.headeritem.HeaderItem;
+import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
 
 import retrofit2.Call;

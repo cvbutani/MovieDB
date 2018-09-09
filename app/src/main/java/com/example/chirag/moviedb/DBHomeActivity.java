@@ -1,7 +1,6 @@
 package com.example.chirag.moviedb;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,19 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
-import com.example.chirag.moviedb.Constant.PublicKeys;
 import com.example.chirag.moviedb.Constant.UriBuilder;
-import com.example.chirag.moviedb.data.ChildItems;
-import com.example.chirag.moviedb.data.HeaderItems;
-import com.example.chirag.moviedb.Utilities.NetworkUtils;
 import com.example.chirag.moviedb.model.childitem.ChildItem;
-import com.example.chirag.moviedb.model.headeritem.HeaderItem;
-import com.example.chirag.moviedb.model.headeritem.ResultHeaderItem;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DbHomeContract.View {
@@ -37,7 +27,6 @@ public class DBHomeActivity extends AppCompatActivity
     private ExpandableListView mExpandableListView;
     private ExpandableListViewAdapter mExpandableListViewAdapter;
     private HeaderItem mViewheader;
-    private HashMap<String, List<ChildItems>> mHeaderTitle;
     private int lastExpandedPosition = -1;
     private UriBuilder mUriBuilder;
     DbHomePresenter mPresenter;

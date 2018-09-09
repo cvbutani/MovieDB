@@ -1,7 +1,7 @@
 package com.example.chirag.moviedb;
 
 import com.example.chirag.moviedb.model.childitem.ChildItem;
-import com.example.chirag.moviedb.model.headeritem.HeaderItem;
+import com.example.chirag.moviedb.model.HeaderItem;
 
 /**
  * MovieDB
