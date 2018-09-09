@@ -96,10 +96,10 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.expandable_list_item, null);
         }
 
-        TextView tvChildList = view.findViewById(R.id.listview_item_description);
+        TextView tvChildList = view.findViewById(R.id.listview_item_genre);
         ImageView ivChildList = view.findViewById(R.id.listview_item_image);
-        TextView tvChildItemCast = view.findViewById(R.id.listview_item_cast);
-        TextView tvChildItemDirector = view.findViewById(R.id.listview_item_director);
+        TextView tvChildItemCast = view.findViewById(R.id.listview_item_release_date);
+        TextView tvChildItemDirector = view.findViewById(R.id.listview_item_language);
         TextView tvItemRating = view.findViewById(R.id.listview_item_rating);
 
         tvChildItemCast.setText(headerChildCast);

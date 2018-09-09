@@ -2,7 +2,7 @@ package com.example.chirag.moviedb;
 
 import com.example.chirag.moviedb.data.OnTaskCompletion;
 import com.example.chirag.moviedb.data.RemoteRepository;
-import com.example.chirag.moviedb.model.childitem.ChildItem;
+
 import com.example.chirag.moviedb.model.HeaderItem;
 
 /**
@@ -32,15 +32,6 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
                 mCallback.onHeaderResultFailure(errorMessage);
             }
 
-            @Override
-            public void onChildItemSuccess(ChildItem data) {
-                mCallback.onChildResultSuccess(data);
-            }
-
-            @Override
-            public void onChildItemFailure(String errorMessage) {
-                mCallback.onChildResultFailure(errorMessage);
-            }
         });
     }
 

@@ -1,6 +1,5 @@
 package com.example.chirag.moviedb.data;
 
-import com.example.chirag.moviedb.model.childitem.ChildItem;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
@@ -32,19 +31,6 @@ public class RemoteService {
             @Override
             public void onFailure(Call<HeaderItem> call, Throwable t) {
                 callback.onHeaderItemFailure(t.getMessage());
-            }
-        });
-
-        Call<ChildItem> childItemCall = service.getMovieCredits();
-        childItemCall.enqueue(new Callback<ChildItem>() {
-            @Override
-            public void onResponse(Call<ChildItem> call, Response<ChildItem> response) {
-                callback.onChildItemSuccess(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<ChildItem> call, Throwable t) {
-                callback.onChildItemFailure(t.getMessage());
             }
         });
     }

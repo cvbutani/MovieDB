@@ -28,7 +28,7 @@
 
 
         <TextView
-            android:id="@+id/listview_item_description"
+            android:id="@+id/listview_item_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="4"
@@ -54,7 +54,7 @@
 
 
                 <TextView
-                    android:id="@+id/listview_item_cast"
+                    android:id="@+id/listview_item_release_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -76,7 +76,7 @@
 
 
                 <TextView
-                    android:id="@+id/listview_item_director"
+                    android:id="@+id/listview_item_language"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"

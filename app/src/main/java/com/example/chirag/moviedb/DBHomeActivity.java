@@ -16,8 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
-import com.example.chirag.moviedb.Constant.UriBuilder;
-import com.example.chirag.moviedb.model.childitem.ChildItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 
@@ -28,7 +26,6 @@ public class DBHomeActivity extends AppCompatActivity
     private ExpandableListViewAdapter mExpandableListViewAdapter;
     private HeaderItem mViewheader;
     private int lastExpandedPosition = -1;
-    private UriBuilder mUriBuilder;
     DbHomePresenter mPresenter;
 
     @Override
@@ -166,15 +163,5 @@ public class DBHomeActivity extends AppCompatActivity
         Log.i("RESULT: ", "SOMETHING WENT WRONG" + errorMessage);
     }
 
-    @Override
-    public void onChildResultSuccess(ChildItem data) {
-        Log.i("CHILD ITEM CAST ", data.getCast().get(0).getName());
-        Log.i("CHILD ITEM CREW ", data.getCrew().get(0).getJob());
-    }
-
-    @Override
-    public void onChildResultFailure(String errorMessage) {
-
-    }
 }
 
