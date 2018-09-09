@@ -108,6 +108,10 @@ public class ResultHeaderItem implements Serializable {
         return genre.toString();
     }
 
+    public List<Integer> getGenreId() {
+        return genreIds;
+    }
+
     public void setGenreIds(List<Integer> genreIds) {
         this.genreIds = genreIds;
     }

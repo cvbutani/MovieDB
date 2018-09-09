@@ -9,6 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chirag.moviedb.model.GenreResponse;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.squareup.picasso.Picasso;
 
@@ -20,14 +21,16 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
     private HeaderItem mListDataHeader;
+    private GenreResponse mGenreResponse;
 
-    ExpandableListViewAdapter(Context mContext, HeaderItem mListDataHeader) {
+    ExpandableListViewAdapter(Context mContext, HeaderItem mListDataHeader, GenreResponse response) {
         this.mContext = mContext;
         this.mListDataHeader = mListDataHeader;
+        this.mGenreResponse = response;
     }
 
     @Override
-    public int getGroupCount()  {
+    public int getGroupCount() {
         return mListDataHeader.getResults().size();
     }
 
@@ -79,7 +82,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        String headerChildText = mListDataHeader.getResults().get(i).getGenreIds();
+
         StringBuilder image = new StringBuilder();
 
         String headerChildImage = mListDataHeader.getResults().get(i).getPoster();
@@ -87,7 +90,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         String image1 = image.toString();
 
         String headerChildCast = mListDataHeader.getResults().get(i).getReleaseDate();
-        String headerChildDirector =mListDataHeader.getResults().get(i).getOriginalLanguage();
+        String headerChildDirector = mListDataHeader.getResults().get(i).getOriginalLanguage();
 
         double rating = mListDataHeader.getResults().get(i).getVoteAverage();
 
@@ -104,7 +107,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
         tvChildItemCast.setText(headerChildCast);
         tvChildItemDirector.setText(headerChildDirector);
-        tvChildList.setText(headerChildText);
+        tvChildList.setText(genreId(i));
         Picasso.get().load(image1).into(ivChildList);
         tvItemRating.setText(String.valueOf(rating) + "/10");
         return view;
@@ -113,5 +116,26 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return true;
+    }
+
+    private String genreId(int i) {
+        StringBuilder genre = new StringBuilder();
+        int size = mGenreResponse.getGenres().size();
+
+        for (int j = 0; j < size; j++) {
+            if (mGenreResponse.getGenres().get(j).getId().equals(mListDataHeader.getResults().get(i).getGenreId().get(0))) {
+                genre.append(mGenreResponse.getGenres().get(j).getName());
+            }
+        }
+        for (int j1 = 0; j1 < size; j1++) {
+            for (int k = 1; k < mListDataHeader.getResults().get(i).getGenreId().size(); k++) {
+                if (mListDataHeader.getResults().get(i).getGenreId().get(k).equals(mGenreResponse.getGenres().get(j1).getId())) {
+                    genre.append(", ");
+                    genre.append(mGenreResponse.getGenres().get(j1).getName());
+                }
+            }
+        }
+
+        return genre.toString();
     }
 }

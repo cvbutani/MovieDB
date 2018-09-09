@@ -75,8 +75,8 @@ public class DBHomeActivity extends AppCompatActivity
 
                 Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
                 ResultHeaderItem item = mViewheader.getResults().get(i);
-
                 intent.putExtra("EXTRA", item);
+                intent.putExtra("EXTRA_GENRE", mGenreList);
                 startActivity(intent);
                 return true;
             }
@@ -145,7 +145,7 @@ public class DBHomeActivity extends AppCompatActivity
     public void onHeaderResultSuccess(HeaderItem data) {
         mViewheader = data;
         Log.i("RESULT ", data.getResults().get(0).getTitle());
-        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader);
+        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mGenreList);
         mExpandableListView.setAdapter(mExpandableListViewAdapter);
 
         mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
