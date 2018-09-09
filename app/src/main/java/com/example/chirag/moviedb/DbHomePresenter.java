@@ -3,6 +3,7 @@ package com.example.chirag.moviedb;
 import com.example.chirag.moviedb.data.OnTaskCompletion;
 import com.example.chirag.moviedb.data.RemoteRepository;
 
+import com.example.chirag.moviedb.model.GenreResponse;
 import com.example.chirag.moviedb.model.HeaderItem;
 
 /**
@@ -20,8 +21,8 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     }
 
     @Override
-    public void getData() {
-        mRemoteRepository.getNewBatchOfData(new OnTaskCompletion() {
+    public void getPopularMovies() {
+        mRemoteRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
             public void onHeaderItemSuccess(HeaderItem data) {
                 mCallback.onHeaderResultSuccess(data);
@@ -36,8 +37,24 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     }
 
     @Override
+    public void getGenreList() {
+        mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
+            @Override
+            public void onGenreListSuccess(GenreResponse data) {
+                mCallback.onGenreListSuccess(data);
+            }
+
+            @Override
+            public void onGenreListFailure(String errorMessage) {
+                mCallback.onGenreListFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
     public void attachView(DbHomeContract.View view) {
         mCallback = view;
-        getData();
+        getPopularMovies();
+        getGenreList();
     }
 }

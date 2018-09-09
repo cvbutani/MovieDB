@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb;
 
 
+import com.example.chirag.moviedb.model.GenreResponse;
 import com.example.chirag.moviedb.model.HeaderItem;
 
 /**
@@ -14,10 +15,16 @@ public interface DbHomeContract {
 
         void onHeaderResultFailure(String errorMessage);
 
+        void onGenreListSuccess(GenreResponse data);
+
+        void onGenreListFailure(String errorMessage);
+
     }
 
     interface Presenter {
-        void getData();
+        void getPopularMovies();
+
+        void getGenreList();
 
         void attachView(DbHomeContract.View view);
     }

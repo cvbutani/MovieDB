@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data;
 
+import com.example.chirag.moviedb.model.GenreResponse;
 import com.example.chirag.moviedb.model.HeaderItem;
 
 /**
@@ -8,8 +9,19 @@ import com.example.chirag.moviedb.model.HeaderItem;
  */
 public interface OnTaskCompletion {
 
-    void onHeaderItemSuccess(HeaderItem data);
+    interface OnGetMovieCompletion {
 
-    void onHeaderItemFailure(String errorMessage);
+        void onHeaderItemSuccess(HeaderItem data);
+
+        void onHeaderItemFailure(String errorMessage);
+
+    }
+
+    interface OnGetGenresCompletion {
+
+        void onGenreListSuccess(GenreResponse data);
+
+        void onGenreListFailure(String errorMessage);
+    }
 
 }

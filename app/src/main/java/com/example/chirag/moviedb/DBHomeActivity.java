@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
+import com.example.chirag.moviedb.model.GenreResponse;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 
@@ -25,6 +26,7 @@ public class DBHomeActivity extends AppCompatActivity
     private ExpandableListView mExpandableListView;
     private ExpandableListViewAdapter mExpandableListViewAdapter;
     private HeaderItem mViewheader;
+    private GenreResponse mGenreList;
     private int lastExpandedPosition = -1;
     DbHomePresenter mPresenter;
 
@@ -161,6 +163,17 @@ public class DBHomeActivity extends AppCompatActivity
     @Override
     public void onHeaderResultFailure(String errorMessage) {
         Log.i("RESULT: ", "SOMETHING WENT WRONG" + errorMessage);
+    }
+
+    @Override
+    public void onGenreListSuccess(GenreResponse data) {
+        mGenreList = data;
+        Log.i("GENRE LIST ", mGenreList.getGenres().get(0).getName());
+    }
+
+    @Override
+    public void onGenreListFailure(String errorMessage) {
+
     }
 
 }

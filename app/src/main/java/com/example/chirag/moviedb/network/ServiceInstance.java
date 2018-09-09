@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceInstance {
 
     private static Retrofit mRetrofit;
-    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+    private static final String BASE_URL = "http://api.themoviedb.org/3/";
 
     public static Retrofit getServiceInstance() {
         if (mRetrofit == null) {
