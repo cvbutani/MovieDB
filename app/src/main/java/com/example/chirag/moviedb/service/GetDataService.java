@@ -1,10 +1,12 @@
 package com.example.chirag.moviedb.service;
 
-import com.example.chirag.moviedb.model.GenreResponse;
+import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.TrailerItem;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -20,7 +22,14 @@ public interface GetDataService {
     );
 
     @GET("genre/movie/list")
-    Call<GenreResponse> getGenreList(
+    Call<GenreItem> getGenreList(
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
+    @GET("movie/{movie_id}/videos")
+    Call<TrailerItem> getTrailerList(
+            @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );

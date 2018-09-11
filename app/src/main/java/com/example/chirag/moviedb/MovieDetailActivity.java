@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.chirag.moviedb.model.GenreResponse;
+import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +29,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     ResultHeaderItem mHeaderItem;
 
-    GenreResponse mGenreResponse;
+    GenreItem mGenreItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +39,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (getIntent() != null) {
             Intent i = getIntent();
             mHeaderItem = (ResultHeaderItem) i.getSerializableExtra("EXTRA");
-            mGenreResponse = (GenreResponse) i.getSerializableExtra("EXTRA_GENRE");
+            mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
 
         String movieReleaseDate = mHeaderItem.getReleaseDate();
         String movieLanguage = mHeaderItem.getOriginalLanguage();
-        String movieGenre = mHeaderItem.getGenreIds();
         double movieRating = mHeaderItem.getVoteAverage();
         String movieOverview = mHeaderItem.getDescription();
 
@@ -78,18 +77,18 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private String genreId() {
         StringBuilder genre = new StringBuilder();
-        int size = mGenreResponse.getGenres().size();
+        int size = mGenreItem.getResultGenreItems().size();
 
         for (int j = 0; j < size; j++) {
-            if (mGenreResponse.getGenres().get(j).getId().equals(mHeaderItem.getGenreId().get(0))) {
-                genre.append(mGenreResponse.getGenres().get(j).getName());
+            if (mGenreItem.getResultGenreItems().get(j).getId().equals(mHeaderItem.getGenreId().get(0))) {
+                genre.append(mGenreItem.getResultGenreItems().get(j).getName());
             }
         }
         for (int j1 = 0; j1 < size; j1++) {
             for (int k = 1; k < mHeaderItem.getGenreId().size(); k++) {
-                if (mHeaderItem.getGenreId().get(k).equals(mGenreResponse.getGenres().get(j1).getId())) {
+                if (mHeaderItem.getGenreId().get(k).equals(mGenreItem.getResultGenreItems().get(j1).getId())) {
                     genre.append(", ");
-                    genre.append(mGenreResponse.getGenres().get(j1).getName());
+                    genre.append(mGenreItem.getResultGenreItems().get(j1).getName());
                 }
             }
         }

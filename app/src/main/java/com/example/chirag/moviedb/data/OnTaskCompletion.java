@@ -1,7 +1,10 @@
 package com.example.chirag.moviedb.data;
 
-import com.example.chirag.moviedb.model.GenreResponse;
+import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultTrailerItem;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -19,9 +22,16 @@ public interface OnTaskCompletion {
 
     interface OnGetGenresCompletion {
 
-        void onGenreListSuccess(GenreResponse data);
+        void onGenreListSuccess(GenreItem data);
 
         void onGenreListFailure(String errorMessage);
+    }
+
+    interface OnGetTrailerCompletion {
+
+        void onTrailerItemSuccess(List<ResultTrailerItem> data);
+
+        void onTrailerItemFailure(String errorMessage);
     }
 
 }

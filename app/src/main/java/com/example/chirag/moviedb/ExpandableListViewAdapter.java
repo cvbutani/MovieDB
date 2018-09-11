@@ -9,7 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.chirag.moviedb.model.GenreResponse;
+import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.squareup.picasso.Picasso;
 
@@ -21,12 +21,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
     private HeaderItem mListDataHeader;
-    private GenreResponse mGenreResponse;
+    private GenreItem mGenreItem;
 
-    ExpandableListViewAdapter(Context mContext, HeaderItem mListDataHeader, GenreResponse response) {
+    ExpandableListViewAdapter(Context mContext, HeaderItem mListDataHeader, GenreItem response) {
         this.mContext = mContext;
         this.mListDataHeader = mListDataHeader;
-        this.mGenreResponse = response;
+        this.mGenreItem = response;
     }
 
     @Override
@@ -120,18 +120,18 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private String genreId(int i) {
         StringBuilder genre = new StringBuilder();
-        int size = mGenreResponse.getGenres().size();
+        int size = mGenreItem.getResultGenreItems().size();
 
         for (int j = 0; j < size; j++) {
-            if (mGenreResponse.getGenres().get(j).getId().equals(mListDataHeader.getResults().get(i).getGenreId().get(0))) {
-                genre.append(mGenreResponse.getGenres().get(j).getName());
+            if (mGenreItem.getResultGenreItems().get(j).getId().equals(mListDataHeader.getResults().get(i).getGenreId().get(0))) {
+                genre.append(mGenreItem.getResultGenreItems().get(j).getName());
             }
         }
         for (int j1 = 0; j1 < size; j1++) {
             for (int k = 1; k < mListDataHeader.getResults().get(i).getGenreId().size(); k++) {
-                if (mListDataHeader.getResults().get(i).getGenreId().get(k).equals(mGenreResponse.getGenres().get(j1).getId())) {
+                if (mListDataHeader.getResults().get(i).getGenreId().get(k).equals(mGenreItem.getResultGenreItems().get(j1).getId())) {
                     genre.append(", ");
-                    genre.append(mGenreResponse.getGenres().get(j1).getName());
+                    genre.append(mGenreItem.getResultGenreItems().get(j1).getName());
                 }
             }
         }

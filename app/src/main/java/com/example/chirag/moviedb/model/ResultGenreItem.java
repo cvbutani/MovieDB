@@ -9,7 +9,7 @@ import java.io.Serializable;
  * MovieDB
  * Created by Chirag on 09/09/18.
  */
-public class Genre implements Serializable {
+public class ResultGenreItem implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -21,14 +21,14 @@ public class Genre implements Serializable {
     /**
      * No args constructor for use in serialization
      */
-    public Genre() {
+    public ResultGenreItem() {
     }
 
     /**
      * @param id
      * @param name
      */
-    public Genre(Integer id, String name) {
+    public ResultGenreItem(Integer id, String name) {
         super();
         this.id = id;
         this.name = name;

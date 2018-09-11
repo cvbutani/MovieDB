@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.data;
 
-import com.example.chirag.moviedb.model.GenreResponse;
+import com.example.chirag.moviedb.model.GenreItem;
+import com.example.chirag.moviedb.model.TrailerItem;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
@@ -52,13 +53,13 @@ public class RemoteService {
 
     void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
         mServiceApi.getGenreList(TMDB_API_KEY, LANGUAGE)
-                .enqueue(new Callback<GenreResponse>() {
+                .enqueue(new Callback<GenreItem>() {
                     @Override
-                    public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
+                    public void onResponse(Call<GenreItem> call, Response<GenreItem> response) {
                         if (response.isSuccessful()) {
-                            GenreResponse genreResponse = response.body();
-                            if (genreResponse != null && genreResponse.getGenres() != null) {
-                                callback.onGenreListSuccess(genreResponse);
+                            GenreItem genreItem = response.body();
+                            if (genreItem != null && genreItem.getResultGenreItems() != null) {
+                                callback.onGenreListSuccess(genreItem);
                             } else {
                                 callback.onGenreListFailure("SOMETHING WENT WRONG WHILE GETTING GENRE");
                             }
@@ -68,10 +69,35 @@ public class RemoteService {
                     }
 
                     @Override
-                    public void onFailure(Call<GenreResponse> call, Throwable t) {
+                    public void onFailure(Call<GenreItem> call, Throwable t) {
                         callback.onGenreListFailure(t.getMessage());
 
                     }
                 });
+    }
+
+    void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
+        mServiceApi.getTrailerList(movieId, TMDB_API_KEY, LANGUAGE)
+                .enqueue(new Callback<TrailerItem>() {
+                    @Override
+                    public void onResponse(Call<TrailerItem> call, Response<TrailerItem> response) {
+                        if (response.isSuccessful()) {
+                            TrailerItem trailerItem = response.body();
+                            if (trailerItem != null && trailerItem.getResults() != null) {
+                                callback.onTrailerItemSuccess(trailerItem.getResults());
+                            } else {
+                                callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                            }
+                        } else {
+                            callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<TrailerItem> call, Throwable t) {
+                        callback.onTrailerItemFailure(t.getMessage());
+                    }
+                });
+
     }
 }
