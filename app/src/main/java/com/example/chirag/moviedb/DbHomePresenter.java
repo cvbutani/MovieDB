@@ -54,8 +54,8 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     }
 
     @Override
-    public void getTrailerList(HeaderItem data) {
-        mRemoteRepository.getTrailerList(data.getResults().get(0).getId(), new OnTaskCompletion.OnGetTrailerCompletion() {
+    public void getTrailerList(int movieId) {
+        mRemoteRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
             @Override
             public void onTrailerItemSuccess(List<ResultTrailerItem> data) {
                 mCallback.onTrailerListSuccess(data);

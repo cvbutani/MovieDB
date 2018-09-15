@@ -33,7 +33,7 @@ public interface DbHomeContract {
 
         void getGenreList();
 
-        void getTrailerList(HeaderItem data);
+        void getTrailerList(int movieId);
 
         void attachView(DbHomeContract.View view);
     }

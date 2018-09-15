@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class GenreItem implements Serializable {
 
-    @SerializedName("resultGenreItems")
+    @SerializedName("genres")
     @Expose
     private List<ResultGenreItem> resultGenreItems = null;
 

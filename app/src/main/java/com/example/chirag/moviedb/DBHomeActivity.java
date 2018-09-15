@@ -3,22 +3,27 @@ package com.example.chirag.moviedb;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.model.ResultTrailerItem;
+
+import java.util.List;
+
+//import com.example.chirag.moviedb.model.ResultTrailerItem;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DbHomeContract.View {
@@ -75,6 +80,7 @@ public class DBHomeActivity extends AppCompatActivity
 
                 Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
                 ResultHeaderItem item = mViewheader.getResults().get(i);
+                mPresenter.getTrailerList(item.getId());
                 intent.putExtra("EXTRA", item);
                 intent.putExtra("EXTRA_GENRE", mGenreList);
                 startActivity(intent);
@@ -173,6 +179,16 @@ public class DBHomeActivity extends AppCompatActivity
 
     @Override
     public void onGenreListFailure(String errorMessage) {
+
+    }
+
+    @Override
+    public void onTrailerListSuccess(List<ResultTrailerItem> data) {
+        Log.i("TRAILER SUCCESS: ", data.get(0).getKey());
+    }
+
+    @Override
+    public void onTrailerListFailure(String errorMessage) {
 
     }
 
