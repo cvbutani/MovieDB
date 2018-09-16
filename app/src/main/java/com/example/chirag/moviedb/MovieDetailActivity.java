@@ -23,8 +23,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     ImageView mImageViewPoster;
 
-    ImageView mImageViewTrailer;
-
     TextView mTextViewReleaseDate;
 
     TextView mTextViewLanguage;
