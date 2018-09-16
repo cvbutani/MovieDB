@@ -19,9 +19,7 @@ import android.widget.ExpandableListView;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
-import com.example.chirag.moviedb.model.ResultTrailerItem;
-
-import java.util.List;
+import com.example.chirag.moviedb.model.TrailerItem;
 
 //import com.example.chirag.moviedb.model.ResultTrailerItem;
 
@@ -32,8 +30,12 @@ public class DBHomeActivity extends AppCompatActivity
     private ExpandableListViewAdapter mExpandableListViewAdapter;
     private HeaderItem mViewheader;
     private GenreItem mGenreList;
+    private TrailerItem mTrailerItem;
+
     private int lastExpandedPosition = -1;
     DbHomePresenter mPresenter;
+    MovieDetailContract mMovieDetailCallback;
+    int mMovieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,27 +69,24 @@ public class DBHomeActivity extends AppCompatActivity
 
         mExpandableListView = findViewById(R.id.expandable_listview);
 
-        mExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                return false;
-            }
-        });
         mExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-
-
-                Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
-                ResultHeaderItem item = mViewheader.getResults().get(i);
-                mPresenter.getTrailerList(item.getId());
-                intent.putExtra("EXTRA", item);
-                intent.putExtra("EXTRA_GENRE", mGenreList);
-                startActivity(intent);
+                mMovieId = i;
+                startNewActivity(i);
                 return true;
             }
         });
 
+    }
+
+    private void startNewActivity(int movieId) {
+        ResultHeaderItem item = mViewheader.getResults().get(movieId);
+//        mPresenter.getTrailerList(mViewheader.getResults().get(mMovieId).getId());
+        Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
+        intent.putExtra("EXTRA", item);
+        intent.putExtra("EXTRA_GENRE", mGenreList);
+        startActivity(intent);
     }
 
     @Override
@@ -150,10 +149,8 @@ public class DBHomeActivity extends AppCompatActivity
     @Override
     public void onHeaderResultSuccess(HeaderItem data) {
         mViewheader = data;
-        Log.i("RESULT ", data.getResults().get(0).getTitle());
         mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mGenreList);
         mExpandableListView.setAdapter(mExpandableListViewAdapter);
-
         mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
@@ -179,16 +176,6 @@ public class DBHomeActivity extends AppCompatActivity
 
     @Override
     public void onGenreListFailure(String errorMessage) {
-
-    }
-
-    @Override
-    public void onTrailerListSuccess(List<ResultTrailerItem> data) {
-        Log.i("TRAILER SUCCESS: ", data.get(0).getKey());
-    }
-
-    @Override
-    public void onTrailerListFailure(String errorMessage) {
 
     }
 

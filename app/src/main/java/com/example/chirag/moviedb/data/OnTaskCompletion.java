@@ -2,9 +2,7 @@ package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultTrailerItem;
-
-import java.util.List;
+import com.example.chirag.moviedb.model.TrailerItem;
 
 /**
  * MovieDB
@@ -29,7 +27,7 @@ public interface OnTaskCompletion {
 
     interface OnGetTrailerCompletion {
 
-        void onTrailerItemSuccess(List<ResultTrailerItem> data);
+        void onTrailerItemSuccess(TrailerItem data);
 
         void onTrailerItemFailure(String errorMessage);
     }

@@ -4,9 +4,6 @@ import com.example.chirag.moviedb.data.OnTaskCompletion;
 import com.example.chirag.moviedb.data.RemoteRepository;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultTrailerItem;
-
-import java.util.List;
 
 /**
  * MovieDB
@@ -49,22 +46,6 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
             @Override
             public void onGenreListFailure(String errorMessage) {
                 mCallback.onGenreListFailure(errorMessage);
-            }
-        });
-    }
-
-    @Override
-    public void getTrailerList(int movieId) {
-        mRemoteRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
-            @Override
-            public void onTrailerItemSuccess(List<ResultTrailerItem> data) {
-                mCallback.onTrailerListSuccess(data);
-
-            }
-
-            @Override
-            public void onTrailerItemFailure(String errorMessage) {
-                mCallback.onTrailerListFailure(errorMessage);
             }
         });
     }

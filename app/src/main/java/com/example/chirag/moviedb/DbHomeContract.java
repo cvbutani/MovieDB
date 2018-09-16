@@ -3,9 +3,6 @@ package com.example.chirag.moviedb;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultTrailerItem;
-
-import java.util.List;
 
 /**
  * MovieDB
@@ -22,18 +19,12 @@ public interface DbHomeContract {
 
         void onGenreListFailure(String errorMessage);
 
-        void onTrailerListSuccess(List<ResultTrailerItem> data);
-
-        void onTrailerListFailure(String errorMessage);
-
     }
 
     interface Presenter {
         void getPopularMovies();
 
         void getGenreList();
-
-        void getTrailerList(int movieId);
 
         void attachView(DbHomeContract.View view);
     }

@@ -1,17 +1,18 @@
 package com.example.chirag.moviedb;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.model.TrailerItem;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
 
     ImageView mImageViewAppBar;
 
@@ -31,6 +32,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     GenreItem mGenreItem;
 
+    MovieDetailPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             mHeaderItem = (ResultHeaderItem) i.getSerializableExtra("EXTRA");
             mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
+
+        mPresenter = new MovieDetailPresenter();
+        mPresenter.attachView(this, mHeaderItem.getId());
 
         String movieReleaseDate = mHeaderItem.getReleaseDate();
         String movieLanguage = mHeaderItem.getOriginalLanguage();
@@ -63,6 +69,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mTextViewGenre.setText(genreId());
         mTextViewRating.setText(String.valueOf(movieRating));
         mTextViewOverview.setText(movieOverview);
+
     }
 
     private void viewHolder() {
@@ -94,5 +101,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         return genre.toString();
+    }
+
+    @Override
+    public void onTrailerListSuccess(TrailerItem data) {
+        Log.i("RESULT ", data.getResults().get(0).getKey());
+    }
+
+    @Override
+    public void onTrailerListFailure(String errorMessage) {
+
     }
 }

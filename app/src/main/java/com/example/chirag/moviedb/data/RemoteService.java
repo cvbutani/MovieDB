@@ -1,10 +1,10 @@
 package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.TrailerItem;
-import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.TrailerItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
+import com.example.chirag.moviedb.service.GetDataService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,27 +77,26 @@ public class RemoteService {
     }
 
     void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
-        mServiceApi.getTrailerList(movieId, TMDB_API_KEY, LANGUAGE)
-                .enqueue(new Callback<TrailerItem>() {
-                    @Override
-                    public void onResponse(Call<TrailerItem> call, Response<TrailerItem> response) {
-                        if (response.isSuccessful()) {
-                            TrailerItem trailerItem = response.body();
-                            if (trailerItem != null && trailerItem.getResults() != null) {
-                                callback.onTrailerItemSuccess(trailerItem.getResults());
-                            } else {
-                                callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
-                            }
-                        } else {
-                            callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
-                        }
+        mServiceApi.getTrailerList(movieId, TMDB_API_KEY).enqueue(new Callback<TrailerItem>() {
+            @Override
+            public void onResponse(Call<TrailerItem> call, Response<TrailerItem> response) {
+                if (response.isSuccessful()) {
+                    TrailerItem trailerItem = response.body();
+                    if (trailerItem != null && trailerItem.getResults() != null) {
+                        callback.onTrailerItemSuccess(trailerItem);
+                    } else {
+                        callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
                     }
+                } else {
+                    callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<TrailerItem> call, Throwable t) {
-                        callback.onTrailerItemFailure(t.getMessage());
-                    }
-                });
+            @Override
+            public void onFailure(Call<TrailerItem> call, Throwable t) {
+                callback.onTrailerItemFailure(t.getMessage());
+            }
+        });
 
     }
 }
