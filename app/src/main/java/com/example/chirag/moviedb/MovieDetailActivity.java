@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -62,6 +63,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         mPresenter = new MovieDetailPresenter();
         mPresenter.attachView(this, mMovieId);
 
@@ -107,7 +111,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             mTextViewTrailer.setVisibility(View.VISIBLE);
             mLinearLayoutTrailer.removeAllViews();
             for (final ResultTrailerItem item : data.getResults()) {
-                View parent = getLayoutInflater().inflate(R.layout.thumbnail_trailer, mLinearLayoutTrailer, false);
+                View parent = getLayoutInflater().inflate(R.layout.movie_trailer_thumbnail, mLinearLayoutTrailer, false);
                 ImageView thumbnail = parent.findViewById(R.id.trailer_imageview);
                 thumbnail.requestLayout();
                 thumbnail.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +151,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             if (movieId == data.getResults().get(i).getId()) {
 
                 mHeaderItem = data.getResults().get(i);
-
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setTitle(mHeaderItem.getTitle());
                 String movieReleaseDate = mHeaderItem.getReleaseDate();
                 String movieLanguage = mHeaderItem.getOriginalLanguage();
                 double movieRating = mHeaderItem.getVoteAverage();
