@@ -2,6 +2,7 @@ package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 
 /**
@@ -30,6 +31,13 @@ public interface OnTaskCompletion {
         void onTrailerItemSuccess(TrailerItem data);
 
         void onTrailerItemFailure(String errorMessage);
+    }
+
+    interface OnGetReviewCompletion {
+
+        void onReviewResponseSuccess(Reviews data);
+
+        void onReviewResponseFailure(String errorMessage);
     }
 
 }

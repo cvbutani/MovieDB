@@ -15,6 +15,7 @@ import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.ResultTrailerItem;
+import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.squareup.picasso.Picasso;
 
@@ -151,8 +152,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             if (movieId == data.getResults().get(i).getId()) {
 
                 mHeaderItem = data.getResults().get(i);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
-                getSupportActionBar().setTitle(mHeaderItem.getTitle());
+
                 String movieReleaseDate = mHeaderItem.getReleaseDate();
                 String movieLanguage = mHeaderItem.getOriginalLanguage();
                 double movieRating = mHeaderItem.getVoteAverage();
@@ -172,6 +172,16 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 mTextViewRating.setText(String.valueOf(movieRating));
                 mTextViewOverview.setText(movieOverview);
             }
+        }
+    }
+
+    @Override
+    public void onReviewDetail(Reviews data) {
+        if (!data.getResults().isEmpty()) {
+            Log.i(LOG_TAG, "AUTHOR: " + data.getResults().get(0).getAuthor());
+            Log.i(LOG_TAG,"COMMENT: " + data.getResults().get(0).getContent());
+        } else {
+            Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
         }
     }
 

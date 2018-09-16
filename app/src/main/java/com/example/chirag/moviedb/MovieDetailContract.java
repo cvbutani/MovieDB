@@ -3,6 +3,7 @@ package com.example.chirag.moviedb;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 
 /**
@@ -18,6 +19,8 @@ public interface MovieDetailContract {
 
         void onMovieDetail(HeaderItem data, int movieId);
 
+        void onReviewDetail(Reviews data);
+
         void onGenreDetail(GenreItem data, ResultHeaderItem item);
     }
 
@@ -28,6 +31,8 @@ public interface MovieDetailContract {
         void getMovieData(int movieId);
 
         void getGenreItem(ResultHeaderItem item);
+
+        void getReviews(int movieId);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

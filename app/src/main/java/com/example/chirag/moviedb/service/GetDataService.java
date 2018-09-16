@@ -2,6 +2,7 @@ package com.example.chirag.moviedb.service;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 
 import retrofit2.Call;
@@ -31,5 +32,12 @@ public interface GetDataService {
     Call<TrailerItem> getTrailerList(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey
+    );
+
+    @GET("movie/{movie_id}/reviews")
+    Call<Reviews> getReviewList(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey,
+            @Query("language") String language
     );
 }

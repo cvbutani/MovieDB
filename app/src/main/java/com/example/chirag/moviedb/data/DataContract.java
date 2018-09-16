@@ -10,4 +10,6 @@ public interface DataContract {
     void getGenreList(final OnTaskCompletion.OnGetGenresCompletion callback);
 
     void getTrailerList(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
+
+    void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
 }

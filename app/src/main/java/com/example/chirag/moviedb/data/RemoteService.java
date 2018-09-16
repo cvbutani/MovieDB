@@ -2,6 +2,7 @@ package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
@@ -98,5 +99,28 @@ public class RemoteService {
             }
         });
 
+    }
+
+    void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+        mServiceApi.getReviewList(movieId,TMDB_API_KEY,LANGUAGE).enqueue(new Callback<Reviews>() {
+            @Override
+            public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+                if (response.isSuccessful()) {
+                    Reviews reviews = response.body();
+                    if (reviews != null && reviews.getResults() != null) {
+                        callback.onReviewResponseSuccess(reviews);
+                    } else {
+                        callback.onReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                    }
+                } else {
+                    callback.onReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Reviews> call, Throwable t) {
+                callback.onReviewResponseFailure(t.getMessage());
+            }
+        });
     }
 }

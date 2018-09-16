@@ -5,6 +5,7 @@ import com.example.chirag.moviedb.data.RemoteRepository;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 
 /**
@@ -68,9 +69,25 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getReviews(int movieId) {
+        mRemoteRepository.getReviews(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
+            @Override
+            public void onReviewResponseSuccess(Reviews data) {
+                mCallback.onReviewDetail(data);
+            }
+
+            @Override
+            public void onReviewResponseFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int movieId) {
         mCallback = view;
         getTrailerList(movieId);
         getMovieData(movieId);
+        getReviews(movieId);
     }
 }
