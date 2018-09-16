@@ -1,15 +1,19 @@
 package com.example.chirag.moviedb;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.model.ResultTrailerItem;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.squareup.picasso.Picasso;
 
@@ -18,6 +22,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     ImageView mImageViewAppBar;
 
     ImageView mImageViewPoster;
+
+    ImageView mImageViewTrailer;
 
     TextView mTextViewReleaseDate;
 
@@ -29,15 +35,21 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     TextView mTextViewOverview;
 
-    ResultHeaderItem mHeaderItem;
+    TextView mTextViewTrailer;
 
-//    ResultHeaderItem mResultHeaderItem;
+    LinearLayout mLinearLayoutTrailer;
+
+    ResultHeaderItem mHeaderItem;
 
     GenreItem mGenreItem;
 
     int mMovieId;
 
     MovieDetailPresenter mPresenter;
+
+    public static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
+
+    public static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
 
     public static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
@@ -51,18 +63,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             mMovieId = getIntent().getExtras().getInt("EXTRA");
             mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
-        Log.i(LOG_TAG, mMovieId + "  --  ID");
+
         mPresenter = new MovieDetailPresenter();
         mPresenter.attachView(this, mMovieId);
 
         viewHolder();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mPresenter.getGenreItem(mHeaderItem);
     }
 
     private void viewHolder() {
@@ -73,6 +78,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mTextViewRating = findViewById(R.id.listview_item_rating);
         mImageViewPoster = findViewById(R.id.listview_item_image);
         mTextViewOverview = findViewById(R.id.movie_detail_overview);
+        mTextViewTrailer = findViewById(R.id.trailers_label);
+        mLinearLayoutTrailer = findViewById(R.id.movie_trailers);
     }
 
     private String genreId() {
@@ -99,11 +106,35 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void onTrailerListSuccess(TrailerItem data) {
         if (!data.getResults().isEmpty()) {
-            Log.i("RESULT ", data.getResults().get(0).getKey());
+            mTextViewTrailer.setVisibility(View.VISIBLE);
+            mLinearLayoutTrailer.removeAllViews();
+            for (final ResultTrailerItem item : data.getResults()) {
+                View parent = getLayoutInflater().inflate(R.layout.thumbnail_trailer, mLinearLayoutTrailer, false);
+                ImageView thumbnail = parent.findViewById(R.id.trailer_imageview);
+                thumbnail.requestLayout();
+                thumbnail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String url = String.format(YOUTUBE_URL, item.getKey());
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(intent);
+                    }
+                });
 
+                if (!isFinishing()) {
+                    String value = String.format(YOUTUBE_THUMBNAIL_URL, item.getKey());
+                    Picasso.get()
+                            .load(value)
+                            .fit()
+                            .centerCrop()
+                            .into(thumbnail);
 
+                    Log.i(LOG_TAG, String.format(YOUTUBE_THUMBNAIL_URL, item.getKey()));
+                }
+                mLinearLayoutTrailer.addView(parent);
+            }
         } else {
-            Log.i("TRAILER ERROR ", "SOMETHING WENT WRONG");
+            mTextViewTrailer.setVisibility(View.GONE);
         }
     }
 
@@ -116,25 +147,19 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void onMovieDetail(HeaderItem data, int movieId) {
         for (int i = 0; i < data.getResults().size(); i++) {
             if (movieId == data.getResults().get(i).getId()) {
+
                 mHeaderItem = data.getResults().get(i);
 
                 String movieReleaseDate = mHeaderItem.getReleaseDate();
-
-                Log.i(LOG_TAG, movieReleaseDate);
                 String movieLanguage = mHeaderItem.getOriginalLanguage();
-                Log.i(LOG_TAG, movieLanguage);
                 double movieRating = mHeaderItem.getVoteAverage();
-                Log.i(LOG_TAG, movieReleaseDate);
                 String movieOverview = mHeaderItem.getDescription();
-                Log.i(LOG_TAG, movieOverview);
+
                 StringBuilder builder = new StringBuilder();
                 String imageBackDropString = builder.append("http://image.tmdb.org/t/p/w780/").append(mHeaderItem.getBackdropPath()).toString();
 
                 builder = new StringBuilder();
                 String imagePosterString = builder.append("http://image.tmdb.org/t/p/w185/").append(mHeaderItem.getPoster()).toString();
-
-                Log.i(LOG_TAG, imageBackDropString);
-                Log.i(LOG_TAG, imagePosterString);
 
                 Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
                 Picasso.get().load(imagePosterString).into(mImageViewPoster);
