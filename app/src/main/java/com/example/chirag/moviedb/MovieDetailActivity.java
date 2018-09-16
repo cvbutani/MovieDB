@@ -22,36 +22,26 @@ import com.squareup.picasso.Picasso;
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
 
     ImageView mImageViewAppBar;
-
     ImageView mImageViewPoster;
 
     TextView mTextViewReleaseDate;
-
     TextView mTextViewLanguage;
-
     TextView mTextViewGenre;
-
     TextView mTextViewRating;
-
     TextView mTextViewOverview;
-
     TextView mTextViewTrailer;
 
     LinearLayout mLinearLayoutTrailer;
 
     ResultHeaderItem mHeaderItem;
-
     GenreItem mGenreItem;
-
-    int mMovieId;
-
     MovieDetailPresenter mPresenter;
 
-    public static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
+    private int mMovieId;
 
-    public static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
-
-    public static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
+    private static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
+    private static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
+    private static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
