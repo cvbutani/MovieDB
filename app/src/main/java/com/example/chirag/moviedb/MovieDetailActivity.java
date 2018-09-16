@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.model.GenreItem;
+import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.squareup.picasso.Picasso;
@@ -30,9 +31,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     ResultHeaderItem mHeaderItem;
 
+//    ResultHeaderItem mResultHeaderItem;
+
     GenreItem mGenreItem;
 
+    int mMovieId;
+
     MovieDetailPresenter mPresenter;
+
+    public static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,35 +48,21 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         if (getIntent() != null) {
             Intent i = getIntent();
-            mHeaderItem = (ResultHeaderItem) i.getSerializableExtra("EXTRA");
+            mMovieId = getIntent().getExtras().getInt("EXTRA");
             mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
-
+        Log.i(LOG_TAG, mMovieId + "  --  ID");
         mPresenter = new MovieDetailPresenter();
-        mPresenter.attachView(this, mHeaderItem.getId());
+        mPresenter.attachView(this, mMovieId);
 
-        String movieReleaseDate = mHeaderItem.getReleaseDate();
-        String movieLanguage = mHeaderItem.getOriginalLanguage();
-        double movieRating = mHeaderItem.getVoteAverage();
-        String movieOverview = mHeaderItem.getDescription();
-
-        Log.i("OVERVIEW ", movieOverview);
         viewHolder();
+    }
 
-        StringBuilder builder = new StringBuilder();
-        String imageBackDropString = builder.append("http://image.tmdb.org/t/p/w780/").append(mHeaderItem.getBackdropPath()).toString();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        builder = new StringBuilder();
-        String imagePosterString = builder.append("http://image.tmdb.org/t/p/w185/").append(mHeaderItem.getPoster()).toString();
-
-        Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
-        Picasso.get().load(imagePosterString).into(mImageViewPoster);
-        mTextViewReleaseDate.setText(movieReleaseDate);
-        mTextViewLanguage.setText(movieLanguage);
-        mTextViewGenre.setText(genreId());
-        mTextViewRating.setText(String.valueOf(movieRating));
-        mTextViewOverview.setText(movieOverview);
-
+        mPresenter.getGenreItem(mHeaderItem);
     }
 
     private void viewHolder() {
@@ -105,11 +98,73 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onTrailerListSuccess(TrailerItem data) {
-        Log.i("RESULT ", data.getResults().get(0).getKey());
+        if (!data.getResults().isEmpty()) {
+            Log.i("RESULT ", data.getResults().get(0).getKey());
+
+
+        } else {
+            Log.i("TRAILER ERROR ", "SOMETHING WENT WRONG");
+        }
     }
 
     @Override
     public void onTrailerListFailure(String errorMessage) {
 
+    }
+
+    @Override
+    public void onMovieDetail(HeaderItem data, int movieId) {
+        for (int i = 0; i < data.getResults().size(); i++) {
+            if (movieId == data.getResults().get(i).getId()) {
+                mHeaderItem = data.getResults().get(i);
+
+                String movieReleaseDate = mHeaderItem.getReleaseDate();
+
+                Log.i(LOG_TAG, movieReleaseDate);
+                String movieLanguage = mHeaderItem.getOriginalLanguage();
+                Log.i(LOG_TAG, movieLanguage);
+                double movieRating = mHeaderItem.getVoteAverage();
+                Log.i(LOG_TAG, movieReleaseDate);
+                String movieOverview = mHeaderItem.getDescription();
+                Log.i(LOG_TAG, movieOverview);
+                StringBuilder builder = new StringBuilder();
+                String imageBackDropString = builder.append("http://image.tmdb.org/t/p/w780/").append(mHeaderItem.getBackdropPath()).toString();
+
+                builder = new StringBuilder();
+                String imagePosterString = builder.append("http://image.tmdb.org/t/p/w185/").append(mHeaderItem.getPoster()).toString();
+
+                Log.i(LOG_TAG, imageBackDropString);
+                Log.i(LOG_TAG, imagePosterString);
+
+                Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
+                Picasso.get().load(imagePosterString).into(mImageViewPoster);
+                mTextViewReleaseDate.setText(movieReleaseDate);
+                mTextViewLanguage.setText(movieLanguage);
+                mTextViewGenre.setText(genreId());
+                mTextViewRating.setText(String.valueOf(movieRating));
+                mTextViewOverview.setText(movieOverview);
+            }
+        }
+    }
+
+    @Override
+    public void onGenreDetail(GenreItem data, ResultHeaderItem item) {
+//        StringBuilder genre = new StringBuilder();
+//        int size = data.getResultGenreItems().size();
+//
+//        for (int j = 0; j < size; j++) {
+//            if (data.getResultGenreItems().get(j).getId().equals(item.getGenreId().get(0))) {
+//                genre.append(data.getResultGenreItems().get(j).getName());
+//            }
+//        }
+//        for (int j1 = 0; j1 < size; j1++) {
+//            for (int k = 1; k < item.getGenreId().size(); k++) {
+//                if (item.getGenreId().get(k).equals(data.getResultGenreItems().get(j1).getId())) {
+//                    genre.append(", ");
+//                    genre.append(data.getResultGenreItems().get(j1).getName());
+//                }
+//            }
+//        }
+//        Log.i("GENRE ITEM ", genre.toString());
     }
 }

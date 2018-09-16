@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,9 +81,9 @@ public class DBHomeActivity extends AppCompatActivity
 
     private void startNewActivity(int movieId) {
         ResultHeaderItem item = mViewheader.getResults().get(movieId);
-//        mPresenter.getTrailerList(mViewheader.getResults().get(mMovieId).getId());
+        int id = item.getId();
         Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
-        intent.putExtra("EXTRA", item);
+        intent.putExtra("EXTRA", id);
         intent.putExtra("EXTRA_GENRE", mGenreList);
         startActivity(intent);
     }
@@ -165,13 +164,11 @@ public class DBHomeActivity extends AppCompatActivity
 
     @Override
     public void onHeaderResultFailure(String errorMessage) {
-        Log.i("RESULT: ", "SOMETHING WENT WRONG" + errorMessage);
     }
 
     @Override
     public void onGenreListSuccess(GenreItem data) {
         mGenreList = data;
-        Log.i("GENRE LIST ", mGenreList.getResultGenreItems().get(0).getName());
     }
 
     @Override

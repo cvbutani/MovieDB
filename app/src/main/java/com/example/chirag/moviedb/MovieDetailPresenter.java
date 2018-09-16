@@ -2,6 +2,9 @@ package com.example.chirag.moviedb;
 
 import com.example.chirag.moviedb.data.OnTaskCompletion;
 import com.example.chirag.moviedb.data.RemoteRepository;
+import com.example.chirag.moviedb.model.GenreItem;
+import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.TrailerItem;
 
 /**
@@ -35,8 +38,39 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getMovieData(final int movieId) {
+        mRemoteRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
+            @Override
+            public void onHeaderItemSuccess(HeaderItem data) {
+                mCallback.onMovieDetail(data, movieId);
+            }
+
+            @Override
+            public void onHeaderItemFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
+    public void getGenreItem(final ResultHeaderItem item) {
+        mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
+            @Override
+            public void onGenreListSuccess(GenreItem data) {
+                mCallback.onGenreDetail(data, item);
+            }
+
+            @Override
+            public void onGenreListFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int movieId) {
         mCallback = view;
         getTrailerList(movieId);
+        getMovieData(movieId);
     }
 }

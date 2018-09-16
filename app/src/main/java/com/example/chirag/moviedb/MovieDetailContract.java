@@ -1,5 +1,8 @@
 package com.example.chirag.moviedb;
 
+import com.example.chirag.moviedb.model.GenreItem;
+import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.TrailerItem;
 
 /**
@@ -12,11 +15,19 @@ public interface MovieDetailContract {
         void onTrailerListSuccess(TrailerItem data);
 
         void onTrailerListFailure(String errorMessage);
+
+        void onMovieDetail(HeaderItem data, int movieId);
+
+        void onGenreDetail(GenreItem data, ResultHeaderItem item);
     }
 
     interface Presenter {
 
         void getTrailerList(int movieId);
+
+        void getMovieData(int movieId);
+
+        void getGenreItem(ResultHeaderItem item);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }
