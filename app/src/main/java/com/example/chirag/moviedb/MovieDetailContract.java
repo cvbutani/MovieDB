@@ -1,0 +1,40 @@
+package com.example.chirag.moviedb;
+
+import com.example.chirag.moviedb.model.GenreItem;
+import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.model.Reviews;
+import com.example.chirag.moviedb.model.TrailerItem;
+
+/**
+ * MovieDB
+ * Created by Chirag on 15/09/18.
+ */
+public interface MovieDetailContract {
+
+    interface View {
+        void onTrailerListSuccess(TrailerItem data);
+
+        void onTrailerListFailure(String errorMessage);
+
+        void onMovieDetail(HeaderItem data, int movieId);
+
+        void onReviewDetail(Reviews data);
+
+        void onGenreDetail(GenreItem data, ResultHeaderItem item);
+    }
+
+    interface Presenter {
+
+        void getTrailerList(int movieId);
+
+        void getMovieData(int movieId);
+
+        void getGenreItem(ResultHeaderItem item);
+
+        void getReviews(int movieId);
+
+        void attachView(MovieDetailContract.View view, int movieId);
+    }
+
+}

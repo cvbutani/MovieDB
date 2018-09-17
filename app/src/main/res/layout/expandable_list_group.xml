@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/listview_header"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:maxLength="30"
+        tools:text="AWESOME" />
+
+    <TextView
+        android:id="@+id/listview_header_year"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/listview_header"
+        android:layout_toRightOf="@+id/listview_header"
+        android:gravity="center"
+        tools:text="(2018)"
+        android:textSize="16sp" />
+
+</RelativeLayout>
