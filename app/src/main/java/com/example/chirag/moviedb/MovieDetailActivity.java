@@ -15,6 +15,7 @@ import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.ResultTrailerItem;
+import com.example.chirag.moviedb.model.ReviewResponse;
 import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.squareup.picasso.Picasso;
@@ -32,12 +33,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     TextView mTextViewTrailer;
 
     LinearLayout mLinearLayoutTrailer;
+    LinearLayout mLinearLayoutReview;
 
     ResultHeaderItem mHeaderItem;
     GenreItem mGenreItem;
     MovieDetailPresenter mPresenter;
 
     private int mMovieId;
+
+    private boolean isContentClicked = false;
 
     private static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
     private static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
@@ -54,7 +58,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mPresenter = new MovieDetailPresenter();
@@ -73,6 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mTextViewOverview = findViewById(R.id.movie_detail_overview);
         mTextViewTrailer = findViewById(R.id.trailers_label);
         mLinearLayoutTrailer = findViewById(R.id.movie_trailers);
+        mLinearLayoutReview = findViewById(R.id.movie_review_layout);
     }
 
     private String genreId() {
@@ -168,8 +173,30 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void onReviewDetail(Reviews data) {
         if (!data.getResults().isEmpty()) {
-            Log.i(LOG_TAG, "AUTHOR: " + data.getResults().get(0).getAuthor());
-            Log.i(LOG_TAG,"COMMENT: " + data.getResults().get(0).getContent());
+
+            for (ReviewResponse response : data.getResults()) {
+
+                View parent = getLayoutInflater().inflate(R.layout.movie_review_details, mLinearLayoutReview, false);
+
+                TextView tvAuthor = parent.findViewById(R.id.movie_review_author);
+                final TextView tvContent = parent.findViewById(R.id.movie_review_content);
+
+                tvContent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (isContentClicked) {
+                            tvContent.setMaxLines(2);
+                            isContentClicked = false;
+                        } else {
+                            tvContent.setMaxLines(Integer.MAX_VALUE);
+                            isContentClicked = true;
+                        }
+                    }
+                });
+                tvAuthor.setText("-- " + response.getAuthor());
+                tvContent.setText(response.getContent());
+                mLinearLayoutReview.addView(parent);
+            }
         } else {
             Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
         }
