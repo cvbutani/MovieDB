@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="5dp"
+<<<<<<< HEAD
     android:id="@+id/movie_review_card"
+=======
+>>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
     app:cardUseCompatPadding="true">
 
     <LinearLayout
