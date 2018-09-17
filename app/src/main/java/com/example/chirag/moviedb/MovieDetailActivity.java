@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-<<<<<<< HEAD
+
 import android.support.v7.widget.CardView;
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
+
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -43,24 +42,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     GenreItem mGenreItem;
     MovieDetailPresenter mPresenter;
 
-<<<<<<< HEAD
+
     CardView mTrailerCardView;
     CardView mReviewCardView;
 
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
     private int mMovieId;
 
     private boolean isContentClicked = false;
 
     private static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
     private static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
-<<<<<<< HEAD
     private static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
+
     private static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
     @Override
@@ -94,11 +89,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mTextViewTrailer = findViewById(R.id.trailers_label);
         mLinearLayoutTrailer = findViewById(R.id.movie_trailers);
         mLinearLayoutReview = findViewById(R.id.movie_review_layout);
-<<<<<<< HEAD
         mTrailerCardView = findViewById(R.id.movie_trailer_card);
         mReviewCardView = findViewById(R.id.movie_review_card);
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
+
     }
 
     private String genreId() {
@@ -125,10 +118,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void onTrailerListSuccess(TrailerItem data) {
         if (!data.getResults().isEmpty()) {
-<<<<<<< HEAD
             mTrailerCardView.setVisibility(View.VISIBLE);
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
             mTextViewTrailer.setVisibility(View.VISIBLE);
             mLinearLayoutTrailer.removeAllViews();
             for (final ResultTrailerItem item : data.getResults()) {
@@ -151,19 +141,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                             .fit()
                             .centerCrop()
                             .into(thumbnail);
-<<<<<<< HEAD
-=======
-
-                    Log.i(LOG_TAG, String.format(YOUTUBE_THUMBNAIL_URL, item.getKey()));
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
                 }
                 mLinearLayoutTrailer.addView(parent);
             }
         } else {
-<<<<<<< HEAD
             mTrailerCardView.setVisibility(View.GONE);
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
             mTextViewTrailer.setVisibility(View.GONE);
         }
     }
@@ -175,7 +157,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onMovieDetail(HeaderItem data, int movieId) {
-<<<<<<< HEAD
+
         if (!data.getResults().isEmpty()) {
             for (int i = 0; i < data.getResults().size(); i++) {
                 if (movieId == data.getResults().get(i).getId()) {
@@ -206,50 +188,18 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             }
         } else {
             Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
-=======
-        for (int i = 0; i < data.getResults().size(); i++) {
-            if (movieId == data.getResults().get(i).getId()) {
-
-                mHeaderItem = data.getResults().get(i);
-
-                String movieReleaseDate = mHeaderItem.getReleaseDate();
-                String movieLanguage = mHeaderItem.getOriginalLanguage();
-                double movieRating = mHeaderItem.getVoteAverage();
-                String movieOverview = mHeaderItem.getDescription();
-
-                StringBuilder builder = new StringBuilder();
-                String imageBackDropString = builder.append("http://image.tmdb.org/t/p/w780/").append(mHeaderItem.getBackdropPath()).toString();
-
-                builder = new StringBuilder();
-                String imagePosterString = builder.append("http://image.tmdb.org/t/p/w185/").append(mHeaderItem.getPoster()).toString();
-
-                Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
-                Picasso.get().load(imagePosterString).into(mImageViewPoster);
-                mTextViewReleaseDate.setText(movieReleaseDate);
-                mTextViewLanguage.setText(movieLanguage);
-                mTextViewGenre.setText(genreId());
-                mTextViewRating.setText(String.valueOf(movieRating));
-                mTextViewOverview.setText(movieOverview);
-            }
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
         }
     }
+
 
     @Override
     public void onReviewDetail(Reviews data) {
         if (!data.getResults().isEmpty()) {
-<<<<<<< HEAD
             mReviewCardView.setVisibility(View.VISIBLE);
             for (ReviewResponse response : data.getResults()) {
 
                 View parent = getLayoutInflater().inflate(R.layout.movie_review_details, mLinearLayoutReview, false);
-=======
 
-            for (ReviewResponse response : data.getResults()) {
-
-                View parent = getLayoutInflater().inflate(R.layout.movie_review_details, mLinearLayoutReview, false);
-
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
                 TextView tvAuthor = parent.findViewById(R.id.movie_review_author);
                 final TextView tvContent = parent.findViewById(R.id.movie_review_content);
 
@@ -270,10 +220,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 mLinearLayoutReview.addView(parent);
             }
         } else {
-<<<<<<< HEAD
             mReviewCardView.setVisibility(View.GONE);
-=======
->>>>>>> b07822e647d801448d9b07d4d0f4e908881385c2
             Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
         }
     }
