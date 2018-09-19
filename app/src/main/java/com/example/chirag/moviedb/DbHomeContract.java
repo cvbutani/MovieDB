@@ -23,6 +23,10 @@ public interface DbHomeContract {
 
         void onNowPlayingMovieFailure(String errorMessage);
 
+        void onTopRatedMovieSuccess(HeaderItem data);
+
+        void onTopRatedMovieFailure(String errorMessage);
+
     }
 
     interface Presenter {
@@ -30,6 +34,8 @@ public interface DbHomeContract {
         void getNowPlayingMovies();
 
         void getPopularMovies();
+
+        void getTopRatedMovies();
 
         void getGenreList();
 

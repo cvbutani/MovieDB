@@ -283,4 +283,39 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
         }
     }
+
+    @Override
+    public void onTopRatedMovie(HeaderItem data, int movieId) {
+        if (!data.getResults().isEmpty()) {
+            for (int i = 0; i < data.getResults().size(); i++) {
+                if (movieId == data.getResults().get(i).getId()) {
+
+                    mHeaderItem = data.getResults().get(i);
+
+                    String movieReleaseDate = mHeaderItem.getReleaseDate();
+                    String movieLanguage = mHeaderItem.getOriginalLanguage();
+                    double movieRating = mHeaderItem.getVoteAverage();
+                    String movieOverview = mHeaderItem.getDescription();
+
+                    StringBuilder builder = new StringBuilder();
+                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(mHeaderItem.getBackdropPath()).toString();
+
+                    builder = new StringBuilder();
+                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(mHeaderItem.getPoster()).toString();
+
+                    Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
+                    Picasso.get().load(imagePosterString).into(mImageViewPoster);
+                    mTextViewReleaseDate.setText(movieReleaseDate);
+                    mTextViewLanguage.setText(movieLanguage);
+                    mTextViewGenre.setText(genreId());
+                    mTextViewRating.setText(String.valueOf(movieRating));
+                    mTextViewOverview.setText(movieOverview);
+                } else {
+                    Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+                }
+            }
+        } else {
+            Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+        }
+    }
 }

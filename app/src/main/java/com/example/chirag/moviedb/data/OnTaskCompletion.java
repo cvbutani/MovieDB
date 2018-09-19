@@ -46,4 +46,11 @@ public interface OnTaskCompletion {
 
         void onNowPlayingMovieFailure(String errorMessage);
     }
+
+    interface OnGetTopRatedMovieCompletion {
+
+        void onTopRatedMovieSuccess(HeaderItem data);
+
+        void onTopRatedMovieFailure(String errorMessage);
+    }
 }

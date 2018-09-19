@@ -9,6 +9,8 @@ public interface DataContract {
 
     void getNowPlayingMoviesData(final OnTaskCompletion.OnGetNowPlayingCompletion callback);
 
+    void getTopRatedMoviesData(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback);
+
     void getGenreList(final OnTaskCompletion.OnGetGenresCompletion callback);
 
     void getTrailerList(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);

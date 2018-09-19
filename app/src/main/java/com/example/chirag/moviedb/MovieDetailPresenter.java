@@ -69,6 +69,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getTopRatedData(final int movieId) {
+        mRemoteRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
+            @Override
+            public void onTopRatedMovieSuccess(HeaderItem data) {
+                mCallback.onTopRatedMovie(data, movieId);
+            }
+
+            @Override
+            public void onTopRatedMovieFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void getGenreItem(final ResultHeaderItem item) {
         mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
@@ -105,5 +120,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getMovieData(movieId);
         getReviews(movieId);
         getNowPlayingData(movieId);
+        getTopRatedData(movieId);
     }
 }

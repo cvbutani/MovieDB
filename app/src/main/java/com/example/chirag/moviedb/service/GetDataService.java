@@ -28,6 +28,12 @@ public interface GetDataService {
             @Query("language") String language
     );
 
+    @GET("movie/top_rated")
+    Call<HeaderItem> getTopRatedInfo(
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
     @GET("genre/movie/list")
     Call<GenreItem> getGenreList(
             @Query("api_key") String apiKey,

@@ -51,6 +51,21 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     }
 
     @Override
+    public void getTopRatedMovies() {
+        mRemoteRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
+            @Override
+            public void onTopRatedMovieSuccess(HeaderItem data) {
+                mCallback.onTopRatedMovieSuccess(data);
+            }
+
+            @Override
+            public void onTopRatedMovieFailure(String errorMessage) {
+                mCallback.onTopRatedMovieFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
     public void getGenreList() {
         mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
@@ -71,5 +86,6 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
         getPopularMovies();
         getGenreList();
         getNowPlayingMovies();
+        getTopRatedMovies();
     }
 }

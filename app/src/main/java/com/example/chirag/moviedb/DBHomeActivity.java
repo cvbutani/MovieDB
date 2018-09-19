@@ -27,6 +27,7 @@ public class DBHomeActivity extends AppCompatActivity
 
     private LinearLayout mLinearLayoutMovieHome;
     private LinearLayout mLinearLayoutNowPlaying;
+    private LinearLayout mLinearLayoutTopRated;
 
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
@@ -63,7 +64,7 @@ public class DBHomeActivity extends AppCompatActivity
 
         mLinearLayoutMovieHome = findViewById(R.id.movie_popular);
         mLinearLayoutNowPlaying = findViewById(R.id.movie_now_playing);
-
+        mLinearLayoutTopRated = findViewById(R.id.movie_top_rated);
     }
 
     private void startNewActivity(int movieId, String name) {
@@ -193,6 +194,32 @@ public class DBHomeActivity extends AppCompatActivity
 
     @Override
     public void onNowPlayingMovieFailure(String errorMessage) {
+
+    }
+
+    @Override
+    public void onTopRatedMovieSuccess(HeaderItem data) {
+        for (final ResultHeaderItem item : data.getResults()) {
+            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutTopRated, false);
+            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+            StringBuilder builder = new StringBuilder();
+            String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+            Picasso.get().load(imagePosterString).into(poster);
+
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mMovieId = item.getId();
+                    String movieName = item.getTitle();
+                    startNewActivity(mMovieId, movieName);
+                }
+            });
+            mLinearLayoutTopRated.addView(parent);
+        }
+    }
+
+    @Override
+    public void onTopRatedMovieFailure(String errorMessage) {
 
     }
 
