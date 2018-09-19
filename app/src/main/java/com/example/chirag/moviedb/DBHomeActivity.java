@@ -66,9 +66,10 @@ public class DBHomeActivity extends AppCompatActivity
 
     }
 
-    private void startNewActivity(int movieId) {
+    private void startNewActivity(int movieId, String name) {
         Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
         intent.putExtra("EXTRA", movieId);
+        intent.putExtra("EXTRA_NAME", name);
         intent.putExtra("EXTRA_GENRE", mGenreList);
         startActivity(intent);
     }
@@ -143,7 +144,9 @@ public class DBHomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     mMovieId = item.getId();
-                    startNewActivity(mMovieId);
+                    String movieName = item.getTitle();
+                    startNewActivity(mMovieId, movieName);
+
                 }
             });
             mLinearLayoutMovieHome.addView(parent);
@@ -180,7 +183,8 @@ public class DBHomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     mMovieId = item.getId();
-                    startNewActivity(mMovieId);
+                    String movieName = item.getTitle();
+                    startNewActivity(mMovieId, movieName);
                 }
             });
             mLinearLayoutNowPlaying.addView(parent);

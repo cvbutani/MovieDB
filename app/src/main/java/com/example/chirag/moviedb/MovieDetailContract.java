@@ -22,6 +22,8 @@ public interface MovieDetailContract {
         void onReviewDetail(Reviews data);
 
         void onGenreDetail(GenreItem data, ResultHeaderItem item);
+
+        void onNowPlayingMovie(HeaderItem data, int movieId);
     }
 
     interface Presenter {
@@ -29,6 +31,8 @@ public interface MovieDetailContract {
         void getTrailerList(int movieId);
 
         void getMovieData(int movieId);
+
+        void getNowPlayingData(int movieId);
 
         void getGenreItem(ResultHeaderItem item);
 

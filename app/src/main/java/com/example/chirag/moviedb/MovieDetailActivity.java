@@ -47,6 +47,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     CardView mReviewCardView;
 
     private int mMovieId;
+    private String mMovieName;
 
     private boolean isContentClicked = false;
 
@@ -66,12 +67,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         if (getIntent() != null) {
             Intent i = getIntent();
             mMovieId = getIntent().getExtras().getInt("EXTRA");
+            mMovieName = getIntent().getExtras().getString("EXTRA_NAME");
             mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setTitle(mMovieName);
         mPresenter = new MovieDetailPresenter();
         mPresenter.attachView(this, mMovieId);
 
@@ -157,7 +159,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onMovieDetail(HeaderItem data, int movieId) {
-
+        Log.i("MOVIE ID: ", movieId + " - ID");
         if (!data.getResults().isEmpty()) {
             for (int i = 0; i < data.getResults().size(); i++) {
                 if (movieId == data.getResults().get(i).getId()) {
@@ -244,5 +246,41 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 //            }
 //        }
 //        Log.i("GENRE ITEM ", genre.toString());
+    }
+
+    @Override
+    public void onNowPlayingMovie(HeaderItem data, int movieId) {
+        Log.i("MOVIE ID: ", movieId + " - ID");
+        if (!data.getResults().isEmpty()) {
+            for (int i = 0; i < data.getResults().size(); i++) {
+                if (movieId == data.getResults().get(i).getId()) {
+
+                    mHeaderItem = data.getResults().get(i);
+
+                    String movieReleaseDate = mHeaderItem.getReleaseDate();
+                    String movieLanguage = mHeaderItem.getOriginalLanguage();
+                    double movieRating = mHeaderItem.getVoteAverage();
+                    String movieOverview = mHeaderItem.getDescription();
+
+                    StringBuilder builder = new StringBuilder();
+                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(mHeaderItem.getBackdropPath()).toString();
+
+                    builder = new StringBuilder();
+                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(mHeaderItem.getPoster()).toString();
+
+                    Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
+                    Picasso.get().load(imagePosterString).into(mImageViewPoster);
+                    mTextViewReleaseDate.setText(movieReleaseDate);
+                    mTextViewLanguage.setText(movieLanguage);
+                    mTextViewGenre.setText(genreId());
+                    mTextViewRating.setText(String.valueOf(movieRating));
+                    mTextViewOverview.setText(movieOverview);
+                } else {
+                    Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+                }
+            }
+        } else {
+            Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+        }
     }
 }
