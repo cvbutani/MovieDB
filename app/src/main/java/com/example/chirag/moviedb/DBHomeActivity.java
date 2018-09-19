@@ -11,24 +11,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.TrailerItem;
+import com.squareup.picasso.Picasso;
 
 //import com.example.chirag.moviedb.model.ResultTrailerItem;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DbHomeContract.View {
 
-    private ExpandableListView mExpandableListView;
-    private ExpandableListViewAdapter mExpandableListViewAdapter;
+    //    private ExpandableListView mExpandableListView;
+//    private ExpandableListViewAdapter mExpandableListViewAdapter;
     private HeaderItem mViewheader;
     private GenreItem mGenreList;
     private TrailerItem mTrailerItem;
-
+    private LinearLayout mLinearLayoutMovieHome;
+    private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
     private int lastExpandedPosition = -1;
     DbHomePresenter mPresenter;
     MovieDetailContract mMovieDetailCallback;
@@ -64,24 +67,24 @@ public class DBHomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mExpandableListView = findViewById(R.id.expandable_listview);
+//        mExpandableListView = findViewById(R.id.expandable_listview);
+//
+//        mExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//            @Override
+//            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+//                mMovieId = i;
+//                startNewActivity(i);
+//                return true;
+//            }
+//        });
+        mLinearLayoutMovieHome = findViewById(R.id.movie_popular);
 
-        mExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                mMovieId = i;
-                startNewActivity(i);
-                return true;
-            }
-        });
 
     }
 
     private void startNewActivity(int movieId) {
-        ResultHeaderItem item = mViewheader.getResults().get(movieId);
-        int id = item.getId();
         Intent intent = new Intent(DBHomeActivity.this, MovieDetailActivity.class);
-        intent.putExtra("EXTRA", id);
+        intent.putExtra("EXTRA", movieId);
         intent.putExtra("EXTRA_GENRE", mGenreList);
         startActivity(intent);
     }
@@ -146,18 +149,36 @@ public class DBHomeActivity extends AppCompatActivity
     @Override
     public void onHeaderResultSuccess(HeaderItem data) {
         mViewheader = data;
-        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mGenreList);
-        mExpandableListView.setAdapter(mExpandableListViewAdapter);
-        mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mGenreList);
+//        mExpandableListView.setAdapter(mExpandableListViewAdapter);
+//        mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//
+//            @Override
+//            public void onGroupExpand(int i) {
+//                if (lastExpandedPosition != -1 && i != lastExpandedPosition) {
+//                    mExpandableListView.collapseGroup(lastExpandedPosition);
+//                }
+//                lastExpandedPosition = i;
+//            }
+//        });
 
-            @Override
-            public void onGroupExpand(int i) {
-                if (lastExpandedPosition != -1 && i != lastExpandedPosition) {
-                    mExpandableListView.collapseGroup(lastExpandedPosition);
+        for (final ResultHeaderItem item : mViewheader.getResults()) {
+            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutMovieHome, false);
+            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+            StringBuilder builder = new StringBuilder();
+            String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+            Picasso.get().load(imagePosterString).into(poster);
+
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mMovieId = item.getId();
+                    startNewActivity(mMovieId);
                 }
-                lastExpandedPosition = i;
-            }
-        });
+            });
+            mLinearLayoutMovieHome.addView(parent);
+        }
+
     }
 
     @Override
