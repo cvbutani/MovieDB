@@ -19,9 +19,16 @@ public interface DbHomeContract {
 
         void onGenreListFailure(String errorMessage);
 
+        void onNowPlayingMovieSuccess(HeaderItem data);
+
+        void onNowPlayingMovieFailure(String errorMessage);
+
     }
 
     interface Presenter {
+
+        void getNowPlayingMovies();
+
         void getPopularMovies();
 
         void getGenreList();

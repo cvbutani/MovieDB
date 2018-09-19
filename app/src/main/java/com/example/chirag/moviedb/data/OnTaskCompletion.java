@@ -40,4 +40,10 @@ public interface OnTaskCompletion {
         void onReviewResponseFailure(String errorMessage);
     }
 
+    interface OnGetNowPlayingCompletion {
+
+        void onNowPlayingMovieSuccess(HeaderItem data);
+
+        void onNowPlayingMovieFailure(String errorMessage);
+    }
 }

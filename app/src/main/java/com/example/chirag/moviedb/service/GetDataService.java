@@ -22,6 +22,12 @@ public interface GetDataService {
             @Query("language") String language
     );
 
+    @GET("movie/now_playing")
+    Call<HeaderItem> getNowPlayingInfo(
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
     @GET("genre/movie/list")
     Call<GenreItem> getGenreList(
             @Query("api_key") String apiKey,

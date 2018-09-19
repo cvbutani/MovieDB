@@ -7,6 +7,8 @@ package com.example.chirag.moviedb.data;
 public interface DataContract {
     void getPopularMoviesData(final OnTaskCompletion.OnGetMovieCompletion callback);
 
+    void getNowPlayingMoviesData(final OnTaskCompletion.OnGetNowPlayingCompletion callback);
+
     void getGenreList(final OnTaskCompletion.OnGetGenresCompletion callback);
 
     void getTrailerList(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);

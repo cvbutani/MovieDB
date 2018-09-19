@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ public class DBHomeActivity extends AppCompatActivity
     private GenreItem mGenreList;
     private TrailerItem mTrailerItem;
     private LinearLayout mLinearLayoutMovieHome;
+    private LinearLayout mLinearLayoutNowPlaying;
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
     private int lastExpandedPosition = -1;
     DbHomePresenter mPresenter;
@@ -78,7 +80,7 @@ public class DBHomeActivity extends AppCompatActivity
 //            }
 //        });
         mLinearLayoutMovieHome = findViewById(R.id.movie_popular);
-
+        mLinearLayoutNowPlaying = findViewById(R.id.movie_now_playing);
 
     }
 
@@ -192,6 +194,33 @@ public class DBHomeActivity extends AppCompatActivity
 
     @Override
     public void onGenreListFailure(String errorMessage) {
+
+    }
+
+    @Override
+    public void onNowPlayingMovieSuccess(HeaderItem data) {
+
+        Log.i("NOW PLAYING: ", data.getResults().get(0).getTitle());
+        for (final ResultHeaderItem item : data.getResults()) {
+            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutNowPlaying, false);
+            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+            StringBuilder builder = new StringBuilder();
+            String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+            Picasso.get().load(imagePosterString).into(poster);
+
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mMovieId = item.getId();
+                    startNewActivity(mMovieId);
+                }
+            });
+            mLinearLayoutNowPlaying.addView(parent);
+        }
+    }
+
+    @Override
+    public void onNowPlayingMovieFailure(String errorMessage) {
 
     }
 

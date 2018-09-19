@@ -52,6 +52,30 @@ public class RemoteService {
         });
     }
 
+    void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
+        mServiceApi.getNowPlayingInfo(TMDB_API_KEY, LANGUAGE)
+                .enqueue(new Callback<HeaderItem>() {
+                    @Override
+                    public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
+                        if (response.isSuccessful()) {
+                            HeaderItem item = response.body();
+                            if (item != null && item.getResults() != null) {
+                                callback.onNowPlayingMovieSuccess(item);
+                            } else {
+                                callback.onNowPlayingMovieFailure("FAILURE");
+                            }
+                        } else {
+                            callback.onNowPlayingMovieFailure("FAILURE");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<HeaderItem> call, Throwable t) {
+                        callback.onNowPlayingMovieFailure(t.getMessage());
+                    }
+                });
+    }
+
     void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
         mServiceApi.getGenreList(TMDB_API_KEY, LANGUAGE)
                 .enqueue(new Callback<GenreItem>() {
@@ -102,7 +126,7 @@ public class RemoteService {
     }
 
     void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
-        mServiceApi.getReviewList(movieId,TMDB_API_KEY,LANGUAGE).enqueue(new Callback<Reviews>() {
+        mServiceApi.getReviewList(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
                 if (response.isSuccessful()) {
