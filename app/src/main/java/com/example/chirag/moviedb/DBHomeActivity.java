@@ -18,34 +18,26 @@ import android.widget.LinearLayout;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
-import com.example.chirag.moviedb.model.TrailerItem;
 import com.squareup.picasso.Picasso;
-
-//import com.example.chirag.moviedb.model.ResultTrailerItem;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DbHomeContract.View {
 
-    //    private ExpandableListView mExpandableListView;
-//    private ExpandableListViewAdapter mExpandableListViewAdapter;
-    private HeaderItem mViewheader;
     private GenreItem mGenreList;
-    private TrailerItem mTrailerItem;
+
     private LinearLayout mLinearLayoutMovieHome;
     private LinearLayout mLinearLayoutNowPlaying;
+
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
-    private int lastExpandedPosition = -1;
-    DbHomePresenter mPresenter;
-    MovieDetailContract mMovieDetailCallback;
+
     int mMovieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dbhome);
-
-        mPresenter = new DbHomePresenter();
-        mPresenter.attachView(this);
+        DbHomePresenter presenter = new DbHomePresenter();
+        presenter.attachView(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,16 +61,6 @@ public class DBHomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        mExpandableListView = findViewById(R.id.expandable_listview);
-//
-//        mExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//            @Override
-//            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-//                mMovieId = i;
-//                startNewActivity(i);
-//                return true;
-//            }
-//        });
         mLinearLayoutMovieHome = findViewById(R.id.movie_popular);
         mLinearLayoutNowPlaying = findViewById(R.id.movie_now_playing);
 
@@ -150,21 +132,7 @@ public class DBHomeActivity extends AppCompatActivity
 
     @Override
     public void onHeaderResultSuccess(HeaderItem data) {
-        mViewheader = data;
-//        mExpandableListViewAdapter = new ExpandableListViewAdapter(this, mViewheader, mGenreList);
-//        mExpandableListView.setAdapter(mExpandableListViewAdapter);
-//        mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//
-//            @Override
-//            public void onGroupExpand(int i) {
-//                if (lastExpandedPosition != -1 && i != lastExpandedPosition) {
-//                    mExpandableListView.collapseGroup(lastExpandedPosition);
-//                }
-//                lastExpandedPosition = i;
-//            }
-//        });
-
-        for (final ResultHeaderItem item : mViewheader.getResults()) {
+        for (final ResultHeaderItem item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutMovieHome, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
             StringBuilder builder = new StringBuilder();
