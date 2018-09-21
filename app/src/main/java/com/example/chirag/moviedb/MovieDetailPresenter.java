@@ -4,7 +4,6 @@ import com.example.chirag.moviedb.data.OnTaskCompletion;
 import com.example.chirag.moviedb.data.RemoteRepository;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 
@@ -99,11 +98,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void getGenreItem(final ResultHeaderItem item) {
+    public void getGenreItem() {
         mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
             public void onGenreListSuccess(GenreItem data) {
-                mCallback.onGenreDetail(data, item);
+                mCallback.onGenreDetail(data);
             }
 
             @Override
@@ -153,5 +152,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getTopRatedData(movieId);
         getUpcomingData(movieId);
         getSimilarData(movieId);
+        getGenreItem();
     }
 }

@@ -2,7 +2,6 @@ package com.example.chirag.moviedb;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 
@@ -21,7 +20,7 @@ public interface MovieDetailContract {
 
         void onReviewDetail(Reviews data);
 
-        void onGenreDetail(GenreItem data, ResultHeaderItem item);
+        void onGenreDetail(GenreItem data);
 
         void onNowPlayingMovie(HeaderItem data, int movieId);
 
@@ -46,7 +45,7 @@ public interface MovieDetailContract {
 
         void getUpcomingData(int movieId);
 
-        void getGenreItem(ResultHeaderItem item);
+        void getGenreItem();
 
         void getReviews(int movieId);
 

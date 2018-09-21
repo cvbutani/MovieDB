@@ -57,6 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
+    private GenreItem mGenreItems;
 
     private static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
@@ -199,24 +200,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void onGenreDetail(GenreItem data, ResultHeaderItem item) {
-//        StringBuilder genre = new StringBuilder();
-//        int size = data.getResultGenreItems().size();
-//
-//        for (int j = 0; j < size; j++) {
-//            if (data.getResultGenreItems().get(j).getId().equals(item.getGenreId().get(0))) {
-//                genre.append(data.getResultGenreItems().get(j).getName());
-//            }
-//        }
-//        for (int j1 = 0; j1 < size; j1++) {
-//            for (int k = 1; k < item.getGenreId().size(); k++) {
-//                if (item.getGenreId().get(k).equals(data.getResultGenreItems().get(j1).getId())) {
-//                    genre.append(", ");
-//                    genre.append(data.getResultGenreItems().get(j1).getName());
-//                }
-//            }
-//        }
-//        Log.i("GENRE ITEM ", genre.toString());
+    public void onGenreDetail(GenreItem data) {
+        mGenreItems = data;
     }
 
     @Override
@@ -244,14 +229,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
             Picasso.get().load(imagePosterString).into(poster);
 
-//            poster.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    mMovieId = item.getId();
-//                    String movieName = item.getTitle();
-//                    startNewActivity(mMovieId, movieName);
-//                }
-//            });
+            poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mMovieId = item.getId();
+                    String movieName = item.getTitle();
+                    startNewActivity(mMovieId, movieName);
+                }
+            });
             mLinearLayoutSimilarMovies.addView(parent);
         }
     }
@@ -293,5 +278,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         } else {
             Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
         }
+    }
+
+    private void startNewActivity(int movieId, String name) {
+        Intent intent = new Intent(MovieDetailActivity.this, MovieDetailActivity.class);
+        intent.putExtra("EXTRA", movieId);
+        intent.putExtra("EXTRA_NAME", name);
+        intent.putExtra("EXTRA_GENRE", mGenreItems);
+        startActivity(intent);
     }
 }
