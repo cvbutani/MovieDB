@@ -42,6 +42,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     GenreItem mGenreItem;
     MovieDetailPresenter mPresenter;
 
+    LinearLayout mLinearLayoutSimilarMovies;
 
     CardView mTrailerCardView;
     CardView mReviewCardView;
@@ -93,7 +94,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mLinearLayoutReview = findViewById(R.id.movie_review_layout);
         mTrailerCardView = findViewById(R.id.movie_trailer_card);
         mReviewCardView = findViewById(R.id.movie_review_card);
-
+        mLinearLayoutSimilarMovies = findViewById(R.id.movie_similar);
     }
 
     private String genreId() {
@@ -232,6 +233,32 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void onUpcomingMovie(HeaderItem data, int movieId) {
         movieData(data, movieId);
+    }
+
+    @Override
+    public void onSimilarMovieSuccess(HeaderItem data, int movieId) {
+        for (final ResultHeaderItem item : data.getResults()) {
+            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
+            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+            StringBuilder builder = new StringBuilder();
+            String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+            Picasso.get().load(imagePosterString).into(poster);
+
+//            poster.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mMovieId = item.getId();
+//                    String movieName = item.getTitle();
+//                    startNewActivity(mMovieId, movieName);
+//                }
+//            });
+            mLinearLayoutSimilarMovies.addView(parent);
+        }
+    }
+
+    @Override
+    public void onSimilarMovieFailure(String errorMessage) {
+
     }
 
     private void movieData(HeaderItem data, int movieId) {

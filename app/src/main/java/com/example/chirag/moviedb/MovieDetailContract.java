@@ -28,6 +28,10 @@ public interface MovieDetailContract {
         void onTopRatedMovie(HeaderItem data, int movieId);
 
         void onUpcomingMovie(HeaderItem data, int movieId);
+
+        void onSimilarMovieSuccess(HeaderItem data, int movieId);
+
+        void onSimilarMovieFailure(String errorMessage);
     }
 
     interface Presenter {
@@ -45,6 +49,8 @@ public interface MovieDetailContract {
         void getGenreItem(ResultHeaderItem item);
 
         void getReviews(int movieId);
+
+        void getSimilarData(int movieId);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

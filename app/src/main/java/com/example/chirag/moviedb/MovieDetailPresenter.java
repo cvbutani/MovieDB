@@ -129,6 +129,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getSimilarData(final int movieId) {
+        mRemoteRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
+            @Override
+            public void onSimilarMovieSuccess(HeaderItem data) {
+                mCallback.onSimilarMovieSuccess(data, movieId);
+            }
+
+            @Override
+            public void onSimilarMovieFailure(String errorMessage) {
+                mCallback.onSimilarMovieFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int movieId) {
         mCallback = view;
         getTrailerList(movieId);
@@ -137,5 +152,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getNowPlayingData(movieId);
         getTopRatedData(movieId);
         getUpcomingData(movieId);
+        getSimilarData(movieId);
     }
 }

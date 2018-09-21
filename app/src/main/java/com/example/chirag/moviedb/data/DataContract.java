@@ -13,6 +13,8 @@ public interface DataContract {
 
     void getUpcomingMoviesData(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback);
 
+    void getSimilarMoviesData(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
+
     void getGenreList(final OnTaskCompletion.OnGetGenresCompletion callback);
 
     void getTrailerList(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);

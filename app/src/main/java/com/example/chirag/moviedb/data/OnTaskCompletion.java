@@ -60,4 +60,11 @@ public interface OnTaskCompletion {
 
         void onUpcomingMovieFailure(String errorMessage);
     }
+
+    interface OnGetSimilarMovieCompletion {
+
+        void onSimilarMovieSuccess(HeaderItem data);
+
+        void onSimilarMovieFailure(String errorMessage);
+    }
 }

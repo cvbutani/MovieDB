@@ -193,4 +193,27 @@ public class RemoteService {
             }
         });
     }
+
+    void getSimilarMovies(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+        mServiceApi.getSimilarMovieList(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
+            @Override
+            public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
+                if (response.isSuccessful()) {
+                    HeaderItem item = response.body();
+                    if (item != null && item.getResults() != null) {
+                        callback.onSimilarMovieSuccess(item);
+                    } else {
+                        callback.onSimilarMovieFailure("FAILURE");
+                    }
+                } else {
+                    callback.onSimilarMovieFailure("FAILURE");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HeaderItem> call, Throwable t) {
+                callback.onSimilarMovieFailure(t.getMessage());
+            }
+        });
+    }
 }
