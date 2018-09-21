@@ -99,6 +99,29 @@ public class RemoteService {
         });
     }
 
+    void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
+        mServiceApi.getUpcomingInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
+            @Override
+            public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
+                if (response.isSuccessful()) {
+                    HeaderItem item = response.body();
+                    if (item != null && item.getResults() != null) {
+                        callback.onUpcomingMovieSuccess(item);
+                    } else {
+                        callback.onUpcomingMovieFailure("FAILURE");
+                    }
+                } else {
+                    callback.onUpcomingMovieFailure("FAILURE");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HeaderItem> call, Throwable t) {
+                callback.onUpcomingMovieFailure(t.getMessage());
+            }
+        });
+    }
+
     void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
         mServiceApi.getGenreList(TMDB_API_KEY, LANGUAGE)
                 .enqueue(new Callback<GenreItem>() {

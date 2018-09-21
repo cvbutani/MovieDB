@@ -84,6 +84,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getUpcomingData(final int movieId) {
+        mRemoteRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
+            @Override
+            public void onUpcomingMovieSuccess(HeaderItem data) {
+                mCallback.onUpcomingMovie(data, movieId);
+            }
+
+            @Override
+            public void onUpcomingMovieFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void getGenreItem(final ResultHeaderItem item) {
         mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
@@ -121,5 +136,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getReviews(movieId);
         getNowPlayingData(movieId);
         getTopRatedData(movieId);
+        getUpcomingData(movieId);
     }
 }

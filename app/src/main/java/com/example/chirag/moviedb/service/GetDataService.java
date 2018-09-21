@@ -34,6 +34,12 @@ public interface GetDataService {
             @Query("language") String language
     );
 
+    @GET("movie/upcoming")
+    Call<HeaderItem> getUpcomingInfo(
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
     @GET("genre/movie/list")
     Call<GenreItem> getGenreList(
             @Query("api_key") String apiKey,

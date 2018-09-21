@@ -36,6 +36,11 @@ public class RemoteRepository implements DataContract {
     }
 
     @Override
+    public void getUpcomingMoviesData(OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
+        mRemoteService.getUpcomingMovies(callback);
+    }
+
+    @Override
     public void getGenreList(OnTaskCompletion.OnGetGenresCompletion callback) {
         mRemoteService.getGenres(callback);
     }

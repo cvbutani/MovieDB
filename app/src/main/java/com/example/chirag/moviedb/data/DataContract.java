@@ -11,6 +11,8 @@ public interface DataContract {
 
     void getTopRatedMoviesData(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback);
 
+    void getUpcomingMoviesData(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback);
+
     void getGenreList(final OnTaskCompletion.OnGetGenresCompletion callback);
 
     void getTrailerList(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
