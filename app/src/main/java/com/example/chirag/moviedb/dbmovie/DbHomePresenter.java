@@ -15,7 +15,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     private RemoteRepository mRemoteRepository;
 
-    DbHomePresenter() {
+    public DbHomePresenter() {
         mRemoteRepository = RemoteRepository.getInstance();
     }
 

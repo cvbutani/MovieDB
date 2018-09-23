@@ -14,7 +14,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
 
     private RemoteRepository mRemoteRepo;
 
-    DBTvPresenter() {
+    public DBTvPresenter() {
         this.mRemoteRepo = RemoteRepository.getInstance();
     }
 
