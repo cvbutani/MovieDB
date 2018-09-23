@@ -116,7 +116,8 @@ public class DBHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_movie) {
-
+            Intent intent = new Intent(this, DBHomeActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_tv) {
 
         } else if (id == R.id.nav_fav) {

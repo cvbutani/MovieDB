@@ -282,6 +282,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private void startNewActivity(int movieId, String name) {
         Intent intent = new Intent(MovieDetailActivity.this, MovieDetailActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXTRA", movieId);
         intent.putExtra("EXTRA_NAME", name);
         intent.putExtra("EXTRA_GENRE", mGenreItems);
