@@ -18,9 +18,6 @@ public class ResultHeaderItem implements Serializable {
     @SerializedName("vote_average")
     @Expose
     private Double voteAverage;
-    @SerializedName("title")
-    @Expose
-    private String title;
     @SerializedName("poster_path")
     @Expose
     private String poster;
@@ -39,6 +36,12 @@ public class ResultHeaderItem implements Serializable {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+    @SerializedName("original_name")
+    @Expose
+    private String originalName;
+    @SerializedName("title")
+    @Expose
+    private String title;
 
     /**
      * No args constructor for use in serialization
@@ -46,7 +49,7 @@ public class ResultHeaderItem implements Serializable {
     public ResultHeaderItem() {
     }
 
-    public ResultHeaderItem(Integer id, Double voteAverage, String title, String poster, String originalLanguage, List<Integer> genreIds,String backdropPath, String overview, String releaseDate) {
+    public ResultHeaderItem(Integer id, Double voteAverage, String title, String poster, String originalLanguage, List<Integer> genreIds, String backdropPath, String overview, String releaseDate, String originalName) {
         this.id = id;
         this.voteAverage = voteAverage;
         this.title = title;
@@ -56,6 +59,7 @@ public class ResultHeaderItem implements Serializable {
         this.backdropPath = backdropPath;
         this.description = overview;
         this.releaseDate = releaseDate;
+        this.originalName = originalName;
     }
 
     public Integer getId() {
@@ -130,4 +134,11 @@ public class ResultHeaderItem implements Serializable {
         this.releaseDate = releaseDate;
     }
 
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(String originalName) {
+        this.originalName = originalName;
+    }
 }

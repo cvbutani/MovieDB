@@ -65,4 +65,10 @@ public interface GetDataService {
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
+
+    @GET("tv/popular")
+    Call<HeaderItem> getPopularTvInfo(
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
 }

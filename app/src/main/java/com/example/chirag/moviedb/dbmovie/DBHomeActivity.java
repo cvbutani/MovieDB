@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb;
+package com.example.chirag.moviedb.dbmovie;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.chirag.moviedb.dbtv.DBTvActivity;
+import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
+import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.ResultHeaderItem;
@@ -119,7 +122,8 @@ public class DBHomeActivity extends AppCompatActivity
             Intent intent = new Intent(this, DBHomeActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_tv) {
-
+            Intent intent = new Intent(this, DBTvActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_fav) {
 
         }

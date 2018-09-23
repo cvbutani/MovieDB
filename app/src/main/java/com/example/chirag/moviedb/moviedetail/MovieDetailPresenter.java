@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb;
+package com.example.chirag.moviedb.moviedetail;
 
 import com.example.chirag.moviedb.data.OnTaskCompletion;
 import com.example.chirag.moviedb.data.RemoteRepository;

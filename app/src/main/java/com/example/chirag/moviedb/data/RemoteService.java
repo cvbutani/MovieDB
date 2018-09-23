@@ -216,4 +216,27 @@ public class RemoteService {
             }
         });
     }
+
+    void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
+        mServiceApi.getPopularTvInfo(TMDB_API_KEY,LANGUAGE) .enqueue(new Callback<HeaderItem>() {
+            @Override
+            public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
+                if (response.isSuccessful()) {
+                    HeaderItem item = response.body();
+                    if (item != null && item.getResults() != null) {
+                        callback.onPopularTvSuccess(item);
+                    } else {
+                        callback.onPopularTvFailure("FAILURE");
+                    }
+                } else {
+                    callback.onPopularTvFailure("FAILURE");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HeaderItem> call, Throwable t) {
+                callback.onPopularTvFailure(t.getMessage());
+            }
+        });
+    }
 }

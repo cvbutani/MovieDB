@@ -60,5 +60,10 @@ public class RemoteRepository implements DataContract {
         mRemoteService.getReviews(movieId, callback);
     }
 
+    @Override
+    public void getPopularTvData(OnTaskCompletion.OnGetPopularTvCompletion callback) {
+        mRemoteService.getPopularTv(callback);
+    }
+
 
 }

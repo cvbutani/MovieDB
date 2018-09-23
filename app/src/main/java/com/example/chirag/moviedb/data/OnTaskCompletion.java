@@ -67,4 +67,11 @@ public interface OnTaskCompletion {
 
         void onSimilarMovieFailure(String errorMessage);
     }
+
+    interface OnGetPopularTvCompletion {
+
+        void onPopularTvSuccess(HeaderItem data);
+
+        void onPopularTvFailure(String errorMessage);
+    }
 }

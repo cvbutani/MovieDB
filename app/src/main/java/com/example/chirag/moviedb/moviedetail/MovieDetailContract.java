@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb;
+package com.example.chirag.moviedb.moviedetail;
 
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
