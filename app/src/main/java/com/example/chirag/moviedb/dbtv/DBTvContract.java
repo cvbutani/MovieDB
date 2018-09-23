@@ -19,6 +19,6 @@ public interface DBTvContract {
 
         void getPopularTv();
 
-        void attchView(DBTvContract.View view);
+        void attachView(DBTvContract.View view);
     }
 }

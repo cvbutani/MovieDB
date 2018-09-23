@@ -34,7 +34,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     }
 
     @Override
-    public void attchView(DBTvContract.View view) {
+    public void attachView(DBTvContract.View view) {
         this.mCallback = view;
         getPopularTv();
     }
