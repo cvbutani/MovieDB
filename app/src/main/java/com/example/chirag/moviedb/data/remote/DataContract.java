@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.data;
+package com.example.chirag.moviedb.data.remote;
 
 /**
  * MovieDB

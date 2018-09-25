@@ -1,7 +1,7 @@
 package com.example.chirag.moviedb.dbtv;
 
-import com.example.chirag.moviedb.data.OnTaskCompletion;
-import com.example.chirag.moviedb.data.RemoteRepository;
+import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
+import com.example.chirag.moviedb.data.remote.RemoteRepository;
 import com.example.chirag.moviedb.model.HeaderItem;
 
 /**

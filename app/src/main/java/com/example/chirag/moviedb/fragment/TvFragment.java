@@ -58,7 +58,6 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
 
         return rootView;
-
     }
 
     @Override
@@ -95,7 +94,6 @@ public class TvFragment extends Fragment implements DBTvContract.View {
                     mMovieId = item.getId();
                     String movieName = item.getTitle();
                     startNewActivity(mMovieId, movieName);
-
                 }
             });
             layout.addView(parent);

@@ -173,7 +173,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onMovieDetail(HeaderItem data, int movieId) {
-        Log.i("MOVIE ID: ", movieId + " - ID");
         movieData(data, movieId);
     }
 
