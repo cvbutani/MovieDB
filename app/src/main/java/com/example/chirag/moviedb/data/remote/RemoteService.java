@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data.remote;
 
+import com.example.chirag.moviedb.data.MovieDataSource;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.Reviews;
@@ -15,7 +16,7 @@ import retrofit2.Response;
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-public class RemoteService {
+public class RemoteService implements MovieDataSource {
 
     private static final String TMDB_API_KEY = "51b4547daeeca9a0a1dec36a7013b1ad";
     private static final String LANGUAGE = "en-US";
@@ -25,8 +26,8 @@ public class RemoteService {
     RemoteService() {
         mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
     }
-
-    void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
+    @Override
+    public void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
 
         Call<HeaderItem> call = mServiceApi.getPopularMoviesInfo(TMDB_API_KEY, LANGUAGE);
 
@@ -52,7 +53,8 @@ public class RemoteService {
         });
     }
 
-    void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
+    @Override
+    public void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
         mServiceApi.getNowPlayingInfo(TMDB_API_KEY, LANGUAGE)
                 .enqueue(new Callback<HeaderItem>() {
                     @Override
@@ -76,7 +78,8 @@ public class RemoteService {
                 });
     }
 
-    void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
+    @Override
+    public void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
         mServiceApi.getTopRatedInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
             @Override
             public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
@@ -99,7 +102,8 @@ public class RemoteService {
         });
     }
 
-    void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
+    @Override
+    public void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
         mServiceApi.getUpcomingInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
             @Override
             public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
@@ -147,7 +151,8 @@ public class RemoteService {
                 });
     }
 
-    void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
+    @Override
+    public void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
         mServiceApi.getTrailerList(movieId, TMDB_API_KEY).enqueue(new Callback<TrailerItem>() {
             @Override
             public void onResponse(Call<TrailerItem> call, Response<TrailerItem> response) {
@@ -171,7 +176,8 @@ public class RemoteService {
 
     }
 
-    void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+    @Override
+    public void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
         mServiceApi.getReviewList(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
