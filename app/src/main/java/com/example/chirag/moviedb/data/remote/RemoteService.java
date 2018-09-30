@@ -1,12 +1,17 @@
 package com.example.chirag.moviedb.data.remote;
 
+import android.support.annotation.NonNull;
+
 import com.example.chirag.moviedb.data.MovieDataSource;
+import com.example.chirag.moviedb.data.local.LocalDao;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
+import com.example.chirag.moviedb.util.AppExecutors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,9 +28,29 @@ public class RemoteService implements MovieDataSource {
 
     private GetDataService mServiceApi;
 
-    RemoteService() {
+    private static volatile RemoteService INSTANCE;
+
+    private LocalDao mLocalDao;
+
+    private AppExecutors mAppExecutors;
+
+    public RemoteService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+        mAppExecutors = appExecutors;
+        mLocalDao = localDao;
         mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
     }
+
+    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+        if (INSTANCE == null) {
+            synchronized (RemoteService.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new RemoteService(appExecutors, localDao);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
     @Override
     public void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
 
@@ -38,6 +63,15 @@ public class RemoteService implements MovieDataSource {
                     HeaderItem item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onHeaderItemSuccess(item);
+                        for (final ResultHeaderItem info : item.getResults()) {
+                            Runnable insertRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    mLocalDao.insertMovie(info);
+                                }
+                            };
+                            mAppExecutors.getDiskIO().execute(insertRunnable);
+                        }
                     } else {
                         callback.onHeaderItemFailure("FAILURE");
                     }
@@ -224,7 +258,7 @@ public class RemoteService implements MovieDataSource {
     }
 
     void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
-        mServiceApi.getPopularTvInfo(TMDB_API_KEY,LANGUAGE) .enqueue(new Callback<HeaderItem>() {
+        mServiceApi.getPopularTvInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
             @Override
             public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
                 if (response.isSuccessful()) {

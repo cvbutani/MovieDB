@@ -4,10 +4,10 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
-import android.database.Observable;
 
-import com.example.chirag.moviedb.data.Movie;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -22,7 +22,7 @@ public interface LocalDao {
      * @return all movies.
      */
     @Query("SELECT * FROM movie")
-    Observable<Movie> getMovie();
+    List<ResultHeaderItem> getMovie();
 
     /**
      * Select a movie by id.
@@ -31,43 +31,43 @@ public interface LocalDao {
      * @return movie information with movieId.
      */
     @Query("SELECT * FROM movie WHERE entryid = :movieId ")
-    Movie getMovieById(String movieId);
+    ResultHeaderItem getMovieById(String movieId);
 
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
      *
      * @param movie the movie to be inserted.
      */
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    void insertMovie(Movie movie);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMovie(ResultHeaderItem movie);
 
-    /**
-     * Update a movie
-     *
-     * @param movie movie to be updated
-     * @return the number of movies updated. This should always be 1.
-     */
-    @Update
-    int UpdateMovie(Movie movie);
+//    /**
+//     * Update a movie
+//     *
+//     * @param movie movie to be updated
+//     * @return the number of movies updated. This should always be 1.
+//     */
+//    @Update
+//    int UpdateMovie(ResultHeaderItem movie);
 
-    /**
-     * Get a movie by Id. Update its author and review column.
-     *
-     * @param movieId movie to be updated
-     * @param author author to be updated
-     * @param review review to be updated
-     */
-    @Query("UPDATE movie SET author= :author, review = :review WHERE entryid = :movieId")
-    void insertReviewInMovie(String movieId, String author, String review);
-
-    /**
-     * Get a movie by Id. Update its trailer column.
-     *
-     * @param movieId movie to be updated
-     * @param trailerId trailer to be updated
-     */
-    @Query("UPDATE movie SET trailer= :trailerId WHERE entryid = :movieId")
-    void insertTrailerInMovie(String movieId, String trailerId);
+//    /**
+//     * Get a movie by Id. Update its author and review column.
+//     *
+//     * @param movieId movie to be updated
+//     * @param author author to be updated
+//     * @param review review to be updated
+//     */
+//    @Query("UPDATE movie SET author= :author, review = :review WHERE entryid = :movieId")
+//    void insertReviewInMovie(String movieId, String author, String review);
+//
+//    /**
+//     * Get a movie by Id. Update its trailer column.
+//     *
+//     * @param movieId movie to be updated
+//     * @param trailerId trailer to be updated
+//     */
+//    @Query("UPDATE movie SET trailer= :trailerId WHERE entryid = :movieId")
+//    void insertTrailerInMovie(String movieId, String trailerId);
 
     /**
      * Delete all Movies.

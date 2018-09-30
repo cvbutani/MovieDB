@@ -5,23 +5,23 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.example.chirag.moviedb.data.Movie;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 
 /**
  * MovieDB
  * Created by Chirag on 24/09/18.
  */
-@Database(entities = {Movie.class}, version = 1)
+@Database(entities = {ResultHeaderItem.class}, version = 1, exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;
 
     public abstract LocalDao loacalDao();
 
-    private static final Object sLocak = new Object();
+    private static final Object sLock = new Object();
 
     public static LocalDatabase getInstance(Context context) {
-        synchronized(sLocak) {
+        synchronized(sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         LocalDatabase.class, "Movie.db")

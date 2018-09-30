@@ -1,5 +1,7 @@
 package com.example.chirag.moviedb.dbmovie;
 
+import android.content.Context;
+
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteRepository;
 import com.example.chirag.moviedb.model.GenreItem;
@@ -15,8 +17,8 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     private RemoteRepository mRemoteRepository;
 
-    public DbHomePresenter() {
-        mRemoteRepository = RemoteRepository.getInstance();
+    public DbHomePresenter(Context context) {
+        mRemoteRepository = RemoteRepository.getInstance(context);
     }
 
     @Override

@@ -1,5 +1,13 @@
 package com.example.chirag.moviedb.data.remote;
 
+import android.content.Context;
+
+import com.example.chirag.moviedb.data.local.LocalDatabase;
+import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.util.AppExecutors;
+
+;
+
 /**
  * MovieDB
  * Created by Chirag on 04/09/18.
@@ -7,22 +15,28 @@ package com.example.chirag.moviedb.data.remote;
 public class RemoteRepository implements DataContract {
 
     private static RemoteRepository sRemoteRepository;
+
     private static RemoteService mRemoteService;
+
+    private static LocalService mLocalService;
 
     private RemoteRepository() {
     }
 
-    public static RemoteRepository getInstance() {
+    public static RemoteRepository getInstance(Context context) {
         if (sRemoteRepository == null) {
             sRemoteRepository = new RemoteRepository();
-            mRemoteService = new RemoteService();
+            mRemoteService = RemoteService.getInstance(new AppExecutors(), LocalDatabase.getInstance(context).loacalDao());
+            mLocalService = LocalService.getInstance(new AppExecutors(),LocalDatabase.getInstance(context).loacalDao());
         }
         return sRemoteRepository;
     }
 
     @Override
     public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
-        mRemoteService.getPopularMovies(callback);
+//        mRemoteService.getPopularMovies(callback);
+        mLocalService.getPopularMovies(callback);
+
     }
 
     @Override

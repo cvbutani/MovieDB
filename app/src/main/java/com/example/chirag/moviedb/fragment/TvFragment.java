@@ -44,7 +44,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DBTvPresenter tvPresenter = new DBTvPresenter();
+        DBTvPresenter tvPresenter = new DBTvPresenter(getContext());
         tvPresenter.attachView(this);
     }
 

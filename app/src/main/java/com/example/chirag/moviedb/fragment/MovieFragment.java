@@ -45,7 +45,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DbHomePresenter presenter = new DbHomePresenter();
+        DbHomePresenter presenter = new DbHomePresenter(getContext());
         presenter.attachView(this);
     }
 
