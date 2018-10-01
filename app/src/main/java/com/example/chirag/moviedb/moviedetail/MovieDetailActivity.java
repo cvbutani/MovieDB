@@ -77,7 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(mMovieName);
-        mPresenter = new MovieDetailPresenter();
+        mPresenter = new MovieDetailPresenter(getApplicationContext());
         mPresenter.attachView(this, mMovieId);
 
         viewHolder();
@@ -110,26 +110,26 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mLinearLayoutSimilarMovies = findViewById(R.id.movie_similar);
     }
 
-    private String genreId() {
-        StringBuilder genre = new StringBuilder();
-        int size = mGenreItem.getResultGenreItems().size();
-
-        for (int j = 0; j < size; j++) {
-            if (mGenreItem.getResultGenreItems().get(j).getId().equals(mHeaderItem.getGenreId().get(0))) {
-                genre.append(mGenreItem.getResultGenreItems().get(j).getName());
-            }
-        }
-        for (int j1 = 0; j1 < size; j1++) {
-            for (int k = 1; k < mHeaderItem.getGenreId().size(); k++) {
-                if (mHeaderItem.getGenreId().get(k).equals(mGenreItem.getResultGenreItems().get(j1).getId())) {
-                    genre.append(", ");
-                    genre.append(mGenreItem.getResultGenreItems().get(j1).getName());
-                }
-            }
-        }
-
-        return genre.toString();
-    }
+//    private String genreId() {
+//        StringBuilder genre = new StringBuilder();
+//        int size = mGenreItem.getResultGenreItems().size();
+//
+//        for (int j = 0; j < size; j++) {
+//            if (mGenreItem.getResultGenreItems().get(j).getId().equals(mHeaderItem.getGenreId().get(0))) {
+//                genre.append(mGenreItem.getResultGenreItems().get(j).getName());
+//            }
+//        }
+//        for (int j1 = 0; j1 < size; j1++) {
+//            for (int k = 1; k < mHeaderItem.getGenreId().size(); k++) {
+//                if (mHeaderItem.getGenreId().get(k).equals(mGenreItem.getResultGenreItems().get(j1).getId())) {
+//                    genre.append(", ");
+//                    genre.append(mGenreItem.getResultGenreItems().get(j1).getName());
+//                }
+//            }
+//        }
+//
+//        return genre.toString();
+//    }
 
     @Override
     public void onTrailerListSuccess(TrailerItem data) {
@@ -173,7 +173,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onMovieDetail(HeaderItem data, int movieId) {
-        Log.i("MOVIE ID: ", movieId + " - ID");
         movieData(data, movieId);
     }
 
@@ -280,7 +279,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     Picasso.get().load(imagePosterString).into(mImageViewPoster);
                     mTextViewReleaseDate.setText(movieReleaseDate);
                     mTextViewLanguage.setText(movieLanguage);
-                    mTextViewGenre.setText(genreId());
+//                    mTextViewGenre.setText(genreId());
+                    mTextViewGenre.setText("Action");
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
                 } else {

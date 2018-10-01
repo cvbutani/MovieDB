@@ -1,11 +1,17 @@
-package com.example.chirag.moviedb.data;
+package com.example.chirag.moviedb.data.remote;
 
+import android.support.annotation.NonNull;
+
+import com.example.chirag.moviedb.data.MovieDataSource;
+import com.example.chirag.moviedb.data.local.LocalDao;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.model.ResultHeaderItem;
 import com.example.chirag.moviedb.model.Reviews;
 import com.example.chirag.moviedb.model.TrailerItem;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
+import com.example.chirag.moviedb.util.AppExecutors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,18 +21,38 @@ import retrofit2.Response;
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-public class RemoteService {
+public class RemoteService implements MovieDataSource {
 
     private static final String TMDB_API_KEY = "51b4547daeeca9a0a1dec36a7013b1ad";
     private static final String LANGUAGE = "en-US";
 
     private GetDataService mServiceApi;
 
-    RemoteService() {
+    private static volatile RemoteService INSTANCE;
+
+    private LocalDao mLocalDao;
+
+    private AppExecutors mAppExecutors;
+
+    public RemoteService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+        mAppExecutors = appExecutors;
+        mLocalDao = localDao;
         mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
     }
 
-    void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
+    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+        if (INSTANCE == null) {
+            synchronized (RemoteService.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new RemoteService(appExecutors, localDao);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
 
         Call<HeaderItem> call = mServiceApi.getPopularMoviesInfo(TMDB_API_KEY, LANGUAGE);
 
@@ -37,6 +63,16 @@ public class RemoteService {
                     HeaderItem item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onHeaderItemSuccess(item);
+                        for (final ResultHeaderItem info : item.getResults()) {
+                            info.setType("POPULAR");
+                            Runnable insertRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    mLocalDao.insertMovie(info);
+                                }
+                            };
+                            mAppExecutors.getDiskIO().execute(insertRunnable);
+                        }
                     } else {
                         callback.onHeaderItemFailure("FAILURE");
                     }
@@ -52,7 +88,8 @@ public class RemoteService {
         });
     }
 
-    void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
+    @Override
+    public void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
         mServiceApi.getNowPlayingInfo(TMDB_API_KEY, LANGUAGE)
                 .enqueue(new Callback<HeaderItem>() {
                     @Override
@@ -76,7 +113,8 @@ public class RemoteService {
                 });
     }
 
-    void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
+    @Override
+    public void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
         mServiceApi.getTopRatedInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
             @Override
             public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
@@ -99,7 +137,8 @@ public class RemoteService {
         });
     }
 
-    void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
+    @Override
+    public void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
         mServiceApi.getUpcomingInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
             @Override
             public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
@@ -147,7 +186,8 @@ public class RemoteService {
                 });
     }
 
-    void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
+    @Override
+    public void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
         mServiceApi.getTrailerList(movieId, TMDB_API_KEY).enqueue(new Callback<TrailerItem>() {
             @Override
             public void onResponse(Call<TrailerItem> call, Response<TrailerItem> response) {
@@ -171,7 +211,8 @@ public class RemoteService {
 
     }
 
-    void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+    @Override
+    public void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
         mServiceApi.getReviewList(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
@@ -218,7 +259,7 @@ public class RemoteService {
     }
 
     void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
-        mServiceApi.getPopularTvInfo(TMDB_API_KEY,LANGUAGE) .enqueue(new Callback<HeaderItem>() {
+        mServiceApi.getPopularTvInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<HeaderItem>() {
             @Override
             public void onResponse(Call<HeaderItem> call, Response<HeaderItem> response) {
                 if (response.isSuccessful()) {

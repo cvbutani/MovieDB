@@ -1,7 +1,9 @@
 package com.example.chirag.moviedb.moviedetail;
 
-import com.example.chirag.moviedb.data.OnTaskCompletion;
-import com.example.chirag.moviedb.data.RemoteRepository;
+import android.content.Context;
+
+import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
+import com.example.chirag.moviedb.data.remote.RemoteRepository;
 import com.example.chirag.moviedb.model.GenreItem;
 import com.example.chirag.moviedb.model.HeaderItem;
 import com.example.chirag.moviedb.model.Reviews;
@@ -17,8 +19,8 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     private MovieDetailContract.View mCallback;
 
-    MovieDetailPresenter() {
-        mRemoteRepository = RemoteRepository.getInstance();
+    MovieDetailPresenter(Context context) {
+        mRemoteRepository = RemoteRepository.getInstance(context);
     }
 
     @Override

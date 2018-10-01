@@ -29,4 +29,8 @@ public class HeaderItem {
     public List<ResultHeaderItem> getResults() {
         return results;
     }
+
+    public void setResults(List<ResultHeaderItem> results) {
+        this.results = results;
+    }
 }
