@@ -2,9 +2,13 @@ package com.example.chirag.moviedb.dbtv;
 
 import android.content.Context;
 
+import com.example.chirag.moviedb.data.local.LocalDatabase;
+import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteRepository;
+import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.util.AppExecutors;
 
 /**
  * MovieDB
@@ -14,15 +18,18 @@ public class DBTvPresenter implements DBTvContract.Presenter {
 
     private DBTvContract.View mCallback;
 
-    private RemoteRepository mRemoteRepo;
+    private RemoteRepository mRemoteRepository;
 
     public DBTvPresenter(Context context) {
-        this.mRemoteRepo = RemoteRepository.getInstance(context);
+        LocalService mLocalService = LocalService.getInstance(new AppExecutors(), LocalDatabase.getInstance(context).loacalDao());
+        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(), LocalDatabase.getInstance(context).loacalDao());
+
+        this.mRemoteRepository = RemoteRepository.getInstance(mLocalService, mRemoteService);
     }
 
     @Override
     public void getPopularTv() {
-        mRemoteRepo.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
+        mRemoteRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
             @Override
             public void onPopularTvSuccess(HeaderItem data) {
                 mCallback.onPopularTvSuccess(data);

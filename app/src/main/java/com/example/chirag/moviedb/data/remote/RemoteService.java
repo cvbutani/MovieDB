@@ -63,16 +63,7 @@ public class RemoteService implements MovieDataSource {
                     HeaderItem item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onHeaderItemSuccess(item);
-                        for (final ResultHeaderItem info : item.getResults()) {
-                            info.setType("POPULAR");
-                            Runnable insertRunnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    mLocalDao.insertMovie(info);
-                                }
-                            };
-                            mAppExecutors.getDiskIO().execute(insertRunnable);
-                        }
+                        insertMovie(item, "POPULAR");
                     } else {
                         callback.onHeaderItemFailure("FAILURE");
                     }
@@ -98,16 +89,7 @@ public class RemoteService implements MovieDataSource {
                             HeaderItem item = response.body();
                             if (item != null && item.getResults() != null) {
                                 callback.onNowPlayingMovieSuccess(item);
-                                for (final ResultHeaderItem info : item.getResults()) {
-                                    info.setType("NOWPLAYING");
-                                    Runnable insertRunnable = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mLocalDao.insertMovie(info);
-                                        }
-                                    };
-                                    mAppExecutors.getDiskIO().execute(insertRunnable);
-                                }
+                                insertMovie(item, "NOWPLAYING");
                             } else {
                                 callback.onNowPlayingMovieFailure("FAILURE");
                             }
@@ -132,6 +114,7 @@ public class RemoteService implements MovieDataSource {
                     HeaderItem item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onTopRatedMovieSuccess(item);
+                        insertMovie(item, "TopRated");
                     } else {
                         callback.onTopRatedMovieFailure("FAILURE");
                     }
@@ -156,6 +139,7 @@ public class RemoteService implements MovieDataSource {
                     HeaderItem item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onUpcomingMovieSuccess(item);
+                        insertMovie(item,"Upcoming");
                     } else {
                         callback.onUpcomingMovieFailure("FAILURE");
                     }
@@ -289,5 +273,21 @@ public class RemoteService implements MovieDataSource {
                 callback.onPopularTvFailure(t.getMessage());
             }
         });
+    }
+
+    private void insertMovie(HeaderItem item, String movieType) {
+        if (!mLocalDao.getMovie(movieType).isEmpty()) {
+            mLocalDao.deleteMovies(movieType);
+        }
+        for (final ResultHeaderItem info : item.getResults()) {
+            info.setType(movieType);
+            Runnable insertRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mLocalDao.insertMovie(info);
+                }
+            };
+            mAppExecutors.getDiskIO().execute(insertRunnable);
+        }
     }
 }

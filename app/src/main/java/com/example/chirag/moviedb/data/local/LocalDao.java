@@ -72,7 +72,7 @@ public interface LocalDao {
     /**
      * Delete all Movies.
      */
-    @Query("DELETE FROM movie")
-    void deleteMovies();
+    @Query("DELETE FROM movie WHERE type= :value")
+    void deleteMovies(String value);
 
 }

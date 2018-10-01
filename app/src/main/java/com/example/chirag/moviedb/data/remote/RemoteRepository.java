@@ -23,18 +23,18 @@ public class RemoteRepository implements DataContract {
     private RemoteRepository() {
     }
 
-    public static RemoteRepository getInstance(Context context) {
+    public static RemoteRepository getInstance(LocalService localService, RemoteService remoteService) {
         if (sRemoteRepository == null) {
             sRemoteRepository = new RemoteRepository();
-            mRemoteService = RemoteService.getInstance(new AppExecutors(), LocalDatabase.getInstance(context).loacalDao());
-            mLocalService = LocalService.getInstance(new AppExecutors(),LocalDatabase.getInstance(context).loacalDao());
+            mRemoteService = remoteService;
+            mLocalService = localService;
         }
         return sRemoteRepository;
     }
 
     @Override
     public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
-//        mRemoteService.getPopularMovies(callback);
+        //       mRemoteService.getPopularMovies(callback);
         mLocalService.getPopularMovies(callback);
 
     }
@@ -47,12 +47,14 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getTopRatedMoviesData(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        mRemoteService.getTopRatedMovies(callback);
+//        mRemoteService.getTopRatedMovies(callback);
+        mLocalService.getTopRatedMovies(callback);
     }
 
     @Override
     public void getUpcomingMoviesData(OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-        mRemoteService.getUpcomingMovies(callback);
+//        mRemoteService.getUpcomingMovies(callback);
+        mLocalService.getUpcomingMovies(callback);
     }
 
     @Override

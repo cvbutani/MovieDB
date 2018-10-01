@@ -85,13 +85,49 @@ public class LocalService implements MovieDataSource {
     }
 
     @Override
-    public void getTopRatedMovies(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-
+    public void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ResultHeaderItem> movies = mLocalDao.getMovie("TopRated");
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movies.isEmpty()) {
+                            callback.onTopRatedMovieFailure("LOCAL DATA FAILURE");
+                        } else {
+                            HeaderItem item = new HeaderItem();
+                            item.setResults(movies);
+                            callback.onTopRatedMovieSuccess(item);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getUpcomingMovies(OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-
+    public void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ResultHeaderItem> movies = mLocalDao.getMovie("NOWPLAYING");
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movies.isEmpty()) {
+                            callback.onUpcomingMovieFailure("LOCAL DATA FAILURE");
+                        } else {
+                            HeaderItem item = new HeaderItem();
+                            item.setResults(movies);
+                            callback.onUpcomingMovieSuccess(item);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override

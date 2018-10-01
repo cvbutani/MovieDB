@@ -24,7 +24,7 @@ public abstract class LocalDatabase extends RoomDatabase {
         synchronized(sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                        LocalDatabase.class, "Movie.db")
+                        LocalDatabase.class, "Movie.db").allowMainThreadQueries()
                         .build();
             }
             return INSTANCE;
