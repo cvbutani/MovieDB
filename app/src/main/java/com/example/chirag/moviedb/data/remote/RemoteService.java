@@ -98,6 +98,16 @@ public class RemoteService implements MovieDataSource {
                             HeaderItem item = response.body();
                             if (item != null && item.getResults() != null) {
                                 callback.onNowPlayingMovieSuccess(item);
+                                for (final ResultHeaderItem info : item.getResults()) {
+                                    info.setType("NOWPLAYING");
+                                    Runnable insertRunnable = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mLocalDao.insertMovie(info);
+                                        }
+                                    };
+                                    mAppExecutors.getDiskIO().execute(insertRunnable);
+                                }
                             } else {
                                 callback.onNowPlayingMovieFailure("FAILURE");
                             }

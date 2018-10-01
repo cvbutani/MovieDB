@@ -22,7 +22,7 @@ public interface LocalDao {
      * @return all movies.
      */
     @Query("SELECT * FROM movie WHERE type= :value")
-    List<ResultHeaderItem> getPopularMovie(String value);
+    List<ResultHeaderItem> getMovie(String value);
 
     /**
      * Select a movie by id.

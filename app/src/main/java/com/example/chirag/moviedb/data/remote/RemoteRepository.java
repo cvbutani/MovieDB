@@ -41,7 +41,8 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getNowPlayingMoviesData(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-        mRemoteService.getNowPlayingMovies(callback);
+//        mRemoteService.getNowPlayingMovies(callback);
+        mLocalService.getNowPlayingMovies(callback);
     }
 
     @Override

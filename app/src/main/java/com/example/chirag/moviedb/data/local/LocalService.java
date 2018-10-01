@@ -43,7 +43,7 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultHeaderItem> movies = mLocalDao.getPopularMovie("POPULAR");
+                final List<ResultHeaderItem> movies = mLocalDao.getMovie("POPULAR");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -62,8 +62,26 @@ public class LocalService implements MovieDataSource {
     }
 
     @Override
-    public void getNowPlayingMovies(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-
+    public void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ResultHeaderItem> movies = mLocalDao.getMovie("NOWPLAYING");
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movies.isEmpty()) {
+                            callback.onNowPlayingMovieFailure("LOCAL DATA FAILURE");
+                        } else {
+                            HeaderItem item = new HeaderItem();
+                            item.setResults(movies);
+                            callback.onNowPlayingMovieSuccess(item);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
