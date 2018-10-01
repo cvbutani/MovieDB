@@ -21,8 +21,8 @@ public interface LocalDao {
      *
      * @return all movies.
      */
-    @Query("SELECT * FROM movie")
-    List<ResultHeaderItem> getMovie();
+    @Query("SELECT * FROM movie WHERE type= :value")
+    List<ResultHeaderItem> getPopularMovie(String value);
 
     /**
      * Select a movie by id.

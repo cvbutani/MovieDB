@@ -64,6 +64,7 @@ public class RemoteService implements MovieDataSource {
                     if (item != null && item.getResults() != null) {
                         callback.onHeaderItemSuccess(item);
                         for (final ResultHeaderItem info : item.getResults()) {
+                            info.setType("POPULAR");
                             Runnable insertRunnable = new Runnable() {
                                 @Override
                                 public void run() {

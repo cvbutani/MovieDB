@@ -77,13 +77,20 @@ public class ResultHeaderItem implements Serializable {
     @ColumnInfo(name = "title")
     private String title;
 
+    @Nullable
+    @ColumnInfo(name = "type")
+    private String type;
+
+
+
     /**
      * No args constructor for use in serialization
      */
     public ResultHeaderItem() {
     }
+
     @Ignore
-    public ResultHeaderItem(@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title) {
+    public ResultHeaderItem(@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type) {
         this.id = id;
         this.voteAverage = voteAverage;
         this.poster = poster;
@@ -94,10 +101,11 @@ public class ResultHeaderItem implements Serializable {
         this.releaseDate = releaseDate;
         this.originalName = originalName;
         this.title = title;
+        this.type = type;
     }
 
     @Ignore
-    public ResultHeaderItem(@NonNull Integer mId, @Nullable String mTitle, @Nullable Double mVote, @Nullable String mPoster, @Nullable String mLanguage, @Nullable String mBackdropPoster, @Nullable String mOverview, @Nullable String mReleaseDate) {
+    public ResultHeaderItem(@NonNull Integer mId, @Nullable String mTitle, @Nullable Double mVote, @Nullable String mPoster, @Nullable String mLanguage, @Nullable String mBackdropPoster, @Nullable String mOverview, @Nullable String mReleaseDate,@Nullable String type) {
         this.id = mId;
         this.title = mTitle;
         this.voteAverage = mVote;
@@ -106,6 +114,7 @@ public class ResultHeaderItem implements Serializable {
         this.backdropPath = mBackdropPoster;
         this.description = mOverview;
         this.releaseDate = mReleaseDate;
+        this.type = type;
     }
 
     @NonNull
@@ -195,5 +204,13 @@ public class ResultHeaderItem implements Serializable {
 
     public void setTitle(@Nullable String title) {
         this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

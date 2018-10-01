@@ -43,7 +43,7 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultHeaderItem> movies = mLocalDao.getMovie();
+                final List<ResultHeaderItem> movies = mLocalDao.getPopularMovie("POPULAR");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
