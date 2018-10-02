@@ -1,9 +1,9 @@
 package com.example.chirag.moviedb.moviedetail;
 
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
 
 /**
  * MovieDB
@@ -12,23 +12,23 @@ import com.example.chirag.moviedb.model.TrailerItem;
 public interface MovieDetailContract {
 
     interface View {
-        void onTrailerListSuccess(TrailerItem data);
+        void onTrailerListSuccess(Trailer data);
 
         void onTrailerListFailure(String errorMessage);
 
-        void onMovieDetail(HeaderItem data, int movieId);
+        void onMovieDetail(Movies data, int movieId);
 
         void onReviewDetail(Reviews data);
 
-        void onGenreDetail(GenreItem data);
+        void onGenreDetail(Genre data);
 
-        void onNowPlayingMovie(HeaderItem data, int movieId);
+        void onNowPlayingMovie(Movies data, int movieId);
 
-        void onTopRatedMovie(HeaderItem data, int movieId);
+        void onTopRatedMovie(Movies data, int movieId);
 
-        void onUpcomingMovie(HeaderItem data, int movieId);
+        void onUpcomingMovie(Movies data, int movieId);
 
-        void onSimilarMovieSuccess(HeaderItem data, int movieId);
+        void onSimilarMovieSuccess(Movies data, int movieId);
 
         void onSimilarMovieFailure(String errorMessage);
     }

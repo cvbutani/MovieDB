@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.model;
+package com.example.chirag.moviedb.data.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Chirag on 04/09/18.
  */
 @Entity(tableName = "movie")
-public class ResultHeaderItem implements Serializable {
+public class MovieResponse implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -81,16 +81,19 @@ public class ResultHeaderItem implements Serializable {
     @ColumnInfo(name = "type")
     private String type;
 
+    @Nullable
+    @ColumnInfo(name = "trailer")
+    private String trailer;
 
 
     /**
      * No args constructor for use in serialization
      */
-    public ResultHeaderItem() {
+    public MovieResponse() {
     }
 
     @Ignore
-    public ResultHeaderItem(@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type) {
+    public MovieResponse(@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String trailer) {
         this.id = id;
         this.voteAverage = voteAverage;
         this.poster = poster;
@@ -102,10 +105,11 @@ public class ResultHeaderItem implements Serializable {
         this.originalName = originalName;
         this.title = title;
         this.type = type;
+        this.trailer = trailer;
     }
 
     @Ignore
-    public ResultHeaderItem(@NonNull Integer mId, @Nullable String mTitle, @Nullable Double mVote, @Nullable String mPoster, @Nullable String mLanguage, @Nullable String mBackdropPoster, @Nullable String mOverview, @Nullable String mReleaseDate,@Nullable String type) {
+    public MovieResponse(@NonNull Integer mId, @Nullable String mTitle, @Nullable Double mVote, @Nullable String mPoster, @Nullable String mLanguage, @Nullable String mBackdropPoster, @Nullable String mOverview, @Nullable String mReleaseDate, @Nullable String type) {
         this.id = mId;
         this.title = mTitle;
         this.voteAverage = mVote;
@@ -212,5 +216,14 @@ public class ResultHeaderItem implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Nullable
+    public String getTrailer() {
+        return trailer;
+    }
+
+    public void setTrailer(@Nullable String trailer) {
+        this.trailer = trailer;
     }
 }

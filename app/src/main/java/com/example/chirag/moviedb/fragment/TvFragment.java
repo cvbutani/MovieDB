@@ -14,9 +14,9 @@ import android.widget.LinearLayout;
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.dbtv.DBTvContract;
 import com.example.chirag.moviedb.dbtv.DBTvPresenter;
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +26,7 @@ import com.squareup.picasso.Picasso;
  */
 public class TvFragment extends Fragment implements DBTvContract.View {
 
-    private GenreItem mGenreList;
+    private Genre mGenreList;
 
     private LinearLayout mLinearLayoutMovieHome;
     private LinearLayout mLinearLayoutNowPlaying;
@@ -61,7 +61,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     }
 
     @Override
-    public void onPopularTvSuccess(HeaderItem data) {
+    public void onPopularTvSuccess(Movies data) {
         setLayout(data, mLinearLayoutMovieHome);
     }
 
@@ -79,9 +79,9 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         startActivity(intent);
     }
 
-    private void setLayout(HeaderItem data, LinearLayout layout) {
+    private void setLayout(Movies data, LinearLayout layout) {
         layout.removeAllViews();
-        for (final ResultHeaderItem item : data.getResults()) {
+        for (final MovieResponse item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
             StringBuilder builder = new StringBuilder();

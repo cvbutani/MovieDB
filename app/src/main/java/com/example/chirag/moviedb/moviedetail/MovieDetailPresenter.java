@@ -2,16 +2,15 @@ package com.example.chirag.moviedb.moviedetail;
 
 import android.content.Context;
 
-import com.example.chirag.moviedb.data.local.LocalDao;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteRepository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 /**
@@ -36,7 +35,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
         mRemoteRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
             @Override
-            public void onTrailerItemSuccess(TrailerItem data) {
+            public void onTrailerItemSuccess(Trailer data) {
                 mCallback.onTrailerListSuccess(data);
             }
 
@@ -51,7 +50,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getMovieData(final int movieId) {
         mRemoteRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
-            public void onHeaderItemSuccess(HeaderItem data) {
+            public void onHeaderItemSuccess(Movies data) {
                 mCallback.onMovieDetail(data, movieId);
             }
 
@@ -66,7 +65,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getNowPlayingData(final int movieId) {
         mRemoteRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
             @Override
-            public void onNowPlayingMovieSuccess(HeaderItem data) {
+            public void onNowPlayingMovieSuccess(Movies data) {
                 mCallback.onNowPlayingMovie(data, movieId);
             }
 
@@ -81,7 +80,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getTopRatedData(final int movieId) {
         mRemoteRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
             @Override
-            public void onTopRatedMovieSuccess(HeaderItem data) {
+            public void onTopRatedMovieSuccess(Movies data) {
                 mCallback.onTopRatedMovie(data, movieId);
             }
 
@@ -96,7 +95,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getUpcomingData(final int movieId) {
         mRemoteRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
             @Override
-            public void onUpcomingMovieSuccess(HeaderItem data) {
+            public void onUpcomingMovieSuccess(Movies data) {
                 mCallback.onUpcomingMovie(data, movieId);
             }
 
@@ -111,7 +110,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getGenreItem() {
         mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
-            public void onGenreListSuccess(GenreItem data) {
+            public void onGenreListSuccess(Genre data) {
                 mCallback.onGenreDetail(data);
             }
 
@@ -141,7 +140,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getSimilarData(final int movieId) {
         mRemoteRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
             @Override
-            public void onSimilarMovieSuccess(HeaderItem data) {
+            public void onSimilarMovieSuccess(Movies data) {
                 mCallback.onSimilarMovieSuccess(data, movieId);
             }
 

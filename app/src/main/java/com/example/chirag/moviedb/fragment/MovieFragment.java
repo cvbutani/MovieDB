@@ -12,11 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.chirag.moviedb.R;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.dbmovie.DbHomeContract;
 import com.example.chirag.moviedb.dbmovie.DbHomePresenter;
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +26,7 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieFragment extends Fragment implements DbHomeContract.View {
 
-    private GenreItem mGenreList;
+    private Genre mGenreList;
 
     private LinearLayout mLinearLayoutMovieHome;
     private LinearLayout mLinearLayoutNowPlaying;
@@ -63,7 +63,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void onHeaderResultSuccess(HeaderItem data) {
+    public void onHeaderResultSuccess(Movies data) {
         setLayout(data, mLinearLayoutMovieHome);
     }
 
@@ -73,7 +73,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void onGenreListSuccess(GenreItem data) {
+    public void onGenreListSuccess(Genre data) {
         mGenreList = data;
     }
 
@@ -83,7 +83,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void onNowPlayingMovieSuccess(HeaderItem data) {
+    public void onNowPlayingMovieSuccess(Movies data) {
         setLayout(data, mLinearLayoutNowPlaying);
     }
 
@@ -93,7 +93,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void onTopRatedMovieSuccess(HeaderItem data) {
+    public void onTopRatedMovieSuccess(Movies data) {
         setLayout(data, mLinearLayoutTopRated);
     }
 
@@ -103,7 +103,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void onUpcomingMovieSuccess(HeaderItem data) {
+    public void onUpcomingMovieSuccess(Movies data) {
         setLayout(data, mLinearLayoutUpcoming);
     }
 
@@ -120,9 +120,9 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
         startActivity(intent);
     }
 
-    private void setLayout(HeaderItem data, LinearLayout layout) {
+    private void setLayout(Movies data, LinearLayout layout) {
         layout.removeAllViews();
-        for (final ResultHeaderItem item : data.getResults()) {
+        for (final MovieResponse item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
             StringBuilder builder = new StringBuilder();

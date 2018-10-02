@@ -2,10 +2,9 @@ package com.example.chirag.moviedb.data.local;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public interface LocalDao {
      * @return all movies.
      */
     @Query("SELECT * FROM movie WHERE type= :value")
-    List<ResultHeaderItem> getMovie(String value);
+    List<MovieResponse> getMovie(String value);
 
     /**
      * Select a movie by id.
@@ -31,15 +30,15 @@ public interface LocalDao {
      * @return movie information with movieId.
      */
     @Query("SELECT * FROM movie WHERE entryid = :movieId ")
-    ResultHeaderItem getMovieById(String movieId);
+    MovieResponse getMovieById(int movieId);
 
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
      *
      * @param movie the movie to be inserted.
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMovie(ResultHeaderItem movie);
+    @Insert
+    void insertMovie(MovieResponse movie);
 
 //    /**
 //     * Update a movie
@@ -48,7 +47,7 @@ public interface LocalDao {
 //     * @return the number of movies updated. This should always be 1.
 //     */
 //    @Update
-//    int UpdateMovie(ResultHeaderItem movie);
+//    int UpdateMovie(MovieResponse movie);
 
 //    /**
 //     * Get a movie by Id. Update its author and review column.

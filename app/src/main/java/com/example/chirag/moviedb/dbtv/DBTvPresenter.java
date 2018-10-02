@@ -7,7 +7,7 @@ import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteRepository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 /**
@@ -31,7 +31,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void getPopularTv() {
         mRemoteRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
             @Override
-            public void onPopularTvSuccess(HeaderItem data) {
+            public void onPopularTvSuccess(Movies data) {
                 mCallback.onPopularTvSuccess(data);
             }
 

@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.model;
+package com.example.chirag.moviedb.data.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,28 +9,28 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-public class HeaderItem {
+public class Movies {
 
     @SerializedName("results")
     @Expose
-    private List<ResultHeaderItem> results = null;
+    private List<MovieResponse> results = null;
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public HeaderItem() {
+    public Movies() {
     }
 
-    public HeaderItem(List<ResultHeaderItem> results) {
+    public Movies(List<MovieResponse> results) {
         this.results = results;
     }
 
-    public List<ResultHeaderItem> getResults() {
+    public List<MovieResponse> getResults() {
         return results;
     }
 
-    public void setResults(List<ResultHeaderItem> results) {
+    public void setResults(List<MovieResponse> results) {
         this.results = results;
     }
 }

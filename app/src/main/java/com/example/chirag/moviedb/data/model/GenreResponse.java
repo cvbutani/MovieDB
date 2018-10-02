@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.model;
+package com.example.chirag.moviedb.data.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * MovieDB
  * Created by Chirag on 09/09/18.
  */
-public class ResultGenreItem implements Serializable {
+public class GenreResponse implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -21,14 +21,14 @@ public class ResultGenreItem implements Serializable {
     /**
      * No args constructor for use in serialization
      */
-    public ResultGenreItem() {
+    public GenreResponse() {
     }
 
     /**
      * @param id
      * @param name
      */
-    public ResultGenreItem(Integer id, String name) {
+    public GenreResponse(Integer id, String name) {
         super();
         this.id = id;
         this.name = name;

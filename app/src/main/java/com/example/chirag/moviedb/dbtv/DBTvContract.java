@@ -1,6 +1,6 @@
 package com.example.chirag.moviedb.dbtv;
 
-import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.data.model.Movies;
 
 /**
  * MovieDB
@@ -10,7 +10,7 @@ public interface DBTvContract {
 
     interface View {
 
-        void onPopularTvSuccess(HeaderItem data);
+        void onPopularTvSuccess(Movies data);
 
         void onPopularTvFailure(String errorMessage);
     }

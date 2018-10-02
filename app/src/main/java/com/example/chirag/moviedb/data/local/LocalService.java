@@ -3,9 +3,9 @@ package com.example.chirag.moviedb.data.local;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultHeaderItem;
+import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
@@ -43,14 +43,14 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultHeaderItem> movies = mLocalDao.getMovie("POPULAR");
+                final List<MovieResponse> movies = mLocalDao.getMovie("POPULAR");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.onHeaderItemFailure("LOCAL DATA FAILURE");
                         } else {
-                            HeaderItem item = new HeaderItem();
+                            Movies item = new Movies();
                             item.setResults(movies);
                             callback.onHeaderItemSuccess(item);
                         }
@@ -66,14 +66,14 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultHeaderItem> movies = mLocalDao.getMovie("NOWPLAYING");
+                final List<MovieResponse> movies = mLocalDao.getMovie("NOWPLAYING");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.onNowPlayingMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            HeaderItem item = new HeaderItem();
+                            Movies item = new Movies();
                             item.setResults(movies);
                             callback.onNowPlayingMovieSuccess(item);
                         }
@@ -89,14 +89,14 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultHeaderItem> movies = mLocalDao.getMovie("TopRated");
+                final List<MovieResponse> movies = mLocalDao.getMovie("TopRated");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.onTopRatedMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            HeaderItem item = new HeaderItem();
+                            Movies item = new Movies();
                             item.setResults(movies);
                             callback.onTopRatedMovieSuccess(item);
                         }
@@ -112,14 +112,14 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultHeaderItem> movies = mLocalDao.getMovie("NOWPLAYING");
+                final List<MovieResponse> movies = mLocalDao.getMovie("NOWPLAYING");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.onUpcomingMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            HeaderItem item = new HeaderItem();
+                            Movies item = new Movies();
                             item.setResults(movies);
                             callback.onUpcomingMovieSuccess(item);
                         }

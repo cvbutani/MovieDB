@@ -14,13 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.ResultHeaderItem;
-import com.example.chirag.moviedb.model.ResultTrailerItem;
-import com.example.chirag.moviedb.model.ReviewResponse;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.TrailerResponse;
+import com.example.chirag.moviedb.data.model.ReviewResponse;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
@@ -38,8 +38,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     LinearLayout mLinearLayoutTrailer;
     LinearLayout mLinearLayoutReview;
 
-    ResultHeaderItem mHeaderItem;
-    GenreItem mGenreItem;
+    MovieResponse mHeaderItem;
+    Genre mGenreItem;
     MovieDetailPresenter mPresenter;
 
     LinearLayout mLinearLayoutSimilarMovies;
@@ -57,7 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
-    private GenreItem mGenreItems;
+    private Genre mGenreItems;
 
     private static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
@@ -70,7 +70,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             Intent i = getIntent();
             mMovieId = getIntent().getExtras().getInt("EXTRA");
             mMovieName = getIntent().getExtras().getString("EXTRA_NAME");
-            mGenreItem = (GenreItem) i.getSerializableExtra("EXTRA_GENRE");
+            mGenreItem = (Genre) i.getSerializableExtra("EXTRA_GENRE");
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -112,18 +112,18 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
 //    private String genreId() {
 //        StringBuilder genre = new StringBuilder();
-//        int size = mGenreItem.getResultGenreItems().size();
+//        int size = mGenreItem.getGenreResponses().size();
 //
 //        for (int j = 0; j < size; j++) {
-//            if (mGenreItem.getResultGenreItems().get(j).getId().equals(mHeaderItem.getGenreId().get(0))) {
-//                genre.append(mGenreItem.getResultGenreItems().get(j).getName());
+//            if (mGenreItem.getGenreResponses().get(j).getId().equals(mHeaderItem.getGenreId().get(0))) {
+//                genre.append(mGenreItem.getGenreResponses().get(j).getName());
 //            }
 //        }
 //        for (int j1 = 0; j1 < size; j1++) {
 //            for (int k = 1; k < mHeaderItem.getGenreId().size(); k++) {
-//                if (mHeaderItem.getGenreId().get(k).equals(mGenreItem.getResultGenreItems().get(j1).getId())) {
+//                if (mHeaderItem.getGenreId().get(k).equals(mGenreItem.getGenreResponses().get(j1).getId())) {
 //                    genre.append(", ");
-//                    genre.append(mGenreItem.getResultGenreItems().get(j1).getName());
+//                    genre.append(mGenreItem.getGenreResponses().get(j1).getName());
 //                }
 //            }
 //        }
@@ -132,12 +132,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 //    }
 
     @Override
-    public void onTrailerListSuccess(TrailerItem data) {
+    public void onTrailerListSuccess(Trailer data) {
         if (!data.getResults().isEmpty()) {
             mTrailerCardView.setVisibility(View.VISIBLE);
             mTextViewTrailer.setVisibility(View.VISIBLE);
             mLinearLayoutTrailer.removeAllViews();
-            for (final ResultTrailerItem item : data.getResults()) {
+            for (final TrailerResponse item : data.getResults()) {
                 View parent = getLayoutInflater().inflate(R.layout.movie_trailer_thumbnail, mLinearLayoutTrailer, false);
                 ImageView thumbnail = parent.findViewById(R.id.trailer_imageview);
                 thumbnail.requestLayout();
@@ -172,7 +172,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void onMovieDetail(HeaderItem data, int movieId) {
+    public void onMovieDetail(Movies data, int movieId) {
         movieData(data, movieId);
     }
 
@@ -211,29 +211,29 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void onGenreDetail(GenreItem data) {
+    public void onGenreDetail(Genre data) {
         mGenreItems = data;
     }
 
     @Override
-    public void onNowPlayingMovie(HeaderItem data, int movieId) {
+    public void onNowPlayingMovie(Movies data, int movieId) {
         Log.i("MOVIE ID: ", movieId + " - ID");
         movieData(data, movieId);
     }
 
     @Override
-    public void onTopRatedMovie(HeaderItem data, int movieId) {
+    public void onTopRatedMovie(Movies data, int movieId) {
         movieData(data, movieId);
     }
 
     @Override
-    public void onUpcomingMovie(HeaderItem data, int movieId) {
+    public void onUpcomingMovie(Movies data, int movieId) {
         movieData(data, movieId);
     }
 
     @Override
-    public void onSimilarMovieSuccess(HeaderItem data, int movieId) {
-        for (final ResultHeaderItem item : data.getResults()) {
+    public void onSimilarMovieSuccess(Movies data, int movieId) {
+        for (final MovieResponse item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
             StringBuilder builder = new StringBuilder();
@@ -257,7 +257,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     }
 
-    private void movieData(HeaderItem data, int movieId) {
+    private void movieData(Movies data, int movieId) {
         if (!data.getResults().isEmpty()) {
             for (int i = 0; i < data.getResults().size(); i++) {
                 if (movieId == data.getResults().get(i).getId()) {

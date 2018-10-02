@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.model;
+package com.example.chirag.moviedb.data.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

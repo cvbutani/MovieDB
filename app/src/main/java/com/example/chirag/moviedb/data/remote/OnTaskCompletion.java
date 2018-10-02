@@ -1,9 +1,9 @@
 package com.example.chirag.moviedb.data.remote;
 
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
 
 /**
  * MovieDB
@@ -13,7 +13,7 @@ public interface OnTaskCompletion {
 
     interface OnGetMovieCompletion {
 
-        void onHeaderItemSuccess(HeaderItem data);
+        void onHeaderItemSuccess(Movies data);
 
         void onHeaderItemFailure(String errorMessage);
 
@@ -21,14 +21,14 @@ public interface OnTaskCompletion {
 
     interface OnGetGenresCompletion {
 
-        void onGenreListSuccess(GenreItem data);
+        void onGenreListSuccess(Genre data);
 
         void onGenreListFailure(String errorMessage);
     }
 
     interface OnGetTrailerCompletion {
 
-        void onTrailerItemSuccess(TrailerItem data);
+        void onTrailerItemSuccess(Trailer data);
 
         void onTrailerItemFailure(String errorMessage);
     }
@@ -42,35 +42,35 @@ public interface OnTaskCompletion {
 
     interface OnGetNowPlayingCompletion {
 
-        void onNowPlayingMovieSuccess(HeaderItem data);
+        void onNowPlayingMovieSuccess(Movies data);
 
         void onNowPlayingMovieFailure(String errorMessage);
     }
 
     interface OnGetTopRatedMovieCompletion {
 
-        void onTopRatedMovieSuccess(HeaderItem data);
+        void onTopRatedMovieSuccess(Movies data);
 
         void onTopRatedMovieFailure(String errorMessage);
     }
 
     interface OnGetUpcomingMovieCompletion {
 
-        void onUpcomingMovieSuccess(HeaderItem data);
+        void onUpcomingMovieSuccess(Movies data);
 
         void onUpcomingMovieFailure(String errorMessage);
     }
 
     interface OnGetSimilarMovieCompletion {
 
-        void onSimilarMovieSuccess(HeaderItem data);
+        void onSimilarMovieSuccess(Movies data);
 
         void onSimilarMovieFailure(String errorMessage);
     }
 
     interface OnGetPopularTvCompletion {
 
-        void onPopularTvSuccess(HeaderItem data);
+        void onPopularTvSuccess(Movies data);
 
         void onPopularTvFailure(String errorMessage);
     }
