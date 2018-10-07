@@ -10,8 +10,7 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 16/09/18.
  */
-public class Reviews implements Serializable
-{
+public class Reviews implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -22,13 +21,11 @@ public class Reviews implements Serializable
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public Reviews() {
     }
 
     /**
-     *
      * @param id
      * @param results
      */

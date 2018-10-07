@@ -17,23 +17,10 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 09/09/18.
  */
-@Entity(tableName = "trailer",
-        foreignKeys = {
-                @ForeignKey(entity = MovieResponse.class,
-                        parentColumns = "entryid",
-                        childColumns = "id")},
-        indices = {@Index(value = "id")})
 public class Trailer implements Serializable {
-    @SerializedName("id")
-    @Expose
-    @NonNull
-    @ColumnInfo(name = "id")
-    private Integer id;
 
     @SerializedName("results")
     @Expose
-    @Nullable
-    @ColumnInfo(name = "trailers")
     private List<TrailerResponse> results = null;
 
     /**
@@ -42,17 +29,8 @@ public class Trailer implements Serializable {
     public Trailer() {
     }
 
-    public Trailer(Integer id, List<TrailerResponse> results) {
-        this.id = id;
+    public Trailer(List<TrailerResponse> results) {
         this.results = results;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public List<TrailerResponse> getResults() {

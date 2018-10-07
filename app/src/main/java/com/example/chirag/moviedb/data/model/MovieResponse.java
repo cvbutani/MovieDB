@@ -20,9 +20,13 @@ import java.util.List;
 @Entity(tableName = "movie")
 public class MovieResponse implements Serializable {
 
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "primaryKey")
+    private int primaryKey;
+
     @SerializedName("id")
     @Expose
-    @PrimaryKey
     @NonNull
     @ColumnInfo(name = "entryid")
     private Integer id;
@@ -93,7 +97,8 @@ public class MovieResponse implements Serializable {
     }
 
     @Ignore
-    public MovieResponse(@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String trailer) {
+    public MovieResponse(@NonNull int primaryKey,@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String trailer) {
+        this.primaryKey = primaryKey;
         this.id = id;
         this.voteAverage = voteAverage;
         this.poster = poster;
@@ -119,6 +124,15 @@ public class MovieResponse implements Serializable {
         this.description = mOverview;
         this.releaseDate = mReleaseDate;
         this.type = type;
+    }
+
+    @NonNull
+    public int getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(@NonNull int primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
     @NonNull

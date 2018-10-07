@@ -4,14 +4,18 @@ import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
 import com.example.chirag.moviedb.data.local.LocalDao;
+import com.example.chirag.moviedb.data.local.TrailerDao;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.util.AppExecutors;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,19 +36,22 @@ public class RemoteService implements MovieDataSource {
 
     private LocalDao mLocalDao;
 
+    private TrailerDao mTrailerDao;
+
     private AppExecutors mAppExecutors;
 
-    public RemoteService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+    public RemoteService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao, @NonNull TrailerDao trailerDao) {
         mAppExecutors = appExecutors;
         mLocalDao = localDao;
+        mTrailerDao = trailerDao;
         mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
     }
 
-    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao, @NonNull TrailerDao trailerDao) {
         if (INSTANCE == null) {
             synchronized (RemoteService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new RemoteService(appExecutors, localDao);
+                    INSTANCE = new RemoteService(appExecutors, localDao, trailerDao);
                 }
             }
         }
@@ -186,17 +193,23 @@ public class RemoteService implements MovieDataSource {
             @Override
             public void onResponse(Call<Trailer> call, Response<Trailer> response) {
                 if (response.isSuccessful()) {
-                    Trailer trailerItem = response.body();
+                    final Trailer trailerItem = response.body();
                     if (trailerItem != null && trailerItem.getResults() != null) {
                         callback.onTrailerItemSuccess(trailerItem);
-                        Runnable runnable = new Runnable() {
+                        Runnable trailerRunnable = new Runnable() {
                             @Override
                             public void run() {
-                                MovieResponse item = mLocalDao.getMovieById(movieId);
-
+                                List<TrailerResponse> trailerList = trailerItem.getResults();
+                                List<TrailerResponse> trailerData = mTrailerDao.getTrailers(movieId);
+                                if (trailerData.isEmpty()) {
+                                    for (TrailerResponse list : trailerList) {
+                                        list.setMovieId(movieId);
+                                        mTrailerDao.insertTrailer(list);
+                                    }
+                                }
                             }
                         };
-
+                        mAppExecutors.getDiskIO().execute(trailerRunnable);
                     } else {
                         callback.onTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
                     }

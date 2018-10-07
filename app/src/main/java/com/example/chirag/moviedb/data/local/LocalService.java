@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
 import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -20,18 +22,21 @@ public class LocalService implements MovieDataSource {
 
     private LocalDao mLocalDao;
 
+    private TrailerDao mTrailerDao;
+
     private AppExecutors mAppExecutors;
 
-    private LocalService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+    private LocalService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao,@NonNull TrailerDao trailerDao) {
         mAppExecutors = appExecutors;
         mLocalDao = localDao;
+        mTrailerDao = trailerDao;
     }
 
-    public static LocalService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao) {
+    public static LocalService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao, @NonNull TrailerDao trailerDao) {
         if (INSTANCE == null) {
             synchronized (LocalService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new LocalService(appExecutors, localDao);
+                    INSTANCE = new LocalService(appExecutors, localDao, trailerDao);
                 }
             }
         }
@@ -131,8 +136,26 @@ public class LocalService implements MovieDataSource {
     }
 
     @Override
-    public void getTrailers(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
-
+    public void getTrailers(final int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<TrailerResponse> trailers = mTrailerDao.getTrailers(movieId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (trailers.isEmpty()) {
+                            callback.onTrailerItemFailure("LOCAL DATA FAILURE");
+                        } else {
+                            Trailer trailer = new Trailer();
+                            trailer.setResults(trailers);
+                            callback.onTrailerItemSuccess(trailer);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override

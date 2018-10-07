@@ -34,20 +34,20 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
-        //       mRemoteService.getPopularMovies(callback);
+        mRemoteService.getPopularMovies(callback);
         mLocalService.getPopularMovies(callback);
 
     }
 
     @Override
     public void getNowPlayingMoviesData(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-//        mRemoteService.getNowPlayingMovies(callback);
+        mRemoteService.getNowPlayingMovies(callback);
         mLocalService.getNowPlayingMovies(callback);
     }
 
     @Override
     public void getTopRatedMoviesData(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-//        mRemoteService.getTopRatedMovies(callback);
+        mRemoteService.getTopRatedMovies(callback);
         mLocalService.getTopRatedMovies(callback);
     }
 
@@ -59,6 +59,7 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getSimilarMoviesData(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+
         mRemoteService.getSimilarMovies(movieId, callback);
     }
 
@@ -69,7 +70,8 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getTrailerList(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
-        mRemoteService.getTrailers(movieId, callback);
+        mLocalService.getTrailers(movieId, callback);
+//        mRemoteService.getTrailers(movieId, callback);
     }
 
     @Override
