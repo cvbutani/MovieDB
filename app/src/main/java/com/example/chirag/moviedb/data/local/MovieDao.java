@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Chirag on 24/09/18.
  */
 @Dao
-public interface LocalDao {
+public interface MovieDao {
 
     /**
      * Select all movies from the movie table.

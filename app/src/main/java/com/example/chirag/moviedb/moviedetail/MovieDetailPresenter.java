@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.data.remote.RemoteRepository;
+import com.example.chirag.moviedb.data.RemoteRepository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
@@ -24,8 +24,14 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     private MovieDetailContract.View mCallback;
 
     MovieDetailPresenter(Context context) {
-        LocalService mLocalService = LocalService.getInstance(new AppExecutors(), LocalDatabase.getInstance(context).loacalDao(), LocalDatabase.getInstance(context).trailerDao());
-        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(), LocalDatabase.getInstance(context).loacalDao(), LocalDatabase.getInstance(context).trailerDao());
+        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).trailerDao(),
+                LocalDatabase.getInstance(context).reviewDao());
+        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
+                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).trailerDao(),
+                LocalDatabase.getInstance(context).reviewDao());
 
         mRemoteRepository = RemoteRepository.getInstance(mLocalService, mRemoteService);
     }

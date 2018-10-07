@@ -3,11 +3,13 @@ package com.example.chirag.moviedb.data.remote;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
-import com.example.chirag.moviedb.data.local.LocalDao;
+import com.example.chirag.moviedb.data.local.MovieDao;
+import com.example.chirag.moviedb.data.local.ReviewDao;
 import com.example.chirag.moviedb.data.local.TrailerDao;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
@@ -34,24 +36,27 @@ public class RemoteService implements MovieDataSource {
 
     private static volatile RemoteService INSTANCE;
 
-    private LocalDao mLocalDao;
+    private MovieDao mMovieDao;
 
     private TrailerDao mTrailerDao;
 
+    private ReviewDao mReviewDao;
+
     private AppExecutors mAppExecutors;
 
-    public RemoteService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao, @NonNull TrailerDao trailerDao) {
+    public RemoteService(@NonNull AppExecutors appExecutors, @NonNull MovieDao movieDao, @NonNull TrailerDao trailerDao, @NonNull ReviewDao reviewDao) {
         mAppExecutors = appExecutors;
-        mLocalDao = localDao;
+        mMovieDao = movieDao;
         mTrailerDao = trailerDao;
+        mReviewDao = reviewDao;
         mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
     }
 
-    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao, @NonNull TrailerDao trailerDao) {
+    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull MovieDao movieDao, @NonNull TrailerDao trailerDao, @NonNull ReviewDao reviewDao) {
         if (INSTANCE == null) {
             synchronized (RemoteService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new RemoteService(appExecutors, localDao, trailerDao);
+                    INSTANCE = new RemoteService(appExecutors, movieDao, trailerDao, reviewDao);
                 }
             }
         }
@@ -162,7 +167,8 @@ public class RemoteService implements MovieDataSource {
         });
     }
 
-    void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
+    @Override
+    public void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
         mServiceApi.getGenreList(TMDB_API_KEY, LANGUAGE)
                 .enqueue(new Callback<Genre>() {
                     @Override
@@ -227,14 +233,28 @@ public class RemoteService implements MovieDataSource {
     }
 
     @Override
-    public void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+    public void getReviews(final int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
         mServiceApi.getReviewList(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
                 if (response.isSuccessful()) {
-                    Reviews reviews = response.body();
+                    final Reviews reviews = response.body();
                     if (reviews != null && reviews.getResults() != null) {
                         callback.onReviewResponseSuccess(reviews);
+                        Runnable reviewRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                List<ReviewResponse> reviewList = reviews.getResults();
+                                List<ReviewResponse> reviewData = mReviewDao.getReviews(movieId);
+                                if (reviewData.isEmpty()) {
+                                    for (ReviewResponse list : reviewList) {
+                                        list.setMovieId(movieId);
+                                        mReviewDao.insertReviews(list);
+                                    }
+                                }
+                            }
+                        };
+                        mAppExecutors.getDiskIO().execute(reviewRunnable);
                     } else {
                         callback.onReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
                     }
@@ -250,7 +270,8 @@ public class RemoteService implements MovieDataSource {
         });
     }
 
-    void getSimilarMovies(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+    @Override
+    public void getSimilarMovies(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
         mServiceApi.getSimilarMovieList(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {
@@ -273,7 +294,8 @@ public class RemoteService implements MovieDataSource {
         });
     }
 
-    void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
+    @Override
+    public void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
         mServiceApi.getPopularTvInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {
@@ -300,12 +322,12 @@ public class RemoteService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (!mLocalDao.getMovie(movieType).isEmpty()) {
-                    mLocalDao.deleteMovies(movieType);
+                if (!mMovieDao.getMovie(movieType).isEmpty()) {
+                    mMovieDao.deleteMovies(movieType);
                 }
                 for (final MovieResponse info : item.getResults()) {
                     info.setType(movieType);
-                    mLocalDao.insertMovie(info);
+                    mMovieDao.insertMovie(info);
                 }
             }
         };

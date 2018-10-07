@@ -1,4 +1,6 @@
-package com.example.chirag.moviedb.data.remote;
+package com.example.chirag.moviedb.data;
+
+import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 
 /**
  * MovieDB

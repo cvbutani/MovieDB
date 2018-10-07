@@ -1,12 +1,9 @@
-package com.example.chirag.moviedb.data.remote;
+package com.example.chirag.moviedb.data;
 
-import android.content.Context;
-
-import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
-import com.example.chirag.moviedb.util.AppExecutors;
+import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
+import com.example.chirag.moviedb.data.remote.RemoteService;
 
-;
 
 /**
  * MovieDB
@@ -34,20 +31,20 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
-        mRemoteService.getPopularMovies(callback);
+//        mRemoteService.getPopularMovies(callback);
         mLocalService.getPopularMovies(callback);
 
     }
 
     @Override
     public void getNowPlayingMoviesData(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-        mRemoteService.getNowPlayingMovies(callback);
+//        mRemoteService.getNowPlayingMovies(callback);
         mLocalService.getNowPlayingMovies(callback);
     }
 
     @Override
     public void getTopRatedMoviesData(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        mRemoteService.getTopRatedMovies(callback);
+//        mRemoteService.getTopRatedMovies(callback);
         mLocalService.getTopRatedMovies(callback);
     }
 
@@ -59,7 +56,6 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getSimilarMoviesData(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
-
         mRemoteService.getSimilarMovies(movieId, callback);
     }
 
@@ -70,13 +66,14 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getTrailerList(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
-        mLocalService.getTrailers(movieId, callback);
 //        mRemoteService.getTrailers(movieId, callback);
+        mLocalService.getTrailers(movieId, callback);
     }
 
     @Override
     public void getReviews(int movieId, OnTaskCompletion.OnGetReviewCompletion callback) {
-        mRemoteService.getReviews(movieId, callback);
+//        mRemoteService.getReviews(movieId, callback);
+        mLocalService.getReviews(movieId, callback);
     }
 
     @Override

@@ -19,4 +19,10 @@ public interface MovieDataSource {
     void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
 
     void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
+
+    void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback);
+
+    void getSimilarMovies(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
+
+    void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 }

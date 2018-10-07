@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
 import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.ReviewResponse;
+import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
@@ -20,23 +22,26 @@ public class LocalService implements MovieDataSource {
 
     private static volatile LocalService INSTANCE;
 
-    private LocalDao mLocalDao;
+    private MovieDao mMovieDao;
 
     private TrailerDao mTrailerDao;
 
+    private ReviewDao mReviewDao;
+
     private AppExecutors mAppExecutors;
 
-    private LocalService(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao,@NonNull TrailerDao trailerDao) {
+    private LocalService(@NonNull AppExecutors appExecutors, @NonNull MovieDao movieDao, @NonNull TrailerDao trailerDao, @NonNull ReviewDao reviewDao) {
         mAppExecutors = appExecutors;
-        mLocalDao = localDao;
+        mMovieDao = movieDao;
         mTrailerDao = trailerDao;
+        mReviewDao = reviewDao;
     }
 
-    public static LocalService getInstance(@NonNull AppExecutors appExecutors, @NonNull LocalDao localDao, @NonNull TrailerDao trailerDao) {
+    public static LocalService getInstance(@NonNull AppExecutors appExecutors, @NonNull MovieDao movieDao, @NonNull TrailerDao trailerDao, @NonNull ReviewDao reviewDao) {
         if (INSTANCE == null) {
             synchronized (LocalService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new LocalService(appExecutors, localDao, trailerDao);
+                    INSTANCE = new LocalService(appExecutors, movieDao, trailerDao, reviewDao);
                 }
             }
         }
@@ -48,7 +53,7 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mLocalDao.getMovie("POPULAR");
+                final List<MovieResponse> movies = mMovieDao.getMovie("POPULAR");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -71,7 +76,7 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mLocalDao.getMovie("NOWPLAYING");
+                final List<MovieResponse> movies = mMovieDao.getMovie("NOWPLAYING");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -94,7 +99,7 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mLocalDao.getMovie("TopRated");
+                final List<MovieResponse> movies = mMovieDao.getMovie("TopRated");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -117,7 +122,7 @@ public class LocalService implements MovieDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mLocalDao.getMovie("NOWPLAYING");
+                final List<MovieResponse> movies = mMovieDao.getMovie("NOWPLAYING");
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -159,7 +164,40 @@ public class LocalService implements MovieDataSource {
     }
 
     @Override
-    public void getReviews(int movieId, OnTaskCompletion.OnGetReviewCompletion callback) {
+    public void getReviews(final int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ReviewResponse> reviews = mReviewDao.getReviews(movieId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (reviews.isEmpty()) {
+                            callback.onReviewResponseFailure("LOCAL DATA FAILURE");
+                        } else {
+                            Reviews reviewList = new Reviews();
+                            reviewList.setResults(reviews);
+                            callback.onReviewResponseSuccess(reviewList);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
+    @Override
+    public void getGenres(OnTaskCompletion.OnGetGenresCompletion callback) {
+
+    }
+
+    @Override
+    public void getSimilarMovies(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+
+    }
+
+    @Override
+    public void getPopularTv(OnTaskCompletion.OnGetPopularTvCompletion callback) {
 
     }
 }
