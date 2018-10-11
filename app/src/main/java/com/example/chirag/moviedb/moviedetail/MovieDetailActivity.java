@@ -1,6 +1,9 @@
 package com.example.chirag.moviedb.moviedetail;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +52,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private int mMovieId;
     private String mMovieName;
+    boolean isConnected;
 
     private boolean isContentClicked = false;
 
@@ -66,6 +70,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
+
         if (getIntent() != null) {
             Intent i = getIntent();
             mMovieId = getIntent().getExtras().getInt("EXTRA");
@@ -77,10 +86,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(mMovieName);
-        mPresenter = new MovieDetailPresenter(getApplicationContext());
+
+        mPresenter = new MovieDetailPresenter(getApplicationContext(), isConnected);
         mPresenter.attachView(this, mMovieId);
 
         viewHolder();
+
+
+
     }
 
     @Override

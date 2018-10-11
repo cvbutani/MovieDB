@@ -3,6 +3,9 @@ package com.example.chirag.moviedb.data.local;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
+import com.example.chirag.moviedb.data.local.dao.MovieDao;
+import com.example.chirag.moviedb.data.local.dao.ReviewDao;
+import com.example.chirag.moviedb.data.local.dao.TrailerDao;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;

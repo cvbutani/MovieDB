@@ -1,6 +1,9 @@
 package com.example.chirag.moviedb.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +36,9 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     private LinearLayout mLinearLayoutTopRated;
     private LinearLayout mLinearLayoutUpcoming;
 
+    private ConnectivityManager mConnectivityManager;
+    private NetworkInfo mActiveNetwork;
+
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     int mMovieId;
@@ -44,7 +50,9 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DBTvPresenter tvPresenter = new DBTvPresenter(getContext());
+        boolean isConnected = checkInternetConnection();
+
+        DBTvPresenter tvPresenter = new DBTvPresenter(getContext(), isConnected);
         tvPresenter.attachView(this);
     }
 
@@ -98,5 +106,17 @@ public class TvFragment extends Fragment implements DBTvContract.View {
             });
             layout.addView(parent);
         }
+    }
+
+    public boolean checkInternetConnection() {
+
+        if (getActivity() != null) {
+            mConnectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        }
+        if (mConnectivityManager != null) {
+            mActiveNetwork = mConnectivityManager.getActiveNetworkInfo();
+        }
+
+        return (mActiveNetwork != null) && (mActiveNetwork.isConnectedOrConnecting());
     }
 }

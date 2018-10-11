@@ -22,7 +22,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     private RemoteRepository mRemoteRepository;
 
 
-    public DbHomePresenter(Context context) {
+    public DbHomePresenter(Context context, boolean isConnected) {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).loacalDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
@@ -32,7 +32,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
-        mRemoteRepository = RemoteRepository.getInstance(mLocalService, mRemoteService);
+        mRemoteRepository = RemoteRepository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override

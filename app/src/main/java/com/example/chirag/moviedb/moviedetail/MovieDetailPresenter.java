@@ -23,7 +23,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     private MovieDetailContract.View mCallback;
 
-    MovieDetailPresenter(Context context) {
+    MovieDetailPresenter(Context context, boolean isConnected) {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).loacalDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
@@ -33,7 +33,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
-        mRemoteRepository = RemoteRepository.getInstance(mLocalService, mRemoteService);
+        mRemoteRepository = RemoteRepository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override
