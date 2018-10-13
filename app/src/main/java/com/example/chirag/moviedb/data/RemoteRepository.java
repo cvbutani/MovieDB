@@ -79,7 +79,11 @@ public class RemoteRepository implements DataContract {
 
     @Override
     public void getGenreList(OnTaskCompletion.OnGetGenresCompletion callback) {
-        mRemoteService.getGenres(callback);
+        if (isConnected) {
+            mRemoteService.getGenres(callback);
+        } else {
+            mLocalService.getGenres(callback);
+        }
     }
 
     @Override

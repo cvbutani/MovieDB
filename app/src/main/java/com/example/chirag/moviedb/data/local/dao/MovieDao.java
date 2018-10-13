@@ -41,6 +41,9 @@ public interface MovieDao {
     @Insert
     void insertMovie(MovieResponse movie);
 
+    @Query("UPDATE movie SET genre= :newGenre WHERE entryid= :movieId")
+    void insertGenre(String newGenre, int movieId);
+
 //    /**
 //     * Update a movie
 //     *

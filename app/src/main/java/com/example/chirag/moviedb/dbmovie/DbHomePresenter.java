@@ -23,10 +23,13 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
 
     public DbHomePresenter(Context context, boolean isConnected) {
+
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).loacalDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
-                LocalDatabase.getInstance(context).reviewDao());
+                LocalDatabase.getInstance(context).reviewDao(),
+                LocalDatabase.getInstance(context).genreDao());
+
         RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).loacalDao(),
                 LocalDatabase.getInstance(context).trailerDao(),

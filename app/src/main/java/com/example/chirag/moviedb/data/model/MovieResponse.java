@@ -86,8 +86,8 @@ public class MovieResponse implements Serializable {
     private String type;
 
     @Nullable
-    @ColumnInfo(name = "trailer")
-    private String trailer;
+    @ColumnInfo(name = "genre")
+    private String genre;
 
 
     /**
@@ -97,7 +97,7 @@ public class MovieResponse implements Serializable {
     }
 
     @Ignore
-    public MovieResponse(@NonNull int primaryKey,@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String trailer) {
+    public MovieResponse(@NonNull int primaryKey,@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String genre) {
         this.primaryKey = primaryKey;
         this.id = id;
         this.voteAverage = voteAverage;
@@ -110,7 +110,7 @@ public class MovieResponse implements Serializable {
         this.originalName = originalName;
         this.title = title;
         this.type = type;
-        this.trailer = trailer;
+        this.genre = genre;
     }
 
     @Ignore
@@ -224,6 +224,7 @@ public class MovieResponse implements Serializable {
         this.title = title;
     }
 
+    @Nullable
     public String getType() {
         return type;
     }
@@ -233,11 +234,11 @@ public class MovieResponse implements Serializable {
     }
 
     @Nullable
-    public String getTrailer() {
-        return trailer;
+    public String getGenre() {
+        return genre;
     }
 
-    public void setTrailer(@Nullable String trailer) {
-        this.trailer = trailer;
+    public void setGenre(@Nullable String genre) {
+        this.genre = genre;
     }
 }

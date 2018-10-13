@@ -1,8 +1,5 @@
 package com.example.chirag.moviedb.dbmovie;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,8 +17,6 @@ import com.example.chirag.moviedb.fragment.TvFragment;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
