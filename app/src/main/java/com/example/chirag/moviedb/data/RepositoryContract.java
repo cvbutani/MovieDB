@@ -6,7 +6,7 @@ import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
  * MovieDB
  * Created by Chirag on 29/09/18.
  */
-public interface MovieDataSource {
+public interface RepositoryContract {
 
     void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback);
 

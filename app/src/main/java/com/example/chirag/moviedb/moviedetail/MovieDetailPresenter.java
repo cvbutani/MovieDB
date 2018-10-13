@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.data.RemoteRepository;
+import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
@@ -19,7 +19,7 @@ import com.example.chirag.moviedb.util.AppExecutors;
  */
 public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
-    private RemoteRepository mRemoteRepository;
+    private Repository mRepository;
 
     private MovieDetailContract.View mCallback;
 
@@ -33,13 +33,13 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
-        mRemoteRepository = RemoteRepository.getInstance(isConnected, mLocalService, mRemoteService);
+        mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override
     public void getTrailerList(int movieId) {
 
-        mRemoteRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
+        mRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
             @Override
             public void onTrailerItemSuccess(Trailer data) {
                 mCallback.onTrailerListSuccess(data);
@@ -54,7 +54,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getMovieData(final int movieId) {
-        mRemoteRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
+        mRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
             public void onHeaderItemSuccess(Movies data) {
                 mCallback.onMovieDetail(data, movieId);
@@ -69,7 +69,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getNowPlayingData(final int movieId) {
-        mRemoteRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
+        mRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
             @Override
             public void onNowPlayingMovieSuccess(Movies data) {
                 mCallback.onNowPlayingMovie(data, movieId);
@@ -84,7 +84,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getTopRatedData(final int movieId) {
-        mRemoteRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
+        mRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
             @Override
             public void onTopRatedMovieSuccess(Movies data) {
                 mCallback.onTopRatedMovie(data, movieId);
@@ -99,7 +99,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getUpcomingData(final int movieId) {
-        mRemoteRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
+        mRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
             @Override
             public void onUpcomingMovieSuccess(Movies data) {
                 mCallback.onUpcomingMovie(data, movieId);
@@ -114,7 +114,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getGenreItem() {
-        mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
+        mRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
             public void onGenreListSuccess(Genre data) {
                 mCallback.onGenreDetail(data);
@@ -129,7 +129,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getReviews(int movieId) {
-        mRemoteRepository.getReviews(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
+        mRepository.getReviews(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
             @Override
             public void onReviewResponseSuccess(Reviews data) {
                 mCallback.onReviewDetail(data);
@@ -144,7 +144,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getSimilarData(final int movieId) {
-        mRemoteRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
+        mRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
             @Override
             public void onSimilarMovieSuccess(Movies data) {
                 mCallback.onSimilarMovieSuccess(data, movieId);
@@ -153,6 +153,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
             @Override
             public void onSimilarMovieFailure(String errorMessage) {
                 mCallback.onSimilarMovieFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void getPopularTV(final int tvId) {
+        mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
+            @Override
+            public void onPopularTvSuccess(Movies data) {
+                mCallback.onPopularTV(data, tvId);
+            }
+
+            @Override
+            public void onPopularTvFailure(String errorMessage) {
+
             }
         });
     }
@@ -168,5 +183,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getUpcomingData(movieId);
         getSimilarData(movieId);
         getGenreItem();
+        getPopularTV(movieId);
     }
 }

@@ -248,14 +248,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
             Picasso.get().load(imagePosterString).into(poster);
 
-            poster.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mMovieId = item.getId();
-                    String movieName = item.getTitle();
-                    startNewActivity(mMovieId, movieName);
-                }
-            });
+//            poster.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mMovieId = item.getId();
+//                    String movieName = item.getTitle();
+//                    startNewActivity(mMovieId, movieName);
+//                }
+//            });
             mLinearLayoutSimilarMovies.addView(parent);
         }
     }
@@ -263,6 +263,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void onSimilarMovieFailure(String errorMessage) {
 
+    }
+
+    @Override
+    public void onPopularTV(Movies data, int tvId) {
+        movieData(data, mMovieId);
     }
 
     private void movieData(Movies data, int movieId) {
@@ -294,7 +299,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         movieGenre = mHeaderItem.getGenre();
                     }
                     mTextViewGenre.setText(movieGenre);
-//                    mTextViewGenre.setText("+Action");
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
                 } else {
@@ -304,14 +308,5 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         } else {
             Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
         }
-    }
-
-    private void startNewActivity(int movieId, String name) {
-        Intent intent = new Intent(MovieDetailActivity.this, MovieDetailActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("EXTRA", movieId);
-        intent.putExtra("EXTRA_NAME", name);
-        intent.putExtra("EXTRA_GENRE", mGenreItems);
-        startActivity(intent);
     }
 }

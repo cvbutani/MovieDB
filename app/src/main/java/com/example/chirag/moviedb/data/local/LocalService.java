@@ -2,12 +2,10 @@ package com.example.chirag.moviedb.data.local;
 
 import android.support.annotation.NonNull;
 
-import com.example.chirag.moviedb.data.MovieDataSource;
+import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.GenreResponse;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -23,7 +21,7 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 24/09/18.
  */
-public class LocalService implements MovieDataSource {
+public class LocalService implements RepositoryContract {
 
     private static volatile LocalService INSTANCE;
 

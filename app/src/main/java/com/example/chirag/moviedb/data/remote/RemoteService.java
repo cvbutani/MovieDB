@@ -2,7 +2,7 @@ package com.example.chirag.moviedb.data.remote;
 
 import android.support.annotation.NonNull;
 
-import com.example.chirag.moviedb.data.MovieDataSource;
+import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
@@ -27,7 +27,7 @@ import retrofit2.Response;
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-public class RemoteService implements MovieDataSource {
+public class RemoteService implements RepositoryContract {
 
     private static final String TMDB_API_KEY = "51b4547daeeca9a0a1dec36a7013b1ad";
     private static final String LANGUAGE = "en-US";

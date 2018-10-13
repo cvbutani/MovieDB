@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.data.RemoteRepository;
+import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
@@ -19,8 +19,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     private DbHomeContract.View mCallback;
 
-    private RemoteRepository mRemoteRepository;
-
+    private Repository mRepository;
 
     public DbHomePresenter(Context context, boolean isConnected) {
 
@@ -34,12 +33,12 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
-        mRemoteRepository = RemoteRepository.getInstance(isConnected, mLocalService, mRemoteService);
+        mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override
     public void getNowPlayingMovies() {
-        mRemoteRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
+        mRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
             @Override
             public void onNowPlayingMovieSuccess(Movies data) {
                 mCallback.onNowPlayingMovieSuccess(data);
@@ -54,7 +53,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     @Override
     public void getPopularMovies() {
-        mRemoteRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
+        mRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
             public void onHeaderItemSuccess(Movies data) {
                 mCallback.onHeaderResultSuccess(data);
@@ -70,7 +69,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     @Override
     public void getTopRatedMovies() {
-        mRemoteRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
+        mRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
             @Override
             public void onTopRatedMovieSuccess(Movies data) {
                 mCallback.onTopRatedMovieSuccess(data);
@@ -85,7 +84,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     @Override
     public void getUpcomingMovies() {
-        mRemoteRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
+        mRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
             @Override
             public void onUpcomingMovieSuccess(Movies data) {
                 mCallback.onUpcomingMovieSuccess(data);
@@ -100,7 +99,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     @Override
     public void getGenreList() {
-        mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
+        mRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
             public void onGenreListSuccess(Genre data) {
                 mCallback.onGenreListSuccess(data);

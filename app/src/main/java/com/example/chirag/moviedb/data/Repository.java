@@ -1,9 +1,5 @@
 package com.example.chirag.moviedb.data;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
@@ -13,9 +9,9 @@ import com.example.chirag.moviedb.data.remote.RemoteService;
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-public class RemoteRepository implements DataContract {
+public class Repository implements DataContract {
 
-    private static RemoteRepository sRemoteRepository;
+    private static Repository sRepository;
 
     private static RemoteService mRemoteService;
 
@@ -23,17 +19,17 @@ public class RemoteRepository implements DataContract {
 
     private static Boolean isConnected;
 
-    private RemoteRepository() {
+    private Repository() {
     }
 
-    public static RemoteRepository getInstance(Boolean connection, LocalService localService, RemoteService remoteService) {
-        if (sRemoteRepository == null) {
-            sRemoteRepository = new RemoteRepository();
+    public static Repository getInstance(Boolean connection, LocalService localService, RemoteService remoteService) {
+        if (sRepository == null) {
+            sRepository = new Repository();
             mRemoteService = remoteService;
             mLocalService = localService;
         }
         isConnected = connection;
-        return sRemoteRepository;
+        return sRepository;
     }
 
     @Override
