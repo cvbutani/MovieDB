@@ -27,8 +27,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).loacalDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
-                LocalDatabase.getInstance(context).reviewDao(),
-                LocalDatabase.getInstance(context).genreDao());
+                LocalDatabase.getInstance(context).reviewDao());
         RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).loacalDao(),
                 LocalDatabase.getInstance(context).trailerDao(),

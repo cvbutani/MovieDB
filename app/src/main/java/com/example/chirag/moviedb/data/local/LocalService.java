@@ -3,7 +3,6 @@ package com.example.chirag.moviedb.data.local;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.MovieDataSource;
-import com.example.chirag.moviedb.data.local.dao.GenreDao;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
@@ -34,31 +33,27 @@ public class LocalService implements MovieDataSource {
 
     private ReviewDao mReviewDao;
 
-    private GenreDao mGenreDao;
 
     private AppExecutors mAppExecutors;
 
     private LocalService(@NonNull AppExecutors appExecutors,
                          @NonNull MovieDao movieDao,
                          @NonNull TrailerDao trailerDao,
-                         @NonNull ReviewDao reviewDao,
-                         @NonNull GenreDao genreDao) {
+                         @NonNull ReviewDao reviewDao) {
         mAppExecutors = appExecutors;
         mMovieDao = movieDao;
         mTrailerDao = trailerDao;
         mReviewDao = reviewDao;
-        mGenreDao = genreDao;
     }
 
     public static LocalService getInstance(@NonNull AppExecutors appExecutors,
                                            @NonNull MovieDao movieDao,
                                            @NonNull TrailerDao trailerDao,
-                                           @NonNull ReviewDao reviewDao,
-                                           @NonNull GenreDao genreDao) {
+                                           @NonNull ReviewDao reviewDao) {
         if (INSTANCE == null) {
             synchronized (LocalService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new LocalService(appExecutors, movieDao, trailerDao, reviewDao, genreDao);
+                    INSTANCE = new LocalService(appExecutors, movieDao, trailerDao, reviewDao);
                 }
             }
         }
@@ -205,26 +200,7 @@ public class LocalService implements MovieDataSource {
 
     @Override
     public void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
-        insertGenre();
-        Runnable genreRunnable = new Runnable() {
-            @Override
-            public void run() {
-                final List<GenreResponse> genres = mGenreDao.getGenres();
-                mAppExecutors.getMainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (genres.isEmpty()) {
-                            callback.onGenreListFailure("NO LOCAL DATA FOUND");
-                        } else {
-                            Genre genre = new Genre();
-                            genre.setGenreResponses(genres);
-                            callback.onGenreListSuccess(genre);
-                        }
-                    }
-                });
-            }
-        };
-        mAppExecutors.getDiskIO().execute(genreRunnable);
+        //  Genre will be loaded automatically from database
     }
 
     @Override
@@ -235,56 +211,5 @@ public class LocalService implements MovieDataSource {
     @Override
     public void getPopularTv(OnTaskCompletion.OnGetPopularTvCompletion callback) {
 
-    }
-
-    private void insertGenre() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                List<GenreResponse> genres = mGenreDao.getGenres();
-                if (!genres.isEmpty()) {
-                    return;
-                }
-                GenreResponse response = new GenreResponse(20,"Action");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(12, "Adventure");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(16, "Animation");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(35, "Comedy");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(88, "Crime");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(99, "Documentary");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(18, "Drama");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(10751, "Family");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(14, "Fantasy");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(36, "History");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(27, "Horror");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(10402, "Music");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(9648, "Mystery");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(10749, "Romance");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(878, "Science Fiction");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(10770, "TV Movie");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(53, "Thriller");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(10752, "War");
-                mGenreDao.insertGenres(response);
-                response = new GenreResponse(37, "Western");
-                mGenreDao.insertGenres(response);
-            }
-        };
-        mAppExecutors.getDiskIO().execute(runnable);
     }
 }

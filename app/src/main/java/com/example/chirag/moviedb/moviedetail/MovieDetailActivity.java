@@ -276,6 +276,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     String movieLanguage = mHeaderItem.getOriginalLanguage();
                     double movieRating = mHeaderItem.getVoteAverage();
                     String movieOverview = mHeaderItem.getDescription();
+                    String movieGenre;
 
                     StringBuilder builder = new StringBuilder();
                     String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(mHeaderItem.getBackdropPath()).toString();
@@ -287,7 +288,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     Picasso.get().load(imagePosterString).into(mImageViewPoster);
                     mTextViewReleaseDate.setText(movieReleaseDate);
                     mTextViewLanguage.setText(movieLanguage);
-                    mTextViewGenre.setText(genreId());
+                    if (isConnected) {
+                        movieGenre = genreId();
+                    } else {
+                        movieGenre = mHeaderItem.getGenre();
+                    }
+                    mTextViewGenre.setText(movieGenre);
 //                    mTextViewGenre.setText("+Action");
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);

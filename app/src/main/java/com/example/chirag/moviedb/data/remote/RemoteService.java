@@ -327,6 +327,7 @@ public class RemoteService implements MovieDataSource {
                 }
                 for (final MovieResponse info : item.getResults()) {
                     info.setType(movieType);
+                    info.setGenre(info.getMovieGenre());
                     mMovieDao.insertMovie(info);
                 }
             }
