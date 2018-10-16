@@ -61,8 +61,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
-    private Genre mGenreItems;
-
     private static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
 
     @Override
@@ -221,7 +219,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onGenreDetail(Genre data) {
-        mGenreItems = data;
+        mGenreItem = data;
     }
 
     @Override
@@ -267,7 +265,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onPopularTV(Movies data, int tvId) {
+        mPresenter.getTVGenreDetail();
         movieData(data, mMovieId);
+    }
+
+    @Override
+    public void onTVGenreDetail(Genre data) {
+        mGenreItem = data;
     }
 
     private void movieData(Movies data, int movieId) {

@@ -210,4 +210,9 @@ public class LocalService implements RepositoryContract {
     public void getPopularTv(OnTaskCompletion.OnGetPopularTvCompletion callback) {
 
     }
+
+    @Override
+    public void getTVGenreList(OnTaskCompletion.OnGetTVGenreCompletion callback) {
+
+    }
 }

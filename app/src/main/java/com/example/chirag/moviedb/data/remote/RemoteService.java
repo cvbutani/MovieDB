@@ -318,6 +318,30 @@ public class RemoteService implements RepositoryContract {
         });
     }
 
+    @Override
+    public void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback) {
+        mServiceApi.getTVGenreList(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Genre>() {
+            @Override
+            public void onResponse(Call<Genre> call, Response<Genre> response) {
+                if (response.isSuccessful()) {
+                    Genre item = response.body();
+                    if (item != null && item.getGenreResponses() != null) {
+                        callback.onTVGenreSuccess(item);
+                    } else {
+                        callback.onTVGenreFailure("FAILURE");
+                    }
+                } else {
+                    callback.onTVGenreFailure("FAILURE");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Genre> call, Throwable t) {
+                callback.onTVGenreFailure(t.getMessage());
+            }
+        });
+    }
+
     private void insertMovie(final Movies item, final String movieType) {
         Runnable runnable = new Runnable() {
             @Override

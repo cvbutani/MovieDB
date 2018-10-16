@@ -173,6 +173,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getTVGenreDetail() {
+        mRepository.getTVGenreList(new OnTaskCompletion.OnGetTVGenreCompletion() {
+            @Override
+            public void onTVGenreSuccess(Genre data) {
+                mCallback.onTVGenreDetail(data);
+            }
+
+            @Override
+            public void onTVGenreFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int movieId) {
         mCallback = view;
         getTrailerList(movieId);

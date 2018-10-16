@@ -100,4 +100,9 @@ public class Repository implements DataContract {
     public void getPopularTvData(OnTaskCompletion.OnGetPopularTvCompletion callback) {
         mRemoteService.getPopularTv(callback);
     }
+
+    @Override
+    public void getTVGenreList(OnTaskCompletion.OnGetTVGenreCompletion callback) {
+        mRemoteService.getTVGenreList(callback);
+    }
 }

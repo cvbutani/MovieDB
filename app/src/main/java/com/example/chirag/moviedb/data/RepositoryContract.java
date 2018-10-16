@@ -25,4 +25,6 @@ public interface RepositoryContract {
     void getSimilarMovies(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
 
     void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback);
+
+    void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback);
 }

@@ -33,6 +33,8 @@ public interface MovieDetailContract {
         void onSimilarMovieFailure(String errorMessage);
 
         void onPopularTV(Movies data, int tvId);
+
+        void onTVGenreDetail(Genre data);
     }
 
     interface Presenter {
@@ -54,6 +56,8 @@ public interface MovieDetailContract {
         void getSimilarData(int movieId);
 
         void getPopularTV(int tvId);
+
+        void getTVGenreDetail();
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

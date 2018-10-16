@@ -71,4 +71,10 @@ public interface GetDataService {
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
+
+    @GET("genre/tv/list")
+    Call<Genre> getTVGenreList(
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
 }
