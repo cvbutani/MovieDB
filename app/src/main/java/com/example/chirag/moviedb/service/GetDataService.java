@@ -16,32 +16,17 @@ import retrofit2.http.Query;
  */
 public interface GetDataService {
 
-    @GET("movie/popular")
-    Call<Movies> getPopularMoviesInfo(
+    @GET("{content_type}/{movie_type}")
+    Call<Movies> getContentInfo(
+            @Path("content_type") String contentType,
+            @Path("movie_type") String movieType,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
-    @GET("movie/now_playing")
-    Call<Movies> getNowPlayingInfo(
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
-
-    @GET("movie/top_rated")
-    Call<Movies> getTopRatedInfo(
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
-
-    @GET("movie/upcoming")
-    Call<Movies> getUpcomingInfo(
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
-
-    @GET("genre/movie/list")
+    @GET("genre/{content_type}/list")
     Call<Genre> getGenreList(
+            @Path("content_type") String contentType,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
@@ -66,15 +51,4 @@ public interface GetDataService {
             @Query("language") String language
     );
 
-    @GET("tv/popular")
-    Call<Movies> getPopularTvInfo(
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
-
-    @GET("genre/tv/list")
-    Call<Genre> getTVGenreList(
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
 }

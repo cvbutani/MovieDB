@@ -41,14 +41,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     LinearLayout mLinearLayoutTrailer;
     LinearLayout mLinearLayoutReview;
 
-    MovieResponse mHeaderItem;
-    Genre mGenreItem;
     MovieDetailPresenter mPresenter;
 
     LinearLayout mLinearLayoutSimilarMovies;
 
     CardView mTrailerCardView;
     CardView mReviewCardView;
+
+    private Genre mGenreItem;
+    private MovieResponse mHeaderItem;
 
     private int mMovieId;
     private String mMovieName;

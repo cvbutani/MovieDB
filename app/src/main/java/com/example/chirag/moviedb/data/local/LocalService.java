@@ -17,6 +17,11 @@ import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
 
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_UPCOMING;
+
 /**
  * MovieDB
  * Created by Chirag on 24/09/18.
@@ -63,7 +68,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie("POPULAR");
+                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_POPULAR);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -86,7 +91,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie("NOWPLAYING");
+                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_NOW_PLAYING);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -109,7 +114,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie("TopRated");
+                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_TOP_RATED);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -132,7 +137,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie("NOWPLAYING");
+                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_UPCOMING);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {

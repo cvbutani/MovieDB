@@ -23,14 +23,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
+import static com.example.chirag.moviedb.data.Constant.LANGUAGE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_UPCOMING;
+import static com.example.chirag.moviedb.data.Constant.TMDB_API_KEY;
+
 /**
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
 public class RemoteService implements RepositoryContract {
-
-    private static final String TMDB_API_KEY = "51b4547daeeca9a0a1dec36a7013b1ad";
-    private static final String LANGUAGE = "en-US";
 
     private GetDataService mServiceApi;
 
@@ -66,7 +72,7 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
 
-        Call<Movies> call = mServiceApi.getPopularMoviesInfo(TMDB_API_KEY, LANGUAGE);
+        Call<Movies> call = mServiceApi.getContentInfo(CONTENT_MOVIE, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE);
 
         call.enqueue(new Callback<Movies>() {
             @Override
@@ -75,7 +81,7 @@ public class RemoteService implements RepositoryContract {
                     Movies item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onHeaderItemSuccess(item);
-                        insertMovie(item, "POPULAR");
+                        insertMovie(item, CONTENT_TYPE_POPULAR);
                     } else {
                         callback.onHeaderItemFailure("FAILURE");
                     }
@@ -93,7 +99,7 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-        mServiceApi.getNowPlayingInfo(TMDB_API_KEY, LANGUAGE)
+        mServiceApi.getContentInfo(CONTENT_MOVIE, CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY, LANGUAGE)
                 .enqueue(new Callback<Movies>() {
                     @Override
                     public void onResponse(Call<Movies> call, Response<Movies> response) {
@@ -101,7 +107,7 @@ public class RemoteService implements RepositoryContract {
                             Movies item = response.body();
                             if (item != null && item.getResults() != null) {
                                 callback.onNowPlayingMovieSuccess(item);
-                                insertMovie(item, "NOWPLAYING");
+                                insertMovie(item, CONTENT_TYPE_NOW_PLAYING);
                             } else {
                                 callback.onNowPlayingMovieFailure("FAILURE");
                             }
@@ -119,14 +125,14 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        mServiceApi.getTopRatedInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+        mServiceApi.getContentInfo(CONTENT_MOVIE, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {
                 if (response.isSuccessful()) {
                     Movies item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onTopRatedMovieSuccess(item);
-                        insertMovie(item, "TopRated");
+                        insertMovie(item, CONTENT_TYPE_TOP_RATED);
                     } else {
                         callback.onTopRatedMovieFailure("FAILURE");
                     }
@@ -144,14 +150,14 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-        mServiceApi.getUpcomingInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+        mServiceApi.getContentInfo(CONTENT_MOVIE, CONTENT_TYPE_UPCOMING, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {
                 if (response.isSuccessful()) {
                     Movies item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.onUpcomingMovieSuccess(item);
-                        insertMovie(item, "Upcoming");
+                        insertMovie(item, CONTENT_TYPE_UPCOMING);
                     } else {
                         callback.onUpcomingMovieFailure("FAILURE");
                     }
@@ -169,28 +175,27 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
-        mServiceApi.getGenreList(TMDB_API_KEY, LANGUAGE)
-                .enqueue(new Callback<Genre>() {
-                    @Override
-                    public void onResponse(Call<Genre> call, Response<Genre> response) {
-                        if (response.isSuccessful()) {
-                            Genre genreItem = response.body();
-                            if (genreItem != null && genreItem.getGenreResponses() != null) {
-                                callback.onGenreListSuccess(genreItem);
-                            } else {
-                                callback.onGenreListFailure("SOMETHING WENT WRONG WHILE GETTING GENRE");
-                            }
-                        } else {
-                            callback.onGenreListFailure("SOMETHING WENT WRONG WHILE GETTING GENRE");
-                        }
+        mServiceApi.getGenreList(CONTENT_MOVIE, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Genre>() {
+            @Override
+            public void onResponse(Call<Genre> call, Response<Genre> response) {
+                if (response.isSuccessful()) {
+                    Genre genreItem = response.body();
+                    if (genreItem != null && genreItem.getGenreResponses() != null) {
+                        callback.onGenreListSuccess(genreItem);
+                    } else {
+                        callback.onGenreListFailure("SOMETHING WENT WRONG WHILE GETTING GENRE");
                     }
+                } else {
+                    callback.onGenreListFailure("SOMETHING WENT WRONG WHILE GETTING GENRE");
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<Genre> call, Throwable t) {
-                        callback.onGenreListFailure(t.getMessage());
+            @Override
+            public void onFailure(Call<Genre> call, Throwable t) {
+                callback.onGenreListFailure(t.getMessage());
 
-                    }
-                });
+            }
+        });
     }
 
     @Override
@@ -296,7 +301,7 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
-        mServiceApi.getPopularTvInfo(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+        mServiceApi.getContentInfo(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
             @Override
             public void onResponse(Call<Movies> call, Response<Movies> response) {
                 if (response.isSuccessful()) {
@@ -320,7 +325,7 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback) {
-        mServiceApi.getTVGenreList(TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Genre>() {
+        mServiceApi.getGenreList(CONTENT_TV, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Genre>() {
             @Override
             public void onResponse(Call<Genre> call, Response<Genre> response) {
                 if (response.isSuccessful()) {
