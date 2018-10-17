@@ -26,6 +26,10 @@ import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.squareup.picasso.Picasso;
 
+import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
+import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
+import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
+
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
 
     ImageView mImageViewAppBar;
@@ -77,10 +81,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
         if (getIntent() != null) {
-            Intent i = getIntent();
-            mMovieId = getIntent().getExtras().getInt("EXTRA");
-            mMovieName = getIntent().getExtras().getString("EXTRA_NAME");
-            mGenreItem = (Genre) i.getSerializableExtra("EXTRA_GENRE");
+            if (getIntent().hasExtra(EXTRA_ID)) {
+                mMovieId = getIntent().getExtras().getInt(EXTRA_ID);
+            }
+            if (getIntent().hasExtra(EXTRA_TITLE)) {
+                mMovieName = getIntent().getExtras().getString(EXTRA_TITLE);
+            }
+            if (getIntent().hasExtra(EXTRA_GENRE)) {
+                mGenreItem = (Genre) getIntent().getSerializableExtra(EXTRA_GENRE);
+            }
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);

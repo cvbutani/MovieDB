@@ -15,4 +15,8 @@ public class Constant {
     public static final String CONTENT_TYPE_NOW_PLAYING = "now_playing";
     public static final String CONTENT_TYPE_TOP_RATED = "top_rated";
     public static final String CONTENT_TYPE_UPCOMING = "upcoming";
+
+    public static final String EXTRA_ID = "_ID";
+    public static final String EXTRA_TITLE = "EXTRA_TITLE";
+    public static final String EXTRA_GENRE = "GENRE";
 }
