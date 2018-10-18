@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.moviedetail;
 
 import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
@@ -37,6 +38,8 @@ public interface MovieDetailContract {
         void onTVGenreDetail(Genre data);
 
         void getTvTopRatedDetail(Movies data);
+
+        void getTvSeasonDetail(MovieResponse data, int tvId);
     }
 
     interface Presenter {
@@ -62,6 +65,8 @@ public interface MovieDetailContract {
         void getTVGenreDetail();
 
         void getTVTopRatedDetail();
+
+        void getTvSeasonDetail(int tvId);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

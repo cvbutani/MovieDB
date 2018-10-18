@@ -25,6 +25,7 @@ import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.Season;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -36,6 +37,9 @@ import com.orhanobut.logger.Logger;
 import com.squareup.picasso.Picasso;
 
 import static com.example.chirag.moviedb.data.Constant.BACKDROP_IMAGE_URL;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
@@ -72,7 +76,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private int mMovieId;
     private String mMovieName;
     boolean isConnected;
-
+    String mContentType;
     private boolean isContentClicked = false;
 
     @Override
@@ -98,6 +102,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             }
             if (getIntent().hasExtra(EXTRA_GENRE)) {
                 mGenreItem = (Genre) getIntent().getSerializableExtra(EXTRA_GENRE);
+            }
+            if (getIntent().hasExtra(CONTENT_TYPE)) {
+                mContentType = getIntent().getExtras().getString(CONTENT_TYPE);
             }
         }
 
@@ -259,12 +266,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void onSimilarMovieSuccess(Movies data, int movieId) {
-        for (final MovieResponse item : data.getResults()) {
-            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
-            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-            StringBuilder builder = new StringBuilder();
-            String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
-            Picasso.get().load(imagePosterString).into(poster);
+        if (mContentType.equals(CONTENT_MOVIE)) {
+            for (final MovieResponse item : data.getResults()) {
+                View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
+                ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+                StringBuilder builder = new StringBuilder();
+                String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+                Picasso.get().load(imagePosterString).into(poster);
 
 //            poster.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -274,7 +282,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 //                    startNewActivity(mMovieId, movieName);
 //                }
 //            });
-            mLinearLayoutSimilarMovies.addView(parent);
+                mLinearLayoutSimilarMovies.addView(parent);
+            }
         }
     }
 
@@ -297,6 +306,29 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void getTvTopRatedDetail(Movies data) {
         movieData(data, mMovieId);
+    }
+
+    @Override
+    public void getTvSeasonDetail(MovieResponse data, int tvId) {
+        if (mContentType.equals(CONTENT_TV)) {
+            for (final Season item : data.getSeasons()) {
+                View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
+                ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+                StringBuilder builder = new StringBuilder();
+                String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPosterPath()).toString();
+                Picasso.get().load(imagePosterString).into(poster);
+
+//            poster.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mMovieId = item.getId();
+//                    String movieName = item.getTitle();
+//                    startNewActivity(mMovieId, movieName);
+//                }
+//            });
+                mLinearLayoutSimilarMovies.addView(parent);
+            }
+        }
     }
 
     private void movieData(Movies data, int movieId) {

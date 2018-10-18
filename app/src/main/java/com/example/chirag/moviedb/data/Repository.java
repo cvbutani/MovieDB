@@ -110,4 +110,9 @@ public class Repository implements DataContract {
     public void getTVTopRated(OnTaskCompletion.GetTopRatedTvCompletion callback) {
         mRemoteService.getTVTopRated(callback);
     }
+
+    @Override
+    public void getTvSeasonList(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
+        mRemoteService.getTvSeasonList(tvId, callback);
+    }
 }

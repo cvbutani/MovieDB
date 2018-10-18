@@ -23,6 +23,8 @@ import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
 
+import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
@@ -129,6 +131,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
         intent.putExtra(EXTRA_ID, movieId);
         intent.putExtra(EXTRA_TITLE, name);
         intent.putExtra(EXTRA_GENRE, mGenreList);
+        intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
         startActivity(intent);
     }
 

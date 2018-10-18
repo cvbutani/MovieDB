@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
@@ -203,6 +204,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getTvSeasonDetail(final int tvId) {
+        mRepository.getTvSeasonList(tvId, new OnTaskCompletion.GetTvSeasonCompletion() {
+            @Override
+            public void getTvSeasonContentSuccess(MovieResponse data) {
+                mCallback.getTvSeasonDetail(data, tvId);
+            }
+
+            @Override
+            public void getTvSeasonContentFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int movieId) {
         mCallback = view;
         getTrailerList(movieId);
@@ -215,5 +231,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getGenreItem();
         getPopularTV(movieId);
         getTVTopRatedDetail();
+        getTvSeasonDetail(movieId);
     }
 }

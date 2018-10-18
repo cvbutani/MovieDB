@@ -13,6 +13,7 @@ public class Constant {
     public static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
     public static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
+    public static final String CONTENT_TYPE = "content_type";
     public static final String CONTENT_MOVIE = "movie";
     public static final String CONTENT_TV = "tv";
 

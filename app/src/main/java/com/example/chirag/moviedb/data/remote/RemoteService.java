@@ -30,6 +30,7 @@ import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_UPCOMING;
+import static com.example.chirag.moviedb.data.Constant.POSTER_IMAGE_URL;
 import static com.example.chirag.moviedb.data.Constant.TMDB_API_KEY;
 
 /**
@@ -370,6 +371,30 @@ public class RemoteService implements RepositoryContract {
                         callback.getTvTopRatedContentFailure(t.getMessage());
                     }
                 });
+    }
+
+    @Override
+    public void getTvSeasonList(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback) {
+        mServiceApi.getTvSeason(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    MovieResponse tvSeason = response.body();
+                    if (tvSeason != null && tvSeason.getSeasons() != null) {
+                        callback.getTvSeasonContentSuccess(tvSeason);
+                    } else {
+                        callback.getTvSeasonContentFailure("FAILURE");
+                    }
+                } else {
+                    callback.getTvSeasonContentFailure("FAILURE");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                callback.getTvSeasonContentFailure(t.getMessage());
+            }
+        });
     }
 
     private void insertMovie(final Movies item, final String movieType) {

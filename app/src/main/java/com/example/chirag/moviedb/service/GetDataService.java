@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.service;
 
 import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
@@ -51,4 +52,10 @@ public interface GetDataService {
             @Query("language") String language
     );
 
+    @GET("tv/{tv_id}")
+    Call<MovieResponse> getTvSeason(
+            @Path("tv_id") int id,
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
 }

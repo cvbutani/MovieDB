@@ -28,4 +28,6 @@ public interface DataContract {
     void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback);
 
     void getTVTopRated(final OnTaskCompletion.GetTopRatedTvCompletion callback);
+
+    void getTvSeasonList(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback);
 }

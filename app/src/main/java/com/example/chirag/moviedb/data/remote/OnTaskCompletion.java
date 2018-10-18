@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.data.remote;
 
 import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
@@ -64,5 +65,10 @@ public interface OnTaskCompletion {
     interface GetTopRatedTvCompletion {
         void getTvTopRatedContentSuccess(Movies data);
         void getTvTopRatedContentFailure(String errorMessage);
+    }
+
+    interface GetTvSeasonCompletion {
+        void getTvSeasonContentSuccess(MovieResponse data);
+        void getTvSeasonContentFailure(String errorMessage);
     }
 }

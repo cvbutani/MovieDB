@@ -89,6 +89,10 @@ public class MovieResponse implements Serializable {
     @ColumnInfo(name = "genre")
     private String genre;
 
+    @SerializedName("seasons")
+    @Expose
+    @Ignore
+    private List<Season> seasons = null;
 
     /**
      * No args constructor for use in serialization
@@ -97,7 +101,7 @@ public class MovieResponse implements Serializable {
     }
 
     @Ignore
-    public MovieResponse(@NonNull int primaryKey,@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String genre) {
+    public MovieResponse(@NonNull int primaryKey,@NonNull Integer id, @Nullable Double voteAverage, @Nullable String poster, @Nullable String originalLanguage, @Nullable List<Integer> genreIds, @Nullable String backdropPath, @Nullable String description, @Nullable String releaseDate, String originalName, @Nullable String title, @Nullable String type, @Nullable String genre, @Nullable List<Season> season) {
         this.primaryKey = primaryKey;
         this.id = id;
         this.voteAverage = voteAverage;
@@ -111,6 +115,7 @@ public class MovieResponse implements Serializable {
         this.title = title;
         this.type = type;
         this.genre = genre;
+        this.seasons = season;
     }
 
     @Ignore
@@ -240,6 +245,14 @@ public class MovieResponse implements Serializable {
     @Nullable
     public String getGenre() {
         return genre;
+    }
+
+    public List<Season> getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(List<Season> seasons) {
+        this.seasons = seasons;
     }
 
     public String getMovieGenre() {

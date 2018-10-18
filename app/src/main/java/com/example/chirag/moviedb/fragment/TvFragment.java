@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,8 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
@@ -103,6 +106,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         intent.putExtra(EXTRA_ID, movieId);
         intent.putExtra(EXTRA_TITLE, name);
         intent.putExtra(EXTRA_GENRE, mGenreList);
+        intent.putExtra(CONTENT_TYPE, CONTENT_TV);
         startActivity(intent);
     }
 
