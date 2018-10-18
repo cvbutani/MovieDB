@@ -35,6 +35,8 @@ public interface MovieDetailContract {
         void onPopularTV(Movies data, int tvId);
 
         void onTVGenreDetail(Genre data);
+
+        void getTvTopRatedDetail(Movies data);
     }
 
     interface Presenter {
@@ -58,6 +60,8 @@ public interface MovieDetailContract {
         void getPopularTV(int tvId);
 
         void getTVGenreDetail();
+
+        void getTVTopRatedDetail();
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

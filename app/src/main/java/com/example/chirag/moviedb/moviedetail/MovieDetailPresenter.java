@@ -188,6 +188,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void getTVTopRatedDetail() {
+        mRepository.getTVTopRated(new OnTaskCompletion.GetTopRatedTvCompletion() {
+            @Override
+            public void getTvTopRatedContentSuccess(Movies data) {
+                mCallback.getTvTopRatedDetail(data);
+            }
+
+            @Override
+            public void getTvTopRatedContentFailure(String errorMessage) {
+
+            }
+        });
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int movieId) {
         mCallback = view;
         getTrailerList(movieId);
@@ -199,5 +214,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         getSimilarData(movieId);
         getGenreItem();
         getPopularTV(movieId);
+        getTVTopRatedDetail();
     }
 }

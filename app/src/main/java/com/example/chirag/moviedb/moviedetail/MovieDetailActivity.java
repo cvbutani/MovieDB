@@ -54,6 +54,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     TextView mTextViewRating;
     TextView mTextViewOverview;
     TextView mTextViewTrailer;
+    TextView mTextViewReleaseDateLabel;
 
     LinearLayout mLinearLayoutTrailer;
     LinearLayout mLinearLayoutReview;
@@ -134,6 +135,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mTrailerCardView = findViewById(R.id.movie_trailer_card);
         mReviewCardView = findViewById(R.id.movie_review_card);
         mLinearLayoutSimilarMovies = findViewById(R.id.movie_similar);
+        mTextViewReleaseDateLabel = findViewById(R.id.release_date_label);
     }
 
     private String genreId() {
@@ -292,6 +294,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mGenreItem = data;
     }
 
+    @Override
+    public void getTvTopRatedDetail(Movies data) {
+        movieData(data, mMovieId);
+    }
+
     private void movieData(Movies data, int movieId) {
         if (!data.getResults().isEmpty()) {
             for (int i = 0; i < data.getResults().size(); i++) {
@@ -313,7 +320,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
                     Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
                     Picasso.get().load(imagePosterString).into(mImageViewPoster);
-                    mTextViewReleaseDate.setText(movieReleaseDate);
+                    if (movieReleaseDate == null) {
+                        mTextViewReleaseDateLabel.setVisibility(View.GONE);
+                        mTextViewReleaseDate.setVisibility(View.GONE);
+                    } else {
+                        mTextViewReleaseDateLabel.setVisibility(View.VISIBLE);
+                        mTextViewReleaseDate.setVisibility(View.VISIBLE);
+                        mTextViewReleaseDate.setText(movieReleaseDate);
+                    }
                     mTextViewLanguage.setText(movieLanguage);
                     if (isConnected) {
                         movieGenre = genreId();
