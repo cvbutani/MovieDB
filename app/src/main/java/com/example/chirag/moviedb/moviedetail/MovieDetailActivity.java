@@ -2,21 +2,26 @@ package com.example.chirag.moviedb.moviedetail;
 
 import android.content.Context;
 import android.content.Intent;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+
 import android.os.Bundle;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
+
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.MovieResponse;
@@ -24,11 +29,19 @@ import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
+
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
+
 import com.squareup.picasso.Picasso;
 
+import static com.example.chirag.moviedb.data.Constant.BACKDROP_IMAGE_URL;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
+import static com.example.chirag.moviedb.data.Constant.POSTER_IMAGE_URL;
+import static com.example.chirag.moviedb.data.Constant.YOUTUBE_THUMBNAIL_URL;
+import static com.example.chirag.moviedb.data.Constant.YOUTUBE_URL;
 
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
 
@@ -61,19 +74,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private boolean isContentClicked = false;
 
-    private static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
-    private static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
-    private static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
-    private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
-
-    private static final String LOG_TAG = "MOVIE DETAIL ACTIVITY ";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
         viewHolder();
+
+        Logger.addLogAdapter(new AndroidLogAdapter());
 
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -223,7 +231,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             }
         } else {
             mReviewCardView.setVisibility(View.GONE);
-            Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+            Logger.i(getString(R.string.review_error));
         }
     }
 
@@ -316,11 +324,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
                 } else {
-                    Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+                    Logger.i(getString(R.string.movie_error));
                 }
             }
         } else {
-            Log.i(LOG_TAG, "SOMETHING WENT WRONG. COULDN'T RECEIVE REVIEWS");
+            Logger.i(getString(R.string.movie_error));
         }
     }
 }

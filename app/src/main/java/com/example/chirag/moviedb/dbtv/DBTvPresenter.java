@@ -51,8 +51,24 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     }
 
     @Override
+    public void getTvTopRated() {
+        mRepository.getTVTopRated(new OnTaskCompletion.GetTopRatedTvCompletion() {
+            @Override
+            public void getTvTopRatedContentSuccess(Movies data) {
+                mCallback.getTVTopRatedContentSuccess(data);
+            }
+
+            @Override
+            public void getTvTopRatedContentFailure(String errorMessage) {
+                mCallback.getTVTopRatedContentFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
     public void attachView(DBTvContract.View view) {
         this.mCallback = view;
         getPopularTv();
+        getTvTopRated();
     }
 }

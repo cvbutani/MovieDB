@@ -8,6 +8,11 @@ public class Constant {
     public static final String TMDB_API_KEY = "51b4547daeeca9a0a1dec36a7013b1ad";
     public static final String LANGUAGE = "en-US";
 
+    public static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=%s";
+    public static final String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
+    public static final String BACKDROP_IMAGE_URL = "http://image.tmdb.org/t/p/w780/";
+    public static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
+
     public static final String CONTENT_MOVIE = "movie";
     public static final String CONTENT_TV = "tv";
 

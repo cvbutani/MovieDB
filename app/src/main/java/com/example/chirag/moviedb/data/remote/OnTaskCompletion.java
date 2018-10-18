@@ -60,4 +60,9 @@ public interface OnTaskCompletion {
         void onTVGenreSuccess(Genre data);
         void onTVGenreFailure(String errorMessage);
     }
+
+    interface GetTopRatedTvCompletion {
+        void getTvTopRatedContentSuccess(Movies data);
+        void getTvTopRatedContentFailure(String errorMessage);
+    }
 }

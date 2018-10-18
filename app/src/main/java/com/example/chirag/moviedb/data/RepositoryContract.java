@@ -27,4 +27,6 @@ public interface RepositoryContract {
     void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 
     void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback);
+
+    void getTVTopRated(final OnTaskCompletion.GetTopRatedTvCompletion callback);
 }

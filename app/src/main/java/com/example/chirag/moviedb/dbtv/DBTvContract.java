@@ -13,11 +13,17 @@ public interface DBTvContract {
         void onPopularTvSuccess(Movies data);
 
         void onPopularTvFailure(String errorMessage);
+
+        void getTVTopRatedContentSuccess(Movies data);
+
+        void getTVTopRatedContentFailure(String errorMessage);
     }
 
     interface Presenter {
 
         void getPopularTv();
+
+        void getTvTopRated();
 
         void attachView(DBTvContract.View view);
     }

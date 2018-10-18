@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.dbtv.DBTvContract;
@@ -22,6 +23,8 @@ import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
@@ -40,6 +43,9 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     private LinearLayout mLinearLayoutTopRated;
     private LinearLayout mLinearLayoutUpcoming;
 
+    private TextView mTextViewTopRated;
+    TextView mTextViewPopular;
+
     private ConnectivityManager mConnectivityManager;
     private NetworkInfo mActiveNetwork;
 
@@ -54,9 +60,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean isConnected = checkInternetConnection();
-
-        DBTvPresenter tvPresenter = new DBTvPresenter(getContext(), isConnected);
+        DBTvPresenter tvPresenter = new DBTvPresenter(getContext(), checkInternetConnection());
         tvPresenter.attachView(this);
     }
 
@@ -68,13 +72,15 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
         mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
+        mTextViewTopRated = rootView.findViewById(R.id.movie_top_rated_label);
+        mTextViewPopular = rootView.findViewById(R.id.popular_label);
 
         return rootView;
     }
 
     @Override
     public void onPopularTvSuccess(Movies data) {
-        setLayout(data, mLinearLayoutMovieHome);
+        setLayout(data, mLinearLayoutMovieHome, mTextViewPopular, "Popular TV Shows");
     }
 
     @Override
@@ -82,6 +88,15 @@ public class TvFragment extends Fragment implements DBTvContract.View {
 
     }
 
+    @Override
+    public void getTVTopRatedContentSuccess(Movies data) {
+        setLayout(data,mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
+    }
+
+    @Override
+    public void getTVTopRatedContentFailure(String errorMessage) {
+
+    }
 
     private void startNewActivity(int movieId, String name) {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
@@ -91,8 +106,9 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         startActivity(intent);
     }
 
-    private void setLayout(Movies data, LinearLayout layout) {
+    private void setLayout(Movies data, LinearLayout layout, TextView textView, String title) {
         layout.removeAllViews();
+        textView.setText(title);
         for (final MovieResponse item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
@@ -112,7 +128,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         }
     }
 
-    public boolean checkInternetConnection() {
+    private boolean checkInternetConnection() {
 
         if (getActivity() != null) {
             mConnectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
