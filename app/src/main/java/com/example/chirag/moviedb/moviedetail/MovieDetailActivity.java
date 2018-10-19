@@ -196,7 +196,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     String tvLanguage = data.getOriginalLanguage();
                     double tvRating = data.getVoteAverage();
                     String tvOverview = data.getOverview();
-                    String tvGenre;
+                    String tvGenre = data.getGenreInfo();
 
                     StringBuilder builder = new StringBuilder();
                     String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
@@ -215,21 +215,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         mTextViewReleaseDate.setText(tvReleaseDate);
                     }
                     mTextViewLanguage.setText(tvLanguage);
-                    if (isConnected) {
-                        tvGenre = data.getGenreInfo();
-                    } else {
-                        tvGenre = "asdasd";
-                    }
                     mTextViewGenre.setText(tvGenre);
                     mTextViewRating.setText(String.valueOf(tvRating));
                     mTextViewOverview.setText(tvOverview);
 
-                    mTextViewSimilarLabel.setText("Tv Season Information");
+                    mTextViewSimilarLabel.setText("Season Information");
                     for (final Season item : data.getSeasons()) {
                         View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
                         ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-                        StringBuilder seasonBuilder = new StringBuilder();
-                        String imageSeasonPosterString = seasonBuilder.append(POSTER_IMAGE_URL).append(item.getPosterPath()).toString();
+                        String imageSeasonPosterString = POSTER_IMAGE_URL + item.getPosterPath();
                         Picasso.get().load(imageSeasonPosterString).into(poster);
                         mLinearLayoutSimilarMovies.addView(parent);
                     }
@@ -335,8 +329,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 for (final ResultResponse item : data.getResults()) {
                     View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
                     ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-                    StringBuilder builder = new StringBuilder();
-                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+                    String imagePosterString = POSTER_IMAGE_URL + item.getPoster();
                     Picasso.get().load(imagePosterString).into(poster);
 
                     poster.setOnClickListener(new View.OnClickListener() {

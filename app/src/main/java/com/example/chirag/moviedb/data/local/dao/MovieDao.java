@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public interface MovieDao {
      *
      * @return all movies.
      */
-    @Query("SELECT * FROM movie WHERE type= :value")
-    List<ResultResponse> getMovie(String value);
+    @Query("SELECT * FROM movie_id WHERE type= :value")
+    List<ResultResponse> getMovieId(String value);
 
     /**
      * Select a movie by id.
@@ -29,8 +30,8 @@ public interface MovieDao {
      * @param movieId the movie Id.
      * @return movie information with movieId.
      */
-    @Query("SELECT * FROM movie WHERE id = :movieId ")
-    ResultResponse getMovieById(int movieId);
+    @Query("SELECT * FROM movie_info WHERE id = :movieId ")
+    MovieInfo getMovieInfo(int movieId);
 
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
@@ -38,10 +39,11 @@ public interface MovieDao {
      * @param movie the movie to be inserted.
      */
     @Insert
-    void insertMovie(ResultResponse movie);
+    void insertMovieId(ResultResponse movie);
 
-    @Query("UPDATE movie SET type =:newGenre WHERE id= :movieId")
-    void insertGenre(String newGenre, int movieId);
+    @Insert
+    void insertMovieInfo(MovieInfo movieInfo);
+
 
 //    /**
 //     * Update a movie
@@ -74,7 +76,10 @@ public interface MovieDao {
     /**
      * Delete all Result.
      */
-    @Query("DELETE FROM movie WHERE type= :value")
-    void deleteMovies(String value);
+    @Query("DELETE FROM movie_id WHERE type= :value")
+    void deleteMovieId(String value);
+
+    @Query("DELETE FROM movie_info WHERE id= :value")
+    void deleteMovieInfo(int value);
 
 }

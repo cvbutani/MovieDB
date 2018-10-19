@@ -17,83 +17,101 @@ import java.io.Serializable;
  * MovieDB
  * Created by Chirag on 04/09/18.
  */
-@Entity(tableName = "movie")
+@Entity(tableName = "movie_id")
 public class ResultResponse implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "primary_key")
     private Integer primary_key;
 
     @SerializedName("id")
     @Expose
+    @NonNull
+    @ColumnInfo(name = "id")
     private Integer id;
 
     @SerializedName("poster_path")
     @Expose
+    @NonNull
+    @ColumnInfo(name = "poster")
     private String poster;
 
     @SerializedName("title")
     @Expose
+    @Nullable
+    @ColumnInfo(name = "title")
     private String title;
 
     @SerializedName("name")
     @Expose
+    @Nullable
+    @ColumnInfo(name = "name")
     private String name;
 
+    @Nullable
+    @ColumnInfo(name = "type")
     private String type;
 
-    public ResultResponse(Integer id, String poster, String title, String type, String name) {
+    public ResultResponse(@NonNull Integer id, @NonNull String poster, @Nullable String title, @Nullable String name, @Nullable String type) {
         this.id = id;
         this.poster = poster;
         this.title = title;
+        this.name = name;
         this.type = type;
-        this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @NonNull
     public Integer getPrimary_key() {
         return primary_key;
     }
 
-    public void setPrimary_key(Integer primary_key) {
+    public void setPrimary_key(@NonNull Integer primary_key) {
         this.primary_key = primary_key;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
+    @NonNull
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@NonNull Integer id) {
         this.id = id;
     }
 
+    @NonNull
     public String getPoster() {
         return poster;
     }
 
-    public void setPoster(String poster) {
+    public void setPoster(@NonNull String poster) {
         this.poster = poster;
+    }
+
+    @Nullable
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(@Nullable String title) {
+        this.title = title;
+    }
+
+    @Nullable
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@Nullable String name) {
+        this.name = name;
+    }
+
+    @Nullable
+    public String getType() {
+        return type;
+    }
+
+    public void setType(@Nullable String type) {
+        this.type = type;
     }
 }

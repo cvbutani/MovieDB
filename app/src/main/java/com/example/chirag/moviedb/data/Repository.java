@@ -34,7 +34,11 @@ public class Repository implements DataContract {
 
     @Override
     public void getMovieInfoData(int movieId, OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-        mRemoteService.getMovieInfoRepo(movieId, callback);
+        if (isConnected) {
+            mRemoteService.getMovieInfoRepo(movieId, callback);
+        } else {
+            mLocalService.getMovieInfoRepo(movieId, callback);
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.example.chirag.moviedb.data.local.dao.TrailerDao;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
@@ -80,6 +81,7 @@ public class RemoteService implements RepositoryContract {
                     MovieInfo movieInfo = response.body();
                     if (movieInfo != null) {
                         callback.getMovieInfoSuccess(movieInfo);
+                        insertMovieInfo(movieInfo);
                     } else {
                         callback.getMovieInfoFailure("FAILURE");
                     }
@@ -129,7 +131,7 @@ public class RemoteService implements RepositoryContract {
                             Result item = response.body();
                             if (item != null) {
                                 callback.getPopularMovieSuccess(item);
-                                insertMovie(item, CONTENT_TYPE_POPULAR);
+                                insertMovieId(item, CONTENT_TYPE_POPULAR);
                             } else {
                                 callback.getPopularMovieFailure("FAILURE");
                             }
@@ -155,7 +157,7 @@ public class RemoteService implements RepositoryContract {
                             Result item = response.body();
                             if (item != null) {
                                 callback.getNowPlayingMovieSuccess(item);
-                                insertMovie(item, CONTENT_TYPE_NOW_PLAYING);
+                                insertMovieId(item, CONTENT_TYPE_NOW_PLAYING);
                             } else {
                                 callback.getNowPlayingMovieFailure("FAILURE");
                             }
@@ -180,7 +182,7 @@ public class RemoteService implements RepositoryContract {
                     Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getTopRatedMovieSuccess(item);
-                        insertMovie(item, CONTENT_TYPE_TOP_RATED);
+                        insertMovieId(item, CONTENT_TYPE_TOP_RATED);
                     } else {
                         callback.getTopRatedMovieFailure("FAILURE");
                     }
@@ -205,7 +207,7 @@ public class RemoteService implements RepositoryContract {
                     Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getUpcomingMovieSuccess(item);
-                        insertMovie(item, CONTENT_TYPE_UPCOMING);
+                        insertMovieId(item, CONTENT_TYPE_UPCOMING);
                     } else {
                         callback.getUpcomingMovieFailure("FAILURE");
                     }
@@ -394,21 +396,34 @@ public class RemoteService implements RepositoryContract {
         });
     }
 
-    private void insertMovie(final Result item, final String movieType) {
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                if (!mMovieDao.getMovie(movieType).isEmpty()) {
-//                    mMovieDao.deleteMovies(movieType);
-//                }
-//                for (final ResultResponse info : item.getResults()) {
-//                    info.setType(movieType);
-//                    info.setGenre(info.getMovieGenre());
-//                    mMovieDao.insertMovie(info);
-//                }
-//            }
-//        };
-//        mAppExecutors.getDiskIO().execute(runnable);
+    private void insertMovieId(final Result item, final String movieType) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!mMovieDao.getMovieId(movieType).isEmpty()) {
+                    mMovieDao.deleteMovieId(movieType);
+                }
+                for (final ResultResponse info : item.getResults()) {
+                    info.setType(movieType);
+                    mMovieDao.insertMovieId(info);
+                }
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
+    private void insertMovieInfo(final MovieInfo item) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mMovieDao.getMovieInfo(item.getId()) != null) {
+                    mMovieDao.deleteMovieInfo(item.getId());
+                }
+                item.setGenreInfo(item.getGenreInfo());
+                mMovieDao.insertMovieInfo(item);
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
 }

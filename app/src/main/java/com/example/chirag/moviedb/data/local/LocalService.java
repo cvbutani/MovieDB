@@ -6,6 +6,7 @@ import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
+import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -31,11 +32,8 @@ public class LocalService implements RepositoryContract {
     private static volatile LocalService INSTANCE;
 
     private MovieDao mMovieDao;
-
     private TrailerDao mTrailerDao;
-
     private ReviewDao mReviewDao;
-
 
     private AppExecutors mAppExecutors;
 
@@ -64,8 +62,24 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getMovieInfoRepo(int movieId, OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-
+    public void getMovieInfoRepo(final int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final MovieInfo movieInfo = mMovieDao.getMovieInfo(movieId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movieInfo != null) {
+                            callback.getMovieInfoSuccess(movieInfo);
+                        } else {
+                            callback.getMovieInfoFailure("LOCAL DATA FAILURE");
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -78,7 +92,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_POPULAR);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_POPULAR);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -93,7 +107,7 @@ public class LocalService implements RepositoryContract {
                 });
             }
         };
-//        mAppExecutors.getDiskIO().execute(runnable);
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -101,7 +115,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_NOW_PLAYING);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_NOW_PLAYING);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -116,7 +130,7 @@ public class LocalService implements RepositoryContract {
                 });
             }
         };
-//        mAppExecutors.getDiskIO().execute(runnable);
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -124,7 +138,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_TOP_RATED);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_TOP_RATED);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -139,7 +153,7 @@ public class LocalService implements RepositoryContract {
                 });
             }
         };
-//        mAppExecutors.getDiskIO().execute(runnable);
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -147,7 +161,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_UPCOMING);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_UPCOMING);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -162,7 +176,7 @@ public class LocalService implements RepositoryContract {
                 });
             }
         };
-//        mAppExecutors.getDiskIO().execute(runnable);
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -185,7 +199,7 @@ public class LocalService implements RepositoryContract {
                 });
             }
         };
-//        mAppExecutors.getDiskIO().execute(runnable);
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -208,11 +222,11 @@ public class LocalService implements RepositoryContract {
                 });
             }
         };
-//        mAppExecutors.getDiskIO().execute(runnable);
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getSimilarMoviesRepo(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+    public void getSimilarMoviesRepo(final int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
 
     }
 
