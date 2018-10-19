@@ -97,26 +97,11 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
         });
     }
 
-    @Override
-    public void getGenreMovies() {
-        mRepository.getMovieGenreListData(new OnTaskCompletion.OnGetGenresCompletion() {
-            @Override
-            public void getMovieGenreItemSuccess(Genre data) {
-                mCallback.getMovieGenreHome(data);
-            }
-
-            @Override
-            public void getMovieGenreItemFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
 
     @Override
     public void attachView(DbHomeContract.View view) {
         mCallback = view;
         getPopularMovies();
-        getGenreMovies();
         getNowPlayingMovies();
         getTopRatedMovies();
         getUpcomingMovies();

@@ -15,8 +15,6 @@ public interface DbHomeContract {
 
         void getResultFailure(String errorMessage);
 
-        void getMovieGenreHome(Genre data);
-
         void getNowPlayingMovieHome(Result data);
 
         void getTopRatedMovieHome(Result data);
@@ -33,8 +31,6 @@ public interface DbHomeContract {
         void getTopRatedMovies();
 
         void getUpcomingMovies();
-
-        void getGenreMovies();
 
         void attachView(DbHomeContract.View view);
     }

@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
+import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
 
 /**
  * MovieDB
@@ -98,11 +99,10 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         setLayout(data, mLinearLayoutNowPlaying, mTextViewLatest, "Latest TV Shows");
     }
 
-    private void startNewActivity(int movieId) {
+    private void startNewActivity(int movieId, String name) {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
         intent.putExtra(EXTRA_ID, movieId);
-//        intent.putExtra(EXTRA_TITLE, name);
-//        intent.putExtra(EXTRA_GENRE, mGenreList);
+        intent.putExtra(EXTRA_TITLE, name);
         intent.putExtra(CONTENT_TYPE, CONTENT_TV);
         startActivity(intent);
     }
@@ -121,8 +121,8 @@ public class TvFragment extends Fragment implements DBTvContract.View {
                 @Override
                 public void onClick(View view) {
                     mMovieId = item.getId();
-//                    String movieName = item.getOriginalName();
-                    startNewActivity(mMovieId);
+                    String movieName = item.getName();
+                    startNewActivity(mMovieId, movieName);
                 }
             });
             layout.addView(parent);

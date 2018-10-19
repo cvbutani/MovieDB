@@ -19,8 +19,9 @@ import retrofit2.http.Query;
  */
 public interface GetDataService {
 
-    @GET("movie/{movie_type}")
+    @GET("{result}/{movie_type}")
     Call<Result> getContentDataService(
+            @Path("result") String result,
             @Path("movie_type") String movieType,
             @Query("api_key") String apiKey,
             @Query("language") String language

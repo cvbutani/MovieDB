@@ -24,17 +24,11 @@ public interface RepositoryContract {
 
     void getReviewsRepo(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
 
-    void getMovieGenresRepo(final OnTaskCompletion.OnGetGenresCompletion callback);
-
     void getSimilarMoviesRepo(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
 
     void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 
-    void getTvGenresRepo(final OnTaskCompletion.OnGetTVGenreCompletion callback);
-
     void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback);
-
-    void getSeasonTvListRepo(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback);
 
     void getLatestTvRepo(final OnTaskCompletion.GetLatestTvCompletion callback);
 }

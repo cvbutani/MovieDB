@@ -26,11 +26,13 @@ import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
+import com.example.chirag.moviedb.data.model.Season;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 
+import com.example.chirag.moviedb.data.model.TvInfo;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -38,6 +40,7 @@ import com.squareup.picasso.Picasso;
 
 import static com.example.chirag.moviedb.data.Constant.BACKDROP_IMAGE_URL;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
@@ -71,11 +74,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     CardView mReviewCardView;
 
     int mMovieId;
-
     String mMovieName;
     boolean isConnected;
     String mContentType;
-    private boolean isContentClicked = false;
+    boolean isContentClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,47 +146,96 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void getMovieInfoHome(int movieId, MovieInfo data) {
-        if (data != null) {
-            if (movieId == data.getId()) {
-                String movieReleaseDate = data.getReleaseDate();
-                String movieLanguage = data.getOriginalLanguage();
-                double movieRating = data.getVoteAverage();
-                String movieOverview = data.getOverview();
-                String movieGenre;
+        if (mContentType.equals(CONTENT_MOVIE)) {
+            if (data != null) {
+                if (movieId == data.getId()) {
+                    String movieReleaseDate = data.getReleaseDate();
+                    String movieLanguage = data.getOriginalLanguage();
+                    double movieRating = data.getVoteAverage();
+                    String movieOverview = data.getOverview();
+                    String movieGenre;
 
-                StringBuilder builder = new StringBuilder();
-                String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
+                    StringBuilder builder = new StringBuilder();
+                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
 
-                builder = new StringBuilder();
-                String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data.getPosterPath()).toString();
+                    builder = new StringBuilder();
+                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data.getPosterPath()).toString();
 
-                Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
-                Picasso.get().load(imagePosterString).into(mImageViewPoster);
-                if (movieReleaseDate == null) {
-                    mTextViewReleaseDateLabel.setVisibility(View.GONE);
-                    mTextViewReleaseDate.setVisibility(View.GONE);
-                } else {
-                    mTextViewReleaseDateLabel.setVisibility(View.VISIBLE);
-                    mTextViewReleaseDate.setVisibility(View.VISIBLE);
-                    mTextViewReleaseDate.setText(movieReleaseDate);
-                }
-                mTextViewLanguage.setText(movieLanguage);
-                if (isConnected) {
-                    if (mContentType.equals(CONTENT_MOVIE)) {
+                    Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
+                    Picasso.get().load(imagePosterString).into(mImageViewPoster);
+                    if (movieReleaseDate == null) {
+                        mTextViewReleaseDateLabel.setVisibility(View.GONE);
+                        mTextViewReleaseDate.setVisibility(View.GONE);
+                    } else {
+                        mTextViewReleaseDateLabel.setVisibility(View.VISIBLE);
+                        mTextViewReleaseDate.setVisibility(View.VISIBLE);
+                        mTextViewReleaseDate.setText(movieReleaseDate);
+                    }
+                    mTextViewLanguage.setText(movieLanguage);
+                    if (isConnected) {
                         movieGenre = data.getGenreInfo();
                     } else {
-//                            movieGenre = genreTvString();
-                        // TODO 1 - Fix this error
-                        movieGenre = "Showing some Error";
+                        movieGenre = "asdasd";
+                    }
+                    mTextViewGenre.setText(movieGenre);
+                    mTextViewRating.setText(String.valueOf(movieRating));
+                    mTextViewOverview.setText(movieOverview);
+                } else {
+                    Logger.i(getString(R.string.movie_error));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void getTvInfoHome(int tvId, TvInfo data) {
+        if (mContentType.equals(CONTENT_TV)) {
+            if (data != null) {
+                if (tvId == data.getId()) {
+                    String tvReleaseDate = data.getFirstAirDate();
+                    String tvLanguage = data.getOriginalLanguage();
+                    double tvRating = data.getVoteAverage();
+                    String tvOverview = data.getOverview();
+                    String tvGenre;
+
+                    StringBuilder builder = new StringBuilder();
+                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
+
+                    builder = new StringBuilder();
+                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data.getPosterPath()).toString();
+
+                    Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
+                    Picasso.get().load(imagePosterString).into(mImageViewPoster);
+                    if (tvReleaseDate == null) {
+                        mTextViewReleaseDateLabel.setVisibility(View.GONE);
+                        mTextViewReleaseDate.setVisibility(View.GONE);
+                    } else {
+                        mTextViewReleaseDateLabel.setVisibility(View.VISIBLE);
+                        mTextViewReleaseDate.setVisibility(View.VISIBLE);
+                        mTextViewReleaseDate.setText(tvReleaseDate);
+                    }
+                    mTextViewLanguage.setText(tvLanguage);
+                    if (isConnected) {
+                        tvGenre = data.getGenreInfo();
+                    } else {
+                        tvGenre = "asdasd";
+                    }
+                    mTextViewGenre.setText(tvGenre);
+                    mTextViewRating.setText(String.valueOf(tvRating));
+                    mTextViewOverview.setText(tvOverview);
+
+                    mTextViewSimilarLabel.setText("Tv Season Information");
+                    for (final Season item : data.getSeasons()) {
+                        View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
+                        ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+                        StringBuilder seasonBuilder = new StringBuilder();
+                        String imageSeasonPosterString = seasonBuilder.append(POSTER_IMAGE_URL).append(item.getPosterPath()).toString();
+                        Picasso.get().load(imageSeasonPosterString).into(poster);
+                        mLinearLayoutSimilarMovies.addView(parent);
                     }
                 } else {
-                    movieGenre = "asdasd";
+                    Logger.i(getString(R.string.movie_error));
                 }
-                mTextViewGenre.setText(movieGenre);
-                mTextViewRating.setText(String.valueOf(movieRating));
-                mTextViewOverview.setText(movieOverview);
-            } else {
-                Logger.i(getString(R.string.movie_error));
             }
         }
     }
@@ -304,53 +355,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             }
         }
     }
-
-    @Override
-    public void getPopularTvDetail(Result data, int tvId) {
-//        movieData(data, tvId);
-    }
-
-    @Override
-    public void getGenreTvDetail(Genre data) {
-
-    }
-
-    @Override
-    public void getTopRatedTvDetail(Result data) {
-//        movieData(data, mMovieId);
-    }
-
-    @Override
-    public void getSeasonTvDetail(ResultResponse data, int tvId) {
-//        if (mContentType.equals(CONTENT_TV)) {
-//            if (data != null && data.getSeasons() != null) {
-//                mTrailerCardView.setVisibility(View.VISIBLE);
-//                mTextViewTrailer.setVisibility(View.VISIBLE);
-//                mTextViewSimilarLabel.setText("Tv Season Information");
-//                for (final Season item : data.getSeasons()) {
-//                    View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
-//                    ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-//                    StringBuilder builder = new StringBuilder();
-//                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPosterPath()).toString();
-//                    Picasso.get().load(imagePosterString).into(poster);
-//
-////            poster.setOnClickListener(new View.OnClickListener() {
-////                @Override
-////                public void onClick(View view) {
-////                    mMovieId = item.getId();
-////                    String movieName = item.getTitle();
-////                    startNewActivity(mMovieId, movieName);
-////                }
-////            });
-//                    mLinearLayoutSimilarMovies.addView(parent);
-//                }
-//            } else {
-//                mTrailerCardView.setVisibility(View.GONE);
-//                mTextViewTrailer.setVisibility(View.GONE);
-//            }
-//        }
-    }
-
 
     private void startNewActivity(int movieId, String movieName) {
         Intent intent = new Intent(getApplicationContext(), MovieDetailActivity.class);

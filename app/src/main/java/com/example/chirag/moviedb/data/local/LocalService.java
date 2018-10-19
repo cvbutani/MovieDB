@@ -212,11 +212,6 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getMovieGenresRepo(final OnTaskCompletion.OnGetGenresCompletion callback) {
-        //  Genre will be loaded automatically from database
-    }
-
-    @Override
     public void getSimilarMoviesRepo(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
 
     }
@@ -227,17 +222,7 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getTvGenresRepo(OnTaskCompletion.OnGetTVGenreCompletion callback) {
-
-    }
-
-    @Override
     public void getTopRatedTvRepo(OnTaskCompletion.GetTopRatedTvCompletion callback) {
-
-    }
-
-    @Override
-    public void getSeasonTvListRepo(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
 
     }
 

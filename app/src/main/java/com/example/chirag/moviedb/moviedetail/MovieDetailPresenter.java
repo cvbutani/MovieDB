@@ -7,6 +7,7 @@ import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
+import com.example.chirag.moviedb.data.model.TvInfo;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
@@ -48,6 +49,21 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
             @Override
             public void getMovieInfoFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void getTvInfo(final int tvId) {
+        mRepository.getTvInfoData(tvId, new OnTaskCompletion.OnGetTvInfoCompletion() {
+            @Override
+            public void getTvInfoSuccess(TvInfo data) {
+                mCallback.getTvInfoHome(tvId, data);
+            }
+
+            @Override
+            public void getTvInfoFailure(String errorMessage) {
                 mCallback.getResultFailure(errorMessage);
             }
         });
@@ -101,75 +117,12 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void getPopularTV(final int tvId) {
-        mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
-            @Override
-            public void getPopularTvSuccess(Result data) {
-                mCallback.getPopularTvDetail(data, tvId);
-            }
-
-            @Override
-            public void getPopularTvFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
-
-    @Override
-    public void getGenreTv() {
-        mRepository.getTVGenreListData(new OnTaskCompletion.OnGetTVGenreCompletion() {
-            @Override
-            public void getTVGenreSuccess(Genre data) {
-                mCallback.getGenreTvDetail(data);
-            }
-
-            @Override
-            public void getTVGenreFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
-
-    @Override
-    public void getTopRatedTv() {
-        mRepository.getTopRatedTvData(new OnTaskCompletion.GetTopRatedTvCompletion() {
-            @Override
-            public void getTvTopRatedContentSuccess(Result data) {
-                mCallback.getTopRatedTvDetail(data);
-            }
-
-            @Override
-            public void getTvTopRatedContentFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
-
-    @Override
-    public void getSeasonTv(final int tvId) {
-        mRepository.getSeasonTvListData(tvId, new OnTaskCompletion.GetTvSeasonCompletion() {
-            @Override
-            public void getTvSeasonContentSuccess(ResultResponse data) {
-                mCallback.getSeasonTvDetail(data, tvId);
-            }
-
-            @Override
-            public void getTvSeasonContentFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
-
-    @Override
     public void attachView(MovieDetailContract.View view, int id) {
         mCallback = view;
         getMovieInfo(id);
+        getTvInfo(id);
         getTrailer(id);
         getReviews(id);
         getSimilarMovie(id);
-        getPopularTV(id);
-        getTopRatedTv();
-        getSeasonTv(id);
-        getGenreTv();
     }
 }

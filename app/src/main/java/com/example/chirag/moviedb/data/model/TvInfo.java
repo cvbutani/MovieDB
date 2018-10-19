@@ -31,6 +31,9 @@ public class TvInfo implements Serializable {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("first_air_date")
+    @Expose
+    private String firstAirDate;
     @SerializedName("original_language")
     @Expose
     private String originalLanguage;
@@ -62,13 +65,14 @@ public class TvInfo implements Serializable {
     public TvInfo() {
     }
 
-    public TvInfo(String backdropPath, List<Genre> genres, String homepage, Integer id, List<String> languages, String name, String originalLanguage, String originalName, String overview, Double popularity, String posterPath, List<Season> seasons, Double voteAverage, Integer voteCount) {
+    public TvInfo(String backdropPath, List<Genre> genres, String homepage, Integer id, List<String> languages, String name, String firstAirDate, String originalLanguage, String originalName, String overview, Double popularity, String posterPath, List<Season> seasons, Double voteAverage, Integer voteCount) {
         this.backdropPath = backdropPath;
         this.genres = genres;
         this.homepage = homepage;
         this.id = id;
         this.languages = languages;
         this.name = name;
+        this.firstAirDate = firstAirDate;
         this.originalLanguage = originalLanguage;
         this.originalName = originalName;
         this.overview = overview;
@@ -125,6 +129,14 @@ public class TvInfo implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFirstAirDate() {
+        return firstAirDate;
+    }
+
+    public void setFirstAirDate(String firstAirDate) {
+        this.firstAirDate = firstAirDate;
     }
 
     public String getOriginalLanguage() {
@@ -189,5 +201,15 @@ public class TvInfo implements Serializable {
 
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
+    }
+
+    public String getGenreInfo() {
+        StringBuilder genre = new StringBuilder();
+        genre.append(getGenres().get(0).getName());
+        for (int i=1; i<getGenres().size(); i++) {
+            genre.append(", ");
+            genre.append(getGenres().get(i).getName());
+        }
+        return genre.toString();
     }
 }

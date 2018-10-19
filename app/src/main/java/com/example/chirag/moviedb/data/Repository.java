@@ -39,7 +39,7 @@ public class Repository implements DataContract {
 
     @Override
     public void getTvInfoData(int tvId, OnTaskCompletion.OnGetTvInfoCompletion callback) {
-
+        mRemoteService.getTvInfoRepo(tvId, callback);
     }
 
     @Override
@@ -84,11 +84,6 @@ public class Repository implements DataContract {
     }
 
     @Override
-    public void getMovieGenreListData(OnTaskCompletion.OnGetGenresCompletion callback) {
-        mRemoteService.getMovieGenresRepo(callback);
-    }
-
-    @Override
     public void getTrailerListData(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
         if (isConnected) {
             mRemoteService.getTrailersRepo(movieId, callback);
@@ -112,18 +107,8 @@ public class Repository implements DataContract {
     }
 
     @Override
-    public void getTVGenreListData(OnTaskCompletion.OnGetTVGenreCompletion callback) {
-        mRemoteService.getTvGenresRepo(callback);
-    }
-
-    @Override
     public void getTopRatedTvData(OnTaskCompletion.GetTopRatedTvCompletion callback) {
         mRemoteService.getTopRatedTvRepo(callback);
-    }
-
-    @Override
-    public void getSeasonTvListData(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
-        mRemoteService.getSeasonTvListRepo(tvId, callback);
     }
 
     @Override

@@ -24,11 +24,6 @@ public interface OnTaskCompletion {
         void getPopularMovieFailure(String errorMessage);
     }
 
-    interface OnGetGenresCompletion {
-        void getMovieGenreItemSuccess(Genre data);
-        void getMovieGenreItemFailure(String errorMessage);
-    }
-
     interface OnGetTrailerCompletion {
         void getTrailerItemSuccess(Trailer data);
         void getTrailerItemFailure(String errorMessage);
@@ -64,19 +59,9 @@ public interface OnTaskCompletion {
         void getPopularTvFailure(String errorMessage);
     }
 
-    interface OnGetTVGenreCompletion {
-        void getTVGenreSuccess(Genre data);
-        void getTVGenreFailure(String errorMessage);
-    }
-
     interface GetTopRatedTvCompletion {
         void getTvTopRatedContentSuccess(Result data);
         void getTvTopRatedContentFailure(String errorMessage);
-    }
-
-    interface GetTvSeasonCompletion {
-        void getTvSeasonContentSuccess(ResultResponse data);
-        void getTvSeasonContentFailure(String errorMessage);
     }
 
     interface GetLatestTvCompletion {

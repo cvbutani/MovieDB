@@ -72,7 +72,6 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
 
         return rootView;
-
     }
 
     @Override
@@ -83,11 +82,6 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     @Override
     public void getResultFailure(String errorMessage) {
 
-    }
-
-    @Override
-    public void getMovieGenreHome(Genre data) {
-        mGenreList = data;
     }
 
     @Override
@@ -109,7 +103,6 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
         intent.putExtra(EXTRA_ID, movieId);
         intent.putExtra(EXTRA_TITLE, movieName);
-//        intent.putExtra(EXTRA_GENRE, mGenreList);
         intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
         startActivity(intent);
     }

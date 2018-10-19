@@ -6,6 +6,7 @@ import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.data.model.TvInfo;
 
 /**
  * MovieDB
@@ -16,6 +17,8 @@ public interface MovieDetailContract {
     interface View {
         void getMovieInfoHome(int movieId, MovieInfo data);
 
+        void getTvInfoHome(int tvId, TvInfo data);
+
         void getTrailerDetail(Trailer data);
 
         void getResultFailure(String errorMessage);
@@ -23,32 +26,18 @@ public interface MovieDetailContract {
         void getReviewDetail(Reviews data);
 
         void getSimilarMovieDetail(Result data, int movieId);
-
-        void getPopularTvDetail(Result data, int id);
-
-        void getGenreTvDetail(Genre data);
-
-        void getTopRatedTvDetail(Result data);
-
-        void getSeasonTvDetail(ResultResponse data, int tvId);
     }
 
     interface Presenter {
         void getMovieInfo(int movieId);
+
+        void getTvInfo(int tvId);
 
         void getTrailer(int movieId);
 
         void getReviews(int movieId);
 
         void getSimilarMovie(int movieId);
-
-        void getPopularTV(int tvId);
-
-        void getGenreTv();
-
-        void getTopRatedTv();
-
-        void getSeasonTv(int tvId);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }
