@@ -33,86 +33,96 @@ public class Repository implements DataContract {
     }
 
     @Override
+    public void getMovieInfoData(int movieId, OnTaskCompletion.OnGetMovieInfoCompletion callback) {
+        mRemoteService.getMovieInfoRepo(movieId, callback);
+    }
+
+    @Override
     public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
         if (isConnected) {
-            mRemoteService.getPopularMovies(callback);
+            mRemoteService.getPopularMoviesRepo(callback);
         } else {
-            mLocalService.getPopularMovies(callback);
+            mLocalService.getPopularMoviesRepo(callback);
         }
     }
 
     @Override
     public void getNowPlayingMoviesData(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
         if (isConnected) {
-            mRemoteService.getNowPlayingMovies(callback);
+            mRemoteService.getNowPlayingMoviesRepo(callback);
         } else {
-            mLocalService.getNowPlayingMovies(callback);
+            mLocalService.getNowPlayingMoviesRepo(callback);
         }
     }
 
     @Override
     public void getTopRatedMoviesData(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
         if (isConnected) {
-            mRemoteService.getTopRatedMovies(callback);
+            mRemoteService.getTopRatedMoviesRepo(callback);
         } else {
-            mLocalService.getTopRatedMovies(callback);
+            mLocalService.getTopRatedMoviesRepo(callback);
         }
     }
 
     @Override
     public void getUpcomingMoviesData(OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
         if (isConnected) {
-            mRemoteService.getUpcomingMovies(callback);
+            mRemoteService.getUpcomingMoviesRepo(callback);
         } else {
-            mLocalService.getUpcomingMovies(callback);
+            mLocalService.getUpcomingMoviesRepo(callback);
         }
     }
 
     @Override
     public void getSimilarMoviesData(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
-        mRemoteService.getSimilarMovies(movieId, callback);
+        mRemoteService.getSimilarMoviesRepo(movieId, callback);
     }
 
     @Override
-    public void getGenreList(OnTaskCompletion.OnGetGenresCompletion callback) {
-        mRemoteService.getGenres(callback);
+    public void getMovieGenreListData(OnTaskCompletion.OnGetGenresCompletion callback) {
+        mRemoteService.getMovieGenresRepo(callback);
     }
 
     @Override
-    public void getTrailerList(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
+    public void getTrailerListData(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
         if (isConnected) {
-            mRemoteService.getTrailers(movieId, callback);
+            mRemoteService.getTrailersRepo(movieId, callback);
         } else {
-            mLocalService.getTrailers(movieId, callback);
+            mLocalService.getTrailersRepo(movieId, callback);
         }
     }
 
     @Override
-    public void getReviews(int movieId, OnTaskCompletion.OnGetReviewCompletion callback) {
+    public void getReviewsListData(int movieId, OnTaskCompletion.OnGetReviewCompletion callback) {
         if (isConnected) {
-            mRemoteService.getReviews(movieId, callback);
+            mRemoteService.getReviewsRepo(movieId, callback);
         } else {
-            mLocalService.getReviews(movieId, callback);
+            mLocalService.getReviewsRepo(movieId, callback);
         }
     }
 
     @Override
     public void getPopularTvData(OnTaskCompletion.OnGetPopularTvCompletion callback) {
-        mRemoteService.getPopularTv(callback);
+        mRemoteService.getPopularTvRepo(callback);
     }
 
     @Override
-    public void getTVGenreList(OnTaskCompletion.OnGetTVGenreCompletion callback) {
-        mRemoteService.getTVGenreList(callback);
+    public void getTVGenreListData(OnTaskCompletion.OnGetTVGenreCompletion callback) {
+        mRemoteService.getTvGenresRepo(callback);
     }
 
     @Override
-    public void getTVTopRated(OnTaskCompletion.GetTopRatedTvCompletion callback) {
-        mRemoteService.getTVTopRated(callback);
+    public void getTopRatedTvData(OnTaskCompletion.GetTopRatedTvCompletion callback) {
+        mRemoteService.getTopRatedTvRepo(callback);
     }
 
     @Override
-    public void getTvSeasonList(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
-        mRemoteService.getTvSeasonList(tvId, callback);
+    public void getSeasonTvListData(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
+        mRemoteService.getSeasonTvListRepo(tvId, callback);
+    }
+
+    @Override
+    public void getLatestTvData(OnTaskCompletion.GetLatestTvCompletion callback) {
+        mRemoteService.getLatestTvRepo(callback);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
@@ -26,11 +27,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     MovieDetailPresenter(Context context, boolean isConnected) {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
         RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
@@ -38,122 +39,137 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void getTrailerList(int movieId) {
-
-        mRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
+    public void getMovieInfo(final int movieId) {
+        mRepository.getMovieInfoData(movieId, new OnTaskCompletion.OnGetMovieInfoCompletion() {
             @Override
-            public void onTrailerItemSuccess(Trailer data) {
-                mCallback.onTrailerListSuccess(data);
+            public void getMovieInfoSuccess(MovieInfo data) {
+                mCallback.getMovieInfoHome(movieId, data);
             }
 
             @Override
-            public void onTrailerItemFailure(String errorMessage) {
-                mCallback.onTrailerListFailure(errorMessage);
+            public void getMovieInfoFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getMovieData(final int movieId) {
+    public void getTrailer(int movieId) {
+
+        mRepository.getTrailerListData(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
+            @Override
+            public void getTrailerItemSuccess(Trailer data) {
+                mCallback.getTrailerDetail(data);
+            }
+
+            @Override
+            public void getTrailerItemFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void getPopularMovie(final int movieId) {
         mRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
-            public void onHeaderItemSuccess(Movies data) {
-                mCallback.onMovieDetail(data, movieId);
+            public void getPopularMovieSuccess(Movies data) {
+                mCallback.getPopularMovieDetail(data, movieId);
             }
 
             @Override
-            public void onHeaderItemFailure(String errorMessage) {
-
+            public void getPopularMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getNowPlayingData(final int movieId) {
+    public void getNowPlayingMovie(final int movieId) {
         mRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
             @Override
-            public void onNowPlayingMovieSuccess(Movies data) {
-                mCallback.onNowPlayingMovie(data, movieId);
+            public void getNowPlayingMovieSuccess(Movies data) {
+                mCallback.getNowPlayingMovieDetail(data, movieId);
             }
 
             @Override
-            public void onNowPlayingMovieFailure(String errorMessage) {
-
+            public void getNowPlayingMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getTopRatedData(final int movieId) {
+    public void getTopRatedMovie(final int movieId) {
         mRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
             @Override
-            public void onTopRatedMovieSuccess(Movies data) {
-                mCallback.onTopRatedMovie(data, movieId);
+            public void getTopRatedMovieSuccess(Movies data) {
+                mCallback.getTopRatedMovieDetail(data, movieId);
             }
 
             @Override
-            public void onTopRatedMovieFailure(String errorMessage) {
-
+            public void getTopRatedMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getUpcomingData(final int movieId) {
+    public void getUpcomingMovie(final int movieId) {
         mRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
             @Override
-            public void onUpcomingMovieSuccess(Movies data) {
-                mCallback.onUpcomingMovie(data, movieId);
+            public void getUpcomingMovieSuccess(Movies data) {
+                mCallback.getUpcomingMovieDetail(data, movieId);
             }
 
             @Override
-            public void onUpcomingMovieFailure(String errorMessage) {
-
+            public void getUpcomingMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getGenreItem() {
-        mRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
+    public void getGenreMovie() {
+        mRepository.getMovieGenreListData(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
-            public void onGenreListSuccess(Genre data) {
-                mCallback.onGenreDetail(data);
+            public void getMovieGenreItemSuccess(Genre data) {
+                mCallback.getGenreMovieDetail(data);
             }
 
             @Override
-            public void onGenreListFailure(String errorMessage) {
-
+            public void getMovieGenreItemFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
     public void getReviews(int movieId) {
-        mRepository.getReviews(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
+        mRepository.getReviewsListData(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
             @Override
-            public void onReviewResponseSuccess(Reviews data) {
-                mCallback.onReviewDetail(data);
+            public void getReviewResponseSuccess(Reviews data) {
+                mCallback.getReviewDetail(data);
             }
 
             @Override
-            public void onReviewResponseFailure(String errorMessage) {
-
+            public void getReviewResponseFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getSimilarData(final int movieId) {
+    public void getSimilarMovie(final int movieId) {
         mRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
             @Override
-            public void onSimilarMovieSuccess(Movies data) {
-                mCallback.onSimilarMovieSuccess(data, movieId);
+            public void getSimilarMovieSuccess(Movies data) {
+                mCallback.getSimilarMovieDetail(data, movieId);
             }
 
             @Override
-            public void onSimilarMovieFailure(String errorMessage) {
-                mCallback.onSimilarMovieFailure(errorMessage);
+            public void getSimilarMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
@@ -162,75 +178,77 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getPopularTV(final int tvId) {
         mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
             @Override
-            public void onPopularTvSuccess(Movies data) {
-                mCallback.onPopularTV(data, tvId);
+            public void getPopularTvSuccess(Movies data) {
+                mCallback.getPopularTvDetail(data, tvId);
             }
 
             @Override
-            public void onPopularTvFailure(String errorMessage) {
-
+            public void getPopularTvFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getTVGenreDetail() {
-        mRepository.getTVGenreList(new OnTaskCompletion.OnGetTVGenreCompletion() {
+    public void getGenreTv() {
+        mRepository.getTVGenreListData(new OnTaskCompletion.OnGetTVGenreCompletion() {
             @Override
-            public void onTVGenreSuccess(Genre data) {
-                mCallback.onTVGenreDetail(data);
+            public void getTVGenreSuccess(Genre data) {
+                mCallback.getGenreTvDetail(data);
             }
 
             @Override
-            public void onTVGenreFailure(String errorMessage) {
-
+            public void getTVGenreFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getTVTopRatedDetail() {
-        mRepository.getTVTopRated(new OnTaskCompletion.GetTopRatedTvCompletion() {
+    public void getTopRatedTv() {
+        mRepository.getTopRatedTvData(new OnTaskCompletion.GetTopRatedTvCompletion() {
             @Override
             public void getTvTopRatedContentSuccess(Movies data) {
-                mCallback.getTvTopRatedDetail(data);
+                mCallback.getTopRatedTvDetail(data);
             }
 
             @Override
             public void getTvTopRatedContentFailure(String errorMessage) {
-
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getTvSeasonDetail(final int tvId) {
-        mRepository.getTvSeasonList(tvId, new OnTaskCompletion.GetTvSeasonCompletion() {
+    public void getSeasonTv(final int tvId) {
+        mRepository.getSeasonTvListData(tvId, new OnTaskCompletion.GetTvSeasonCompletion() {
             @Override
             public void getTvSeasonContentSuccess(MovieResponse data) {
-                mCallback.getTvSeasonDetail(data, tvId);
+                mCallback.getSeasonTvDetail(data, tvId);
             }
 
             @Override
             public void getTvSeasonContentFailure(String errorMessage) {
-
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void attachView(MovieDetailContract.View view, int movieId) {
+    public void attachView(MovieDetailContract.View view, int id) {
         mCallback = view;
-        getTrailerList(movieId);
-        getMovieData(movieId);
-        getReviews(movieId);
-        getNowPlayingData(movieId);
-        getTopRatedData(movieId);
-        getUpcomingData(movieId);
-        getSimilarData(movieId);
-        getGenreItem();
-        getPopularTV(movieId);
-        getTVTopRatedDetail();
-        getTvSeasonDetail(movieId);
+        getMovieInfo(id);
+        getTrailer(id);
+        getPopularMovie(id);
+        getReviews(id);
+        getNowPlayingMovie(id);
+        getTopRatedMovie(id);
+        getUpcomingMovie(id);
+        getSimilarMovie(id);
+        getGenreMovie();
+        getPopularTV(id);
+        getTopRatedTv();
+        getSeasonTv(id);
+        getGenreTv();
     }
 }

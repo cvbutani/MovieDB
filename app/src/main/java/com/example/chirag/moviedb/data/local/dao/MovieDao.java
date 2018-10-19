@@ -30,7 +30,7 @@ public interface MovieDao {
      * @param movieId the movie Id.
      * @return movie information with movieId.
      */
-    @Query("SELECT * FROM movie WHERE entryid = :movieId ")
+    @Query("SELECT * FROM movie WHERE id = :movieId ")
     MovieResponse getMovieById(int movieId);
 
     /**
@@ -41,7 +41,7 @@ public interface MovieDao {
     @Insert
     void insertMovie(MovieResponse movie);
 
-    @Query("UPDATE movie SET genre= :newGenre WHERE entryid= :movieId")
+    @Query("UPDATE movie SET type =:newGenre WHERE id= :movieId")
     void insertGenre(String newGenre, int movieId);
 
 //    /**

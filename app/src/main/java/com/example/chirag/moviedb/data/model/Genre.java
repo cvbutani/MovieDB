@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class Genre implements Serializable {
 
-    @SerializedName("genres")
+    @SerializedName("name")
     @Expose
-    private List<GenreResponse> genreResponses = null;
+    private String name;
 
     /**
      * No args constructor for use in serialization
@@ -23,19 +23,19 @@ public class Genre implements Serializable {
     }
 
     /**
-     * @param genreResponses
+     * @param name
      */
-    public Genre(List<GenreResponse> genreResponses) {
+    public Genre(String name) {
         super();
-        this.genreResponses = genreResponses;
+        this.name = name;
     }
 
-    public List<GenreResponse> getGenreResponses() {
-        return genreResponses;
+    public String getName() {
+        return name;
     }
 
-    public void setGenreResponses(List<GenreResponse> genreResponses) {
-        this.genreResponses = genreResponses;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

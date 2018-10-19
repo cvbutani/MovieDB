@@ -24,12 +24,12 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public DbHomePresenter(Context context, boolean isConnected) {
 
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
         RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
@@ -40,13 +40,13 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getNowPlayingMovies() {
         mRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
             @Override
-            public void onNowPlayingMovieSuccess(Movies data) {
-                mCallback.onNowPlayingMovieSuccess(data);
+            public void getNowPlayingMovieSuccess(Movies data) {
+                mCallback.getNowPlayingMovieHome(data);
             }
 
             @Override
-            public void onNowPlayingMovieFailure(String errorMessage) {
-                mCallback.onNowPlayingMovieFailure(errorMessage);
+            public void getNowPlayingMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
@@ -55,13 +55,13 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getPopularMovies() {
         mRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
-            public void onHeaderItemSuccess(Movies data) {
-                mCallback.onHeaderResultSuccess(data);
+            public void getPopularMovieSuccess(Movies data) {
+                mCallback.getPopularMovieHome(data);
             }
 
             @Override
-            public void onHeaderItemFailure(String errorMessage) {
-                mCallback.onHeaderResultFailure(errorMessage);
+            public void getPopularMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
 
         });
@@ -71,13 +71,13 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getTopRatedMovies() {
         mRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
             @Override
-            public void onTopRatedMovieSuccess(Movies data) {
-                mCallback.onTopRatedMovieSuccess(data);
+            public void getTopRatedMovieSuccess(Movies data) {
+                mCallback.getTopRatedMovieHome(data);
             }
 
             @Override
-            public void onTopRatedMovieFailure(String errorMessage) {
-                mCallback.onTopRatedMovieFailure(errorMessage);
+            public void getTopRatedMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
@@ -86,28 +86,28 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getUpcomingMovies() {
         mRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
             @Override
-            public void onUpcomingMovieSuccess(Movies data) {
-                mCallback.onUpcomingMovieSuccess(data);
+            public void getUpcomingMovieSuccess(Movies data) {
+                mCallback.getUpcomingMovieHome(data);
             }
 
             @Override
-            public void onUpcomingMovieFailure(String errorMessage) {
-                mCallback.onUpcomingMovieFailure(errorMessage);
+            public void getUpcomingMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getGenreList() {
-        mRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
+    public void getGenreMovies() {
+        mRepository.getMovieGenreListData(new OnTaskCompletion.OnGetGenresCompletion() {
             @Override
-            public void onGenreListSuccess(Genre data) {
-                mCallback.onGenreListSuccess(data);
+            public void getMovieGenreItemSuccess(Genre data) {
+                mCallback.getMovieGenreHome(data);
             }
 
             @Override
-            public void onGenreListFailure(String errorMessage) {
-                mCallback.onGenreListFailure(errorMessage);
+            public void getMovieGenreItemFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
@@ -116,7 +116,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void attachView(DbHomeContract.View view) {
         mCallback = view;
         getPopularMovies();
-        getGenreList();
+        getGenreMovies();
         getNowPlayingMovies();
         getTopRatedMovies();
         getUpcomingMovies();

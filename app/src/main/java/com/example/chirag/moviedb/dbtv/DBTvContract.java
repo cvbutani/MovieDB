@@ -10,20 +10,22 @@ public interface DBTvContract {
 
     interface View {
 
-        void onPopularTvSuccess(Movies data);
+        void getPopularTvHome(Movies data);
 
-        void onPopularTvFailure(String errorMessage);
+        void getResultFailure(String errorMessage);
 
-        void getTVTopRatedContentSuccess(Movies data);
+        void getTopRatedTvHome(Movies data);
 
-        void getTVTopRatedContentFailure(String errorMessage);
+        void getLatestTvHome(Movies data);
     }
 
     interface Presenter {
 
         void getPopularTv();
 
-        void getTvTopRated();
+        void getTopRatedTv();
+
+        void getLatestTv();
 
         void attachView(DBTvContract.View view);
     }

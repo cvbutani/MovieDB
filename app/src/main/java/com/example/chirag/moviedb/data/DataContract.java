@@ -7,6 +7,8 @@ import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
  * Created by Chirag on 04/09/18.
  */
 public interface DataContract {
+    void getMovieInfoData(int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback);
+
     void getPopularMoviesData(final OnTaskCompletion.OnGetMovieCompletion callback);
 
     void getNowPlayingMoviesData(final OnTaskCompletion.OnGetNowPlayingCompletion callback);
@@ -17,17 +19,19 @@ public interface DataContract {
 
     void getSimilarMoviesData(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
 
-    void getGenreList(final OnTaskCompletion.OnGetGenresCompletion callback);
+    void getMovieGenreListData(final OnTaskCompletion.OnGetGenresCompletion callback);
 
-    void getTrailerList(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
+    void getTrailerListData(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
 
-    void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
+    void getReviewsListData(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
 
     void getPopularTvData(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 
-    void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback);
+    void getTVGenreListData(final OnTaskCompletion.OnGetTVGenreCompletion callback);
 
-    void getTVTopRated(final OnTaskCompletion.GetTopRatedTvCompletion callback);
+    void getTopRatedTvData(final OnTaskCompletion.GetTopRatedTvCompletion callback);
 
-    void getTvSeasonList(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback);
+    void getSeasonTvListData(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback);
+
+    void getLatestTvData(final OnTaskCompletion.GetLatestTvCompletion callback);
 }

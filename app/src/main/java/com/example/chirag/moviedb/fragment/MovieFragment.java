@@ -77,60 +77,40 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void onHeaderResultSuccess(Movies data) {
+    public void getPopularMovieHome(Movies data) {
         setLayout(data, mLinearLayoutMovieHome);
     }
 
     @Override
-    public void onHeaderResultFailure(String errorMessage) {
+    public void getResultFailure(String errorMessage) {
 
     }
 
     @Override
-    public void onGenreListSuccess(Genre data) {
+    public void getMovieGenreHome(Genre data) {
         mGenreList = data;
     }
 
     @Override
-    public void onGenreListFailure(String errorMessage) {
-
-    }
-
-    @Override
-    public void onNowPlayingMovieSuccess(Movies data) {
+    public void getNowPlayingMovieHome(Movies data) {
         setLayout(data, mLinearLayoutNowPlaying);
     }
 
     @Override
-    public void onNowPlayingMovieFailure(String errorMessage) {
-
-    }
-
-    @Override
-    public void onTopRatedMovieSuccess(Movies data) {
+    public void getTopRatedMovieHome(Movies data) {
         setLayout(data, mLinearLayoutTopRated);
     }
 
     @Override
-    public void onTopRatedMovieFailure(String errorMessage) {
-
-    }
-
-    @Override
-    public void onUpcomingMovieSuccess(Movies data) {
+    public void getUpcomingMovieHome(Movies data) {
         setLayout(data, mLinearLayoutUpcoming);
     }
 
-    @Override
-    public void onUpcomingMovieFailure(String errorMessage) {
-
-    }
-
-    private void startNewActivity(int movieId, String name) {
+    private void startNewActivity(int movieId, String movieName) {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
         intent.putExtra(EXTRA_ID, movieId);
-        intent.putExtra(EXTRA_TITLE, name);
-        intent.putExtra(EXTRA_GENRE, mGenreList);
+        intent.putExtra(EXTRA_TITLE, movieName);
+//        intent.putExtra(EXTRA_GENRE, mGenreList);
         intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
         startActivity(intent);
     }

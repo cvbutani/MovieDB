@@ -8,27 +8,31 @@ import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
  */
 public interface RepositoryContract {
 
-    void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback);
+    void getMovieInfoRepo(int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback);
 
-    void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback);
+    void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback);
 
-    void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback);
+    void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback);
 
-    void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback);
+    void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback);
 
-    void getTrailers(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
+    void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback);
 
-    void getReviews(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
+    void getTrailersRepo(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
 
-    void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback);
+    void getReviewsRepo(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
 
-    void getSimilarMovies(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
+    void getMovieGenresRepo(final OnTaskCompletion.OnGetGenresCompletion callback);
 
-    void getPopularTv(final OnTaskCompletion.OnGetPopularTvCompletion callback);
+    void getSimilarMoviesRepo(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
 
-    void getTVGenreList(final OnTaskCompletion.OnGetTVGenreCompletion callback);
+    void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 
-    void getTVTopRated(final OnTaskCompletion.GetTopRatedTvCompletion callback);
+    void getTvGenresRepo(final OnTaskCompletion.OnGetTVGenreCompletion callback);
 
-    void getTvSeasonList(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback);
+    void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback);
+
+    void getSeasonTvListRepo(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback);
+
+    void getLatestTvRepo(final OnTaskCompletion.GetLatestTvCompletion callback);
 }

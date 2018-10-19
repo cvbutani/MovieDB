@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.moviedetail;
 
 import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -13,60 +14,61 @@ import com.example.chirag.moviedb.data.model.Trailer;
 public interface MovieDetailContract {
 
     interface View {
-        void onTrailerListSuccess(Trailer data);
+        void getMovieInfoHome(int movieId, MovieInfo data);
 
-        void onTrailerListFailure(String errorMessage);
+        void getTrailerDetail(Trailer data);
 
-        void onMovieDetail(Movies data, int movieId);
+        void getResultFailure(String errorMessage);
 
-        void onReviewDetail(Reviews data);
+        void getPopularMovieDetail(Movies data, int movieId);
 
-        void onGenreDetail(Genre data);
+        void getReviewDetail(Reviews data);
 
-        void onNowPlayingMovie(Movies data, int movieId);
+        void getGenreMovieDetail(Genre data);
 
-        void onTopRatedMovie(Movies data, int movieId);
+        void getNowPlayingMovieDetail(Movies data, int movieId);
 
-        void onUpcomingMovie(Movies data, int movieId);
+        void getTopRatedMovieDetail(Movies data, int movieId);
 
-        void onSimilarMovieSuccess(Movies data, int movieId);
+        void getUpcomingMovieDetail(Movies data, int movieId);
 
-        void onSimilarMovieFailure(String errorMessage);
+        void getSimilarMovieDetail(Movies data, int movieId);
 
-        void onPopularTV(Movies data, int tvId);
+        void getPopularTvDetail(Movies data, int tvId);
 
-        void onTVGenreDetail(Genre data);
+        void getGenreTvDetail(Genre data);
 
-        void getTvTopRatedDetail(Movies data);
+        void getTopRatedTvDetail(Movies data);
 
-        void getTvSeasonDetail(MovieResponse data, int tvId);
+        void getSeasonTvDetail(MovieResponse data, int tvId);
     }
 
     interface Presenter {
+        void getMovieInfo(int movieId);
 
-        void getTrailerList(int movieId);
+        void getTrailer(int movieId);
 
-        void getMovieData(int movieId);
+        void getPopularMovie(int movieId);
 
-        void getNowPlayingData(int movieId);
+        void getNowPlayingMovie(int movieId);
 
-        void getTopRatedData(int movieId);
+        void getTopRatedMovie(int movieId);
 
-        void getUpcomingData(int movieId);
+        void getUpcomingMovie(int movieId);
 
-        void getGenreItem();
+        void getGenreMovie();
 
         void getReviews(int movieId);
 
-        void getSimilarData(int movieId);
+        void getSimilarMovie(int movieId);
 
         void getPopularTV(int tvId);
 
-        void getTVGenreDetail();
+        void getGenreTv();
 
-        void getTVTopRatedDetail();
+        void getTopRatedTv();
 
-        void getTvSeasonDetail(int tvId);
+        void getSeasonTv(int tvId);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

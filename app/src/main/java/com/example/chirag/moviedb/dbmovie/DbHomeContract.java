@@ -2,6 +2,7 @@ package com.example.chirag.moviedb.dbmovie;
 
 
 import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.MovieInfo;
 import com.example.chirag.moviedb.data.model.Movies;
 
 /**
@@ -11,30 +12,21 @@ import com.example.chirag.moviedb.data.model.Movies;
 public interface DbHomeContract {
 
     interface View {
-        void onHeaderResultSuccess(Movies data);
+        void getPopularMovieHome(Movies data);
 
-        void onHeaderResultFailure(String errorMessage);
+        void getResultFailure(String errorMessage);
 
-        void onGenreListSuccess(Genre data);
+        void getMovieGenreHome(Genre data);
 
-        void onGenreListFailure(String errorMessage);
+        void getNowPlayingMovieHome(Movies data);
 
-        void onNowPlayingMovieSuccess(Movies data);
+        void getTopRatedMovieHome(Movies data);
 
-        void onNowPlayingMovieFailure(String errorMessage);
-
-        void onTopRatedMovieSuccess(Movies data);
-
-        void onTopRatedMovieFailure(String errorMessage);
-
-        void onUpcomingMovieSuccess(Movies data);
-
-        void onUpcomingMovieFailure(String errorMessage);
+        void getUpcomingMovieHome(Movies data);
 
     }
 
     interface Presenter {
-
         void getNowPlayingMovies();
 
         void getPopularMovies();
@@ -43,7 +35,7 @@ public interface DbHomeContract {
 
         void getUpcomingMovies();
 
-        void getGenreList();
+        void getGenreMovies();
 
         void attachView(DbHomeContract.View view);
     }

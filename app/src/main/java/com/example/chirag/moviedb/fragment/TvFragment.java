@@ -48,6 +48,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
 
     private TextView mTextViewTopRated;
     TextView mTextViewPopular;
+    TextView mTextViewLatest;
 
     private ConnectivityManager mConnectivityManager;
     private NetworkInfo mActiveNetwork;
@@ -77,35 +78,36 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
         mTextViewTopRated = rootView.findViewById(R.id.movie_top_rated_label);
         mTextViewPopular = rootView.findViewById(R.id.popular_label);
+        mTextViewLatest = rootView.findViewById(R.id.now_playing_label);
 
         return rootView;
     }
 
     @Override
-    public void onPopularTvSuccess(Movies data) {
+    public void getPopularTvHome(Movies data) {
         setLayout(data, mLinearLayoutMovieHome, mTextViewPopular, "Popular TV Shows");
     }
 
     @Override
-    public void onPopularTvFailure(String errorMessage) {
+    public void getResultFailure(String errorMessage) {
 
     }
 
     @Override
-    public void getTVTopRatedContentSuccess(Movies data) {
-        setLayout(data,mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
+    public void getTopRatedTvHome(Movies data) {
+        setLayout(data, mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
     }
 
     @Override
-    public void getTVTopRatedContentFailure(String errorMessage) {
-
+    public void getLatestTvHome(Movies data) {
+        setLayout(data, mLinearLayoutNowPlaying, mTextViewLatest, "Latest TV Shows");
     }
 
-    private void startNewActivity(int movieId, String name) {
+    private void startNewActivity(int movieId) {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
         intent.putExtra(EXTRA_ID, movieId);
-        intent.putExtra(EXTRA_TITLE, name);
-        intent.putExtra(EXTRA_GENRE, mGenreList);
+//        intent.putExtra(EXTRA_TITLE, name);
+//        intent.putExtra(EXTRA_GENRE, mGenreList);
         intent.putExtra(CONTENT_TYPE, CONTENT_TV);
         startActivity(intent);
     }
@@ -124,8 +126,8 @@ public class TvFragment extends Fragment implements DBTvContract.View {
                 @Override
                 public void onClick(View view) {
                     mMovieId = item.getId();
-                    String movieName = item.getOriginalName();
-                    startNewActivity(mMovieId, movieName);
+//                    String movieName = item.getOriginalName();
+                    startNewActivity(mMovieId);
                 }
             });
             layout.addView(parent);

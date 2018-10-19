@@ -64,7 +64,12 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getPopularMovies(final OnTaskCompletion.OnGetMovieCompletion callback) {
+    public void getMovieInfoRepo(int movieId, OnTaskCompletion.OnGetMovieInfoCompletion callback) {
+
+    }
+
+    @Override
+    public void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -73,21 +78,21 @@ public class LocalService implements RepositoryContract {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
-                            callback.onHeaderItemFailure("LOCAL DATA FAILURE");
+                            callback.getPopularMovieFailure("LOCAL DATA FAILURE");
                         } else {
                             Movies item = new Movies();
                             item.setResults(movies);
-                            callback.onHeaderItemSuccess(item);
+                            callback.getPopularMovieSuccess(item);
                         }
                     }
                 });
             }
         };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getNowPlayingMovies(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
+    public void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -96,21 +101,21 @@ public class LocalService implements RepositoryContract {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
-                            callback.onNowPlayingMovieFailure("LOCAL DATA FAILURE");
+                            callback.getNowPlayingMovieFailure("LOCAL DATA FAILURE");
                         } else {
                             Movies item = new Movies();
                             item.setResults(movies);
-                            callback.onNowPlayingMovieSuccess(item);
+                            callback.getNowPlayingMovieSuccess(item);
                         }
                     }
                 });
             }
         };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getTopRatedMovies(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
+    public void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -119,21 +124,21 @@ public class LocalService implements RepositoryContract {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
-                            callback.onTopRatedMovieFailure("LOCAL DATA FAILURE");
+                            callback.getTopRatedMovieFailure("LOCAL DATA FAILURE");
                         } else {
                             Movies item = new Movies();
                             item.setResults(movies);
-                            callback.onTopRatedMovieSuccess(item);
+                            callback.getTopRatedMovieSuccess(item);
                         }
                     }
                 });
             }
         };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getUpcomingMovies(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
+    public void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -142,21 +147,21 @@ public class LocalService implements RepositoryContract {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
-                            callback.onUpcomingMovieFailure("LOCAL DATA FAILURE");
+                            callback.getUpcomingMovieFailure("LOCAL DATA FAILURE");
                         } else {
                             Movies item = new Movies();
                             item.setResults(movies);
-                            callback.onUpcomingMovieSuccess(item);
+                            callback.getUpcomingMovieSuccess(item);
                         }
                     }
                 });
             }
         };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getTrailers(final int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
+    public void getTrailersRepo(final int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -165,21 +170,21 @@ public class LocalService implements RepositoryContract {
                     @Override
                     public void run() {
                         if (trailers.isEmpty()) {
-                            callback.onTrailerItemFailure("LOCAL DATA FAILURE");
+                            callback.getTrailerItemFailure("LOCAL DATA FAILURE");
                         } else {
                             Trailer trailer = new Trailer();
                             trailer.setResults(trailers);
-                            callback.onTrailerItemSuccess(trailer);
+                            callback.getTrailerItemSuccess(trailer);
                         }
                     }
                 });
             }
         };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getReviews(final int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+    public void getReviewsRepo(final int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -188,46 +193,51 @@ public class LocalService implements RepositoryContract {
                     @Override
                     public void run() {
                         if (reviews.isEmpty()) {
-                            callback.onReviewResponseFailure("LOCAL DATA FAILURE");
+                            callback.getReviewResponseFailure("LOCAL DATA FAILURE");
                         } else {
                             Reviews reviewList = new Reviews();
                             reviewList.setResults(reviews);
-                            callback.onReviewResponseSuccess(reviewList);
+                            callback.getReviewResponseSuccess(reviewList);
                         }
                     }
                 });
             }
         };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getGenres(final OnTaskCompletion.OnGetGenresCompletion callback) {
+    public void getMovieGenresRepo(final OnTaskCompletion.OnGetGenresCompletion callback) {
         //  Genre will be loaded automatically from database
     }
 
     @Override
-    public void getSimilarMovies(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+    public void getSimilarMoviesRepo(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
 
     }
 
     @Override
-    public void getPopularTv(OnTaskCompletion.OnGetPopularTvCompletion callback) {
+    public void getPopularTvRepo(OnTaskCompletion.OnGetPopularTvCompletion callback) {
 
     }
 
     @Override
-    public void getTVGenreList(OnTaskCompletion.OnGetTVGenreCompletion callback) {
+    public void getTvGenresRepo(OnTaskCompletion.OnGetTVGenreCompletion callback) {
 
     }
 
     @Override
-    public void getTVTopRated(OnTaskCompletion.GetTopRatedTvCompletion callback) {
+    public void getTopRatedTvRepo(OnTaskCompletion.GetTopRatedTvCompletion callback) {
 
     }
 
     @Override
-    public void getTvSeasonList(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
+    public void getSeasonTvListRepo(int tvId, OnTaskCompletion.GetTvSeasonCompletion callback) {
+
+    }
+
+    @Override
+    public void getLatestTvRepo(OnTaskCompletion.GetLatestTvCompletion callback) {
 
     }
 }

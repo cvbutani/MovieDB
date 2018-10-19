@@ -23,12 +23,12 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public DBTvPresenter(Context context, boolean isConnected) {
 
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
         RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).loacalDao(),
+                LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).trailerDao(),
                 LocalDatabase.getInstance(context).reviewDao());
 
@@ -39,28 +39,43 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void getPopularTv() {
         mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
             @Override
-            public void onPopularTvSuccess(Movies data) {
-                mCallback.onPopularTvSuccess(data);
+            public void getPopularTvSuccess(Movies data) {
+                mCallback.getPopularTvHome(data);
             }
 
             @Override
-            public void onPopularTvFailure(String errorMessage) {
-                mCallback.onPopularTvFailure(errorMessage);
+            public void getPopularTvFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getTvTopRated() {
-        mRepository.getTVTopRated(new OnTaskCompletion.GetTopRatedTvCompletion() {
+    public void getTopRatedTv() {
+        mRepository.getTopRatedTvData(new OnTaskCompletion.GetTopRatedTvCompletion() {
             @Override
             public void getTvTopRatedContentSuccess(Movies data) {
-                mCallback.getTVTopRatedContentSuccess(data);
+                mCallback.getTopRatedTvHome(data);
             }
 
             @Override
             public void getTvTopRatedContentFailure(String errorMessage) {
-                mCallback.getTVTopRatedContentFailure(errorMessage);
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void getLatestTv() {
+        mRepository.getLatestTvData(new OnTaskCompletion.GetLatestTvCompletion() {
+            @Override
+            public void getLatestTvSuccess(Movies data) {
+                mCallback.getLatestTvHome(data);
+            }
+
+            @Override
+            public void getLatestTvFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
@@ -69,6 +84,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void attachView(DBTvContract.View view) {
         this.mCallback = view;
         getPopularTv();
-        getTvTopRated();
+        getTopRatedTv();
+        getLatestTv();
     }
 }

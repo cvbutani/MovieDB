@@ -8,7 +8,6 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
-import com.example.chirag.moviedb.data.model.GenreResponse;
 import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
@@ -22,7 +21,7 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;
 
-    public abstract MovieDao loacalDao();
+    public abstract MovieDao localDao();
 
     public abstract TrailerDao trailerDao();
 
