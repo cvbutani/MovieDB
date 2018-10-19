@@ -9,6 +9,8 @@ import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 public interface DataContract {
     void getMovieInfoData(int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback);
 
+    void getTvInfoData(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback);
+
     void getPopularMoviesData(final OnTaskCompletion.OnGetMovieCompletion callback);
 
     void getNowPlayingMoviesData(final OnTaskCompletion.OnGetNowPlayingCompletion callback);

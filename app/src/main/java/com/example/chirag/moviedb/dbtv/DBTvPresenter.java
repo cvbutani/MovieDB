@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 /**
@@ -39,7 +39,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void getPopularTv() {
         mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
             @Override
-            public void getPopularTvSuccess(Movies data) {
+            public void getPopularTvSuccess(Result data) {
                 mCallback.getPopularTvHome(data);
             }
 
@@ -54,7 +54,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void getTopRatedTv() {
         mRepository.getTopRatedTvData(new OnTaskCompletion.GetTopRatedTvCompletion() {
             @Override
-            public void getTvTopRatedContentSuccess(Movies data) {
+            public void getTvTopRatedContentSuccess(Result data) {
                 mCallback.getTopRatedTvHome(data);
             }
 
@@ -69,7 +69,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void getLatestTv() {
         mRepository.getLatestTvData(new OnTaskCompletion.GetLatestTvCompletion() {
             @Override
-            public void getLatestTvSuccess(Movies data) {
+            public void getLatestTvSuccess(Result data) {
                 mCallback.getLatestTvHome(data);
             }
 

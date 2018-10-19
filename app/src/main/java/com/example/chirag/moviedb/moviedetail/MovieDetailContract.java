@@ -2,8 +2,8 @@ package com.example.chirag.moviedb.moviedetail;
 
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.MovieInfo;
-import com.example.chirag.moviedb.data.model.MovieResponse;
-import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 
@@ -20,43 +20,23 @@ public interface MovieDetailContract {
 
         void getResultFailure(String errorMessage);
 
-        void getPopularMovieDetail(Movies data, int movieId);
-
         void getReviewDetail(Reviews data);
 
-        void getGenreMovieDetail(Genre data);
+        void getSimilarMovieDetail(Result data, int movieId);
 
-        void getNowPlayingMovieDetail(Movies data, int movieId);
-
-        void getTopRatedMovieDetail(Movies data, int movieId);
-
-        void getUpcomingMovieDetail(Movies data, int movieId);
-
-        void getSimilarMovieDetail(Movies data, int movieId);
-
-        void getPopularTvDetail(Movies data, int tvId);
+        void getPopularTvDetail(Result data, int id);
 
         void getGenreTvDetail(Genre data);
 
-        void getTopRatedTvDetail(Movies data);
+        void getTopRatedTvDetail(Result data);
 
-        void getSeasonTvDetail(MovieResponse data, int tvId);
+        void getSeasonTvDetail(ResultResponse data, int tvId);
     }
 
     interface Presenter {
         void getMovieInfo(int movieId);
 
         void getTrailer(int movieId);
-
-        void getPopularMovie(int movieId);
-
-        void getNowPlayingMovie(int movieId);
-
-        void getTopRatedMovie(int movieId);
-
-        void getUpcomingMovie(int movieId);
-
-        void getGenreMovie();
 
         void getReviews(int movieId);
 

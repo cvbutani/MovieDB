@@ -16,11 +16,11 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 18/10/18.
  */
-//@Entity(tableName = "movie")
+@Entity(tableName = "movie")
 public class MovieInfo implements Serializable {
 
-//    @PrimaryKey(autoGenerate = true)
-//    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
     @ColumnInfo(name = "primaryKey")
     private int primaryKey;
 

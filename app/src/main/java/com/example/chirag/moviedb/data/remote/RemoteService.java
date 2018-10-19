@@ -1,6 +1,5 @@
 package com.example.chirag.moviedb.data.remote;
 
-import android.graphics.Movie;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
@@ -9,12 +8,12 @@ import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.MovieInfo;
-import com.example.chirag.moviedb.data.model.Movies;
-import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
+import com.example.chirag.moviedb.data.model.TvInfo;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -26,8 +25,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_LATEST;
 import static com.example.chirag.moviedb.data.Constant.LANGUAGE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
@@ -97,13 +94,37 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
+    public void getTvInfoRepo(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback) {
+        mServiceApi.getTvInfoDataService(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TvInfo>() {
+            @Override
+            public void onResponse(Call<TvInfo> call, Response<TvInfo> response) {
+                if (response.isSuccessful()) {
+                    TvInfo tvInfo = response.body();
+                    if (tvInfo != null) {
+                        callback.getTvInfoSuccess(tvInfo);
+                    } else {
+                        callback.getTvInfoFailure("FAILURE");
+                    }
+                } else {
+                    callback.getTvInfoFailure("FAILURE");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TvInfo> call, Throwable t) {
+                callback.getTvInfoFailure(t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback) {
         mServiceApi.getContentDataService(CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE)
-                .enqueue(new Callback<Movies>() {
+                .enqueue(new Callback<Result>() {
                     @Override
-                    public void onResponse(Call<Movies> call, Response<Movies> response) {
+                    public void onResponse(Call<Result> call, Response<Result> response) {
                         if (response.isSuccessful()) {
-                            Movies item = response.body();
+                            Result item = response.body();
                             if (item != null) {
                                 callback.getPopularMovieSuccess(item);
                                 insertMovie(item, CONTENT_TYPE_POPULAR);
@@ -116,7 +137,7 @@ public class RemoteService implements RepositoryContract {
                     }
 
                     @Override
-                    public void onFailure(Call<Movies> call, Throwable t) {
+                    public void onFailure(Call<Result> call, Throwable t) {
                         callback.getPopularMovieFailure(t.getMessage());
                     }
                 });
@@ -125,11 +146,11 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
         mServiceApi.getContentDataService(CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY, LANGUAGE)
-                .enqueue(new Callback<Movies>() {
+                .enqueue(new Callback<Result>() {
                     @Override
-                    public void onResponse(Call<Movies> call, Response<Movies> response) {
+                    public void onResponse(Call<Result> call, Response<Result> response) {
                         if (response.isSuccessful()) {
-                            Movies item = response.body();
+                            Result item = response.body();
                             if (item != null) {
                                 callback.getNowPlayingMovieSuccess(item);
                                 insertMovie(item, CONTENT_TYPE_NOW_PLAYING);
@@ -142,7 +163,7 @@ public class RemoteService implements RepositoryContract {
                     }
 
                     @Override
-                    public void onFailure(Call<Movies> call, Throwable t) {
+                    public void onFailure(Call<Result> call, Throwable t) {
                         callback.getNowPlayingMovieFailure(t.getMessage());
                     }
                 });
@@ -150,11 +171,11 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_TYPE_TOP_RATED, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+        mServiceApi.getContentDataService(CONTENT_TYPE_TOP_RATED, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<Movies> call, Response<Movies> response) {
+            public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
-                    Movies item = response.body();
+                    Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getTopRatedMovieSuccess(item);
                         insertMovie(item, CONTENT_TYPE_TOP_RATED);
@@ -167,7 +188,7 @@ public class RemoteService implements RepositoryContract {
             }
 
             @Override
-            public void onFailure(Call<Movies> call, Throwable t) {
+            public void onFailure(Call<Result> call, Throwable t) {
                 callback.getTopRatedMovieFailure(t.getMessage());
             }
         });
@@ -175,11 +196,11 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_TYPE_UPCOMING, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+        mServiceApi.getContentDataService(CONTENT_TYPE_UPCOMING, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<Movies> call, Response<Movies> response) {
+            public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
-                    Movies item = response.body();
+                    Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getUpcomingMovieSuccess(item);
                         insertMovie(item, CONTENT_TYPE_UPCOMING);
@@ -192,7 +213,7 @@ public class RemoteService implements RepositoryContract {
             }
 
             @Override
-            public void onFailure(Call<Movies> call, Throwable t) {
+            public void onFailure(Call<Result> call, Throwable t) {
                 callback.getUpcomingMovieFailure(t.getMessage());
             }
         });
@@ -294,11 +315,11 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getSimilarMoviesRepo(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
-        mServiceApi.getSimilarMovieDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+        mServiceApi.getSimilarMovieDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<Movies> call, Response<Movies> response) {
+            public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
-                    Movies item = response.body();
+                    Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getSimilarMovieSuccess(item);
                     } else {
@@ -310,7 +331,7 @@ public class RemoteService implements RepositoryContract {
             }
 
             @Override
-            public void onFailure(Call<Movies> call, Throwable t) {
+            public void onFailure(Call<Result> call, Throwable t) {
                 callback.getSimilarMovieFailure(t.getMessage());
             }
         });
@@ -318,11 +339,11 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
-//        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Movies>() {
+//        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
 //            @Override
-//            public void onResponse(Call<Movies> call, Response<Movies> response) {
+//            public void onResponse(Call<Result> call, Response<Result> response) {
 //                if (response.isSuccessful()) {
-//                    Movies item = response.body();
+//                    Result item = response.body();
 //                    if (item != null && item.getResults() != null) {
 //                        callback.getPopularTvSuccess(item);
 //                    } else {
@@ -334,7 +355,7 @@ public class RemoteService implements RepositoryContract {
 //            }
 //
 //            @Override
-//            public void onFailure(Call<Movies> call, Throwable t) {
+//            public void onFailure(Call<Result> call, Throwable t) {
 //                callback.getPopularTvFailure(t.getMessage());
 //            }
 //        });
@@ -367,11 +388,11 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback) {
 //        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY, LANGUAGE)
-//                .enqueue(new Callback<Movies>() {
+//                .enqueue(new Callback<Result>() {
 //                    @Override
-//                    public void onResponse(Call<Movies> call, Response<Movies> response) {
+//                    public void onResponse(Call<Result> call, Response<Result> response) {
 //                        if (response.isSuccessful()) {
-//                            Movies tvItem = response.body();
+//                            Result tvItem = response.body();
 //                            if (tvItem != null && tvItem.getResults() != null) {
 //                                callback.getTvTopRatedContentSuccess(tvItem);
 //                            } else {
@@ -383,7 +404,7 @@ public class RemoteService implements RepositoryContract {
 //                    }
 //
 //                    @Override
-//                    public void onFailure(Call<Movies> call, Throwable t) {
+//                    public void onFailure(Call<Result> call, Throwable t) {
 //                        callback.getTvTopRatedContentFailure(t.getMessage());
 //                    }
 //                });
@@ -391,11 +412,11 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getSeasonTvListRepo(int tvId, final OnTaskCompletion.GetTvSeasonCompletion callback) {
-//        mServiceApi.getTvSeasonDataService(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<MovieResponse>() {
+//        mServiceApi.getTvSeasonDataService(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<ResultResponse>() {
 //            @Override
-//            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+//            public void onResponse(Call<ResultResponse> call, Response<ResultResponse> response) {
 //                if (response.isSuccessful()) {
-//                    MovieResponse tvSeason = response.body();
+//                    ResultResponse tvSeason = response.body();
 //                    if (tvSeason != null && tvSeason.getSeasons() != null) {
 //                        callback.getTvSeasonContentSuccess(tvSeason);
 //                    } else {
@@ -407,7 +428,7 @@ public class RemoteService implements RepositoryContract {
 //            }
 //
 //            @Override
-//            public void onFailure(Call<MovieResponse> call, Throwable t) {
+//            public void onFailure(Call<ResultResponse> call, Throwable t) {
 //                callback.getTvSeasonContentFailure(t.getMessage());
 //            }
 //        });
@@ -416,11 +437,11 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getLatestTvRepo(final OnTaskCompletion.GetLatestTvCompletion callback) {
 //        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_LATEST, TMDB_API_KEY, LANGUAGE)
-//                .enqueue(new Callback<Movies>() {
+//                .enqueue(new Callback<Result>() {
 //                    @Override
-//                    public void onResponse(Call<Movies> call, Response<Movies> response) {
+//                    public void onResponse(Call<Result> call, Response<Result> response) {
 //                        if (response.isSuccessful()) {
-//                            Movies latestTv = response.body();
+//                            Result latestTv = response.body();
 //                            if (latestTv != null && latestTv.getResults() != null) {
 //                                callback.getLatestTvSuccess(latestTv);
 //                            } else {
@@ -432,20 +453,20 @@ public class RemoteService implements RepositoryContract {
 //                    }
 //
 //                    @Override
-//                    public void onFailure(Call<Movies> call, Throwable t) {
+//                    public void onFailure(Call<Result> call, Throwable t) {
 //                        callback.getLatestTvFailure(t.getMessage());
 //                    }
 //                });
     }
 
-    private void insertMovie(final Movies item, final String movieType) {
+    private void insertMovie(final Result item, final String movieType) {
 //        Runnable runnable = new Runnable() {
 //            @Override
 //            public void run() {
 //                if (!mMovieDao.getMovie(movieType).isEmpty()) {
 //                    mMovieDao.deleteMovies(movieType);
 //                }
-//                for (final MovieResponse info : item.getResults()) {
+//                for (final ResultResponse info : item.getResults()) {
 //                    info.setType(movieType);
 //                    info.setGenre(info.getMovieGenre());
 //                    mMovieDao.insertMovie(info);

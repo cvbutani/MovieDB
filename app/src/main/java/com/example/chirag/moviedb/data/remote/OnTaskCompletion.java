@@ -1,13 +1,12 @@
 package com.example.chirag.moviedb.data.remote;
 
-import android.graphics.Movie;
-
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.MovieInfo;
-import com.example.chirag.moviedb.data.model.MovieResponse;
-import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.ResultResponse;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.data.model.TvInfo;
 
 /**
  * MovieDB
@@ -21,7 +20,7 @@ public interface OnTaskCompletion {
     }
 
     interface OnGetMovieCompletion {
-        void getPopularMovieSuccess(Movies data);
+        void getPopularMovieSuccess(Result data);
         void getPopularMovieFailure(String errorMessage);
     }
 
@@ -41,27 +40,27 @@ public interface OnTaskCompletion {
     }
 
     interface OnGetNowPlayingCompletion {
-        void getNowPlayingMovieSuccess(Movies data);
+        void getNowPlayingMovieSuccess(Result data);
         void getNowPlayingMovieFailure(String errorMessage);
     }
 
     interface OnGetTopRatedMovieCompletion {
-        void getTopRatedMovieSuccess(Movies data);
+        void getTopRatedMovieSuccess(Result data);
         void getTopRatedMovieFailure(String errorMessage);
     }
 
     interface OnGetUpcomingMovieCompletion {
-        void getUpcomingMovieSuccess(Movies data);
+        void getUpcomingMovieSuccess(Result data);
         void getUpcomingMovieFailure(String errorMessage);
     }
 
     interface OnGetSimilarMovieCompletion {
-        void getSimilarMovieSuccess(Movies data);
+        void getSimilarMovieSuccess(Result data);
         void getSimilarMovieFailure(String errorMessage);
     }
 
     interface OnGetPopularTvCompletion {
-        void getPopularTvSuccess(Movies data);
+        void getPopularTvSuccess(Result data);
         void getPopularTvFailure(String errorMessage);
     }
 
@@ -71,17 +70,23 @@ public interface OnTaskCompletion {
     }
 
     interface GetTopRatedTvCompletion {
-        void getTvTopRatedContentSuccess(Movies data);
+        void getTvTopRatedContentSuccess(Result data);
         void getTvTopRatedContentFailure(String errorMessage);
     }
 
     interface GetTvSeasonCompletion {
-        void getTvSeasonContentSuccess(MovieResponse data);
+        void getTvSeasonContentSuccess(ResultResponse data);
         void getTvSeasonContentFailure(String errorMessage);
     }
 
     interface GetLatestTvCompletion {
-        void getLatestTvSuccess(Movies data);
+        void getLatestTvSuccess(Result data);
         void getLatestTvFailure(String errorMessage);
     }
+
+    interface OnGetTvInfoCompletion {
+        void getTvInfoSuccess(TvInfo data);
+        void getTvInfoFailure(String errorMessage);
+    }
+
 }

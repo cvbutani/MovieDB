@@ -15,17 +15,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.chirag.moviedb.R;
-import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.dbmovie.DbHomeContract;
 import com.example.chirag.moviedb.dbmovie.DbHomePresenter;
 import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
-import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
 
@@ -77,7 +76,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void getPopularMovieHome(Movies data) {
+    public void getPopularMovieHome(Result data) {
         setLayout(data, mLinearLayoutMovieHome);
     }
 
@@ -92,17 +91,17 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
     }
 
     @Override
-    public void getNowPlayingMovieHome(Movies data) {
+    public void getNowPlayingMovieHome(Result data) {
         setLayout(data, mLinearLayoutNowPlaying);
     }
 
     @Override
-    public void getTopRatedMovieHome(Movies data) {
+    public void getTopRatedMovieHome(Result data) {
         setLayout(data, mLinearLayoutTopRated);
     }
 
     @Override
-    public void getUpcomingMovieHome(Movies data) {
+    public void getUpcomingMovieHome(Result data) {
         setLayout(data, mLinearLayoutUpcoming);
     }
 
@@ -115,9 +114,9 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
         startActivity(intent);
     }
 
-    private void setLayout(Movies data, LinearLayout layout) {
+    private void setLayout(Result data, LinearLayout layout) {
         layout.removeAllViews();
-        for (final MovieResponse item : data.getResults()) {
+        for (final ResultResponse item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
             StringBuilder builder = new StringBuilder();

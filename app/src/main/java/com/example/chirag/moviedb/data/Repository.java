@@ -38,6 +38,11 @@ public class Repository implements DataContract {
     }
 
     @Override
+    public void getTvInfoData(int tvId, OnTaskCompletion.OnGetTvInfoCompletion callback) {
+
+    }
+
+    @Override
     public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
         if (isConnected) {
             mRemoteService.getPopularMoviesRepo(callback);

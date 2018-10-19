@@ -6,13 +6,13 @@ import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
-import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
@@ -69,18 +69,23 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
+    public void getTvInfoRepo(int tvId, OnTaskCompletion.OnGetTvInfoCompletion callback) {
+
+    }
+
+    @Override
     public void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_POPULAR);
+                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_POPULAR);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.getPopularMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            Movies item = new Movies();
+                            Result item = new Result();
                             item.setResults(movies);
                             callback.getPopularMovieSuccess(item);
                         }
@@ -96,14 +101,14 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_NOW_PLAYING);
+                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_NOW_PLAYING);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.getNowPlayingMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            Movies item = new Movies();
+                            Result item = new Result();
                             item.setResults(movies);
                             callback.getNowPlayingMovieSuccess(item);
                         }
@@ -119,14 +124,14 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_TOP_RATED);
+                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_TOP_RATED);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.getTopRatedMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            Movies item = new Movies();
+                            Result item = new Result();
                             item.setResults(movies);
                             callback.getTopRatedMovieSuccess(item);
                         }
@@ -142,14 +147,14 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<MovieResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_UPCOMING);
+                final List<ResultResponse> movies = mMovieDao.getMovie(CONTENT_TYPE_UPCOMING);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (movies.isEmpty()) {
                             callback.getUpcomingMovieFailure("LOCAL DATA FAILURE");
                         } else {
-                            Movies item = new Movies();
+                            Result item = new Result();
                             item.setResults(movies);
                             callback.getUpcomingMovieSuccess(item);
                         }

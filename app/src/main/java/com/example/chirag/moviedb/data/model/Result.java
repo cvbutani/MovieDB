@@ -10,32 +10,32 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 18/10/18.
  */
-public class Movies implements Serializable {
+public class Result implements Serializable {
 
     @SerializedName("results")
     @Expose
-    private List<MovieResponse> results = null;
+    private List<ResultResponse> results = null;
 
     /**
      * No args constructor for use in serialization
      */
-    public Movies() {
+    public Result() {
     }
 
     /**
      * @param results
      */
-    public Movies(List<MovieResponse> results) {
+    public Result(List<ResultResponse> results) {
         super();
 
         this.results = results;
     }
 
-    public List<MovieResponse> getResults() {
+    public List<ResultResponse> getResults() {
         return results;
     }
 
-    public void setResults(List<MovieResponse> results) {
+    public void setResults(List<ResultResponse> results) {
         this.results = results;
     }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,21 +16,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
+import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.dbtv.DBTvContract;
 import com.example.chirag.moviedb.dbtv.DBTvPresenter;
 import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.Movies;
-import com.example.chirag.moviedb.data.model.MovieResponse;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
-import static com.example.chirag.moviedb.data.Constant.EXTRA_GENRE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
-import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
 
 /**
  * MovieDB
@@ -84,7 +79,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     }
 
     @Override
-    public void getPopularTvHome(Movies data) {
+    public void getPopularTvHome(Result data) {
         setLayout(data, mLinearLayoutMovieHome, mTextViewPopular, "Popular TV Shows");
     }
 
@@ -94,12 +89,12 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     }
 
     @Override
-    public void getTopRatedTvHome(Movies data) {
+    public void getTopRatedTvHome(Result data) {
         setLayout(data, mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
     }
 
     @Override
-    public void getLatestTvHome(Movies data) {
+    public void getLatestTvHome(Result data) {
         setLayout(data, mLinearLayoutNowPlaying, mTextViewLatest, "Latest TV Shows");
     }
 
@@ -112,10 +107,10 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         startActivity(intent);
     }
 
-    private void setLayout(Movies data, LinearLayout layout, TextView textView, String title) {
+    private void setLayout(Result data, LinearLayout layout, TextView textView, String title) {
         layout.removeAllViews();
         textView.setText(title);
-        for (final MovieResponse item : data.getResults()) {
+        for (final ResultResponse item : data.getResults()) {
             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
             ImageView poster = parent.findViewById(R.id.movie_home_imageview);
             StringBuilder builder = new StringBuilder();

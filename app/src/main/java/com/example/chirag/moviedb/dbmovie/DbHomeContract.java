@@ -2,8 +2,7 @@ package com.example.chirag.moviedb.dbmovie;
 
 
 import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.MovieInfo;
-import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Result;
 
 /**
  * MovieDB
@@ -12,17 +11,17 @@ import com.example.chirag.moviedb.data.model.Movies;
 public interface DbHomeContract {
 
     interface View {
-        void getPopularMovieHome(Movies data);
+        void getPopularMovieHome(Result data);
 
         void getResultFailure(String errorMessage);
 
         void getMovieGenreHome(Genre data);
 
-        void getNowPlayingMovieHome(Movies data);
+        void getNowPlayingMovieHome(Result data);
 
-        void getTopRatedMovieHome(Movies data);
+        void getTopRatedMovieHome(Result data);
 
-        void getUpcomingMovieHome(Movies data);
+        void getUpcomingMovieHome(Result data);
 
     }
 

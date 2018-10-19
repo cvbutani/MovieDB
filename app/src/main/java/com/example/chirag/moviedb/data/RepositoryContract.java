@@ -10,6 +10,8 @@ public interface RepositoryContract {
 
     void getMovieInfoRepo(int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback);
 
+    void getTvInfoRepo(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback);
+
     void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback);
 
     void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback);

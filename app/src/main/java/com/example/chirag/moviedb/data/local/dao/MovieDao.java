@@ -2,10 +2,9 @@ package com.example.chirag.moviedb.data.local.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.example.chirag.moviedb.data.model.MovieResponse;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public interface MovieDao {
      * @return all movies.
      */
     @Query("SELECT * FROM movie WHERE type= :value")
-    List<MovieResponse> getMovie(String value);
+    List<ResultResponse> getMovie(String value);
 
     /**
      * Select a movie by id.
@@ -31,7 +30,7 @@ public interface MovieDao {
      * @return movie information with movieId.
      */
     @Query("SELECT * FROM movie WHERE id = :movieId ")
-    MovieResponse getMovieById(int movieId);
+    ResultResponse getMovieById(int movieId);
 
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
@@ -39,7 +38,7 @@ public interface MovieDao {
      * @param movie the movie to be inserted.
      */
     @Insert
-    void insertMovie(MovieResponse movie);
+    void insertMovie(ResultResponse movie);
 
     @Query("UPDATE movie SET type =:newGenre WHERE id= :movieId")
     void insertGenre(String newGenre, int movieId);
@@ -51,7 +50,7 @@ public interface MovieDao {
 //     * @return the number of movies updated. This should always be 1.
 //     */
 //    @Update
-//    int UpdateMovie(MovieResponse movie);
+//    int UpdateMovie(ResultResponse movie);
 
 //    /**
 //     * Get a movie by Id. Update its author and review column.
@@ -73,7 +72,7 @@ public interface MovieDao {
 //    void insertTrailerInMovie(String movieId, String trailerId);
 
     /**
-     * Delete all Movies.
+     * Delete all Result.
      */
     @Query("DELETE FROM movie WHERE type= :value")
     void deleteMovies(String value);

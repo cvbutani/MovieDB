@@ -18,7 +18,7 @@ import java.io.Serializable;
  * Created by Chirag on 04/09/18.
  */
 @Entity(tableName = "movie")
-public class MovieResponse implements Serializable {
+public class ResultResponse implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private Integer primary_key;
@@ -35,13 +35,26 @@ public class MovieResponse implements Serializable {
     @Expose
     private String title;
 
+    @SerializedName("name")
+    @Expose
+    private String name;
+
     private String type;
 
-    public MovieResponse(Integer id, String poster, String title, String type) {
+    public ResultResponse(Integer id, String poster, String title, String type, String name) {
         this.id = id;
         this.poster = poster;
         this.title = title;
         this.type = type;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getPrimary_key() {

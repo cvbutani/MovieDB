@@ -2,10 +2,11 @@ package com.example.chirag.moviedb.service;
 
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.MovieInfo;
-import com.example.chirag.moviedb.data.model.MovieResponse;
-import com.example.chirag.moviedb.data.model.Movies;
+import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.data.model.TvInfo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -19,7 +20,7 @@ import retrofit2.http.Query;
 public interface GetDataService {
 
     @GET("movie/{movie_type}")
-    Call<Movies> getContentDataService(
+    Call<Result> getContentDataService(
             @Path("movie_type") String movieType,
             @Query("api_key") String apiKey,
             @Query("language") String language
@@ -28,6 +29,13 @@ public interface GetDataService {
     @GET("movie/{movie_id}")
     Call<MovieInfo> getMovieInfoDataService(
             @Path("movie_id") int id,
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
+    @GET("tv/{tv_id}")
+    Call<TvInfo> getTvInfoDataService(
+            @Path("tv_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
@@ -53,14 +61,14 @@ public interface GetDataService {
     );
 
     @GET("movie/{movie_id}/similar")
-    Call<Movies> getSimilarMovieDataService(
+    Call<Result> getSimilarMovieDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
     @GET("tv/{tv_id}")
-    Call<MovieResponse> getTvSeasonDataService(
+    Call<ResultResponse> getTvSeasonDataService(
             @Path("tv_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language

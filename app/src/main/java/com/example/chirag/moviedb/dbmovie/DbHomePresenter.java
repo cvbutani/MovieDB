@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.Movies;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 /**
@@ -40,7 +40,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getNowPlayingMovies() {
         mRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
             @Override
-            public void getNowPlayingMovieSuccess(Movies data) {
+            public void getNowPlayingMovieSuccess(Result data) {
                 mCallback.getNowPlayingMovieHome(data);
             }
 
@@ -55,7 +55,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getPopularMovies() {
         mRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
             @Override
-            public void getPopularMovieSuccess(Movies data) {
+            public void getPopularMovieSuccess(Result data) {
                 mCallback.getPopularMovieHome(data);
             }
 
@@ -71,7 +71,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getTopRatedMovies() {
         mRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
             @Override
-            public void getTopRatedMovieSuccess(Movies data) {
+            public void getTopRatedMovieSuccess(Result data) {
                 mCallback.getTopRatedMovieHome(data);
             }
 
@@ -86,7 +86,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     public void getUpcomingMovies() {
         mRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
             @Override
-            public void getUpcomingMovieSuccess(Movies data) {
+            public void getUpcomingMovieSuccess(Result data) {
                 mCallback.getUpcomingMovieHome(data);
             }
 
