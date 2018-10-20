@@ -53,12 +53,21 @@ public class ResultResponse implements Serializable {
     @ColumnInfo(name = "type")
     private String type;
 
-    public ResultResponse(@NonNull Integer id, @NonNull String poster, @Nullable String title, @Nullable String name, @Nullable String type) {
+    @Nullable
+    @ColumnInfo(name = "content")
+    private String content;
+
+    public ResultResponse() {
+    }
+
+    public ResultResponse(@NonNull Integer id, @NonNull String poster, @Nullable String title,
+                          @Nullable String name, @Nullable String type, @Nullable String key) {
         this.id = id;
         this.poster = poster;
         this.title = title;
         this.name = name;
         this.type = type;
+        this.content = key;
     }
 
     @NonNull
@@ -113,5 +122,14 @@ public class ResultResponse implements Serializable {
 
     public void setType(@Nullable String type) {
         this.type = type;
+    }
+
+    @Nullable
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(@Nullable String content) {
+        this.content = content;
     }
 }

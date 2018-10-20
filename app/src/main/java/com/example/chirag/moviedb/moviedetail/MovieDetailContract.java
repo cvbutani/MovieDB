@@ -1,12 +1,9 @@
 package com.example.chirag.moviedb.moviedetail;
 
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
-import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
-import com.example.chirag.moviedb.data.model.TvInfo;
 
 /**
  * MovieDB
@@ -15,9 +12,9 @@ import com.example.chirag.moviedb.data.model.TvInfo;
 public interface MovieDetailContract {
 
     interface View {
-        void getMovieInfoHome(int movieId, MovieInfo data);
+        void getMovieInfoHome(int movieId, TMDB data);
 
-        void getTvInfoHome(int tvId, TvInfo data);
+        void getTvInfoHome(int tvId, TMDB data);
 
         void getTrailerDetail(Trailer data);
 

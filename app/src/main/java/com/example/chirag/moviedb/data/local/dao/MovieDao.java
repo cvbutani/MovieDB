@@ -4,7 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 
 import java.util.List;
@@ -21,8 +21,8 @@ public interface MovieDao {
      *
      * @return all movies.
      */
-    @Query("SELECT * FROM movie_id WHERE type= :value")
-    List<ResultResponse> getMovieId(String value);
+    @Query("SELECT * FROM movie_id WHERE type= :value AND content= :key")
+    List<ResultResponse> getMovieId(String value, String key);
 
     /**
      * Select a movie by id.
@@ -31,7 +31,7 @@ public interface MovieDao {
      * @return movie information with movieId.
      */
     @Query("SELECT * FROM movie_info WHERE id = :movieId ")
-    MovieInfo getMovieInfo(int movieId);
+    TMDB getMovieInfo(int movieId);
 
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
@@ -42,7 +42,7 @@ public interface MovieDao {
     void insertMovieId(ResultResponse movie);
 
     @Insert
-    void insertMovieInfo(MovieInfo movieInfo);
+    void insertMovieInfo(TMDB movieInfo);
 
 
 //    /**

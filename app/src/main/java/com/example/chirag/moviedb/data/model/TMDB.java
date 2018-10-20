@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Chirag on 18/10/18.
  */
 @Entity(tableName = "movie_info")
-public class MovieInfo implements Serializable {
+public class TMDB implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -98,16 +98,40 @@ public class MovieInfo implements Serializable {
     @ColumnInfo(name = "vote_average")
     private Double voteAverage;
 
+    @SerializedName("name")
+    @Expose
+    @Nullable
+    @ColumnInfo(name = "name")
+    private String name;
+    @SerializedName("first_air_date")
+    @Expose
+    @Nullable
+    @ColumnInfo(name = "first_air_date")
+    private String firstAirDate;
+
+    @SerializedName("original_name")
+    @Expose
+    @Nullable
+    @ColumnInfo(name = "original_name")
+    private String originalName;
+
+    @SerializedName("seasons")
+    @Expose
+    @Ignore
+    private List<Season> seasons = null;
+
     /**
      * No args constructor for use in serialization
      */
-    public MovieInfo() {
+    public TMDB() {
     }
 
-    public MovieInfo(@Nullable String backdropPath, List<Genre> genres, @Nullable String genreInfo,
-                     @NonNull Integer id, @Nullable String imdbId, @Nullable String originalLanguage,
-                     @Nullable String originalTitle, @Nullable String overview, @Nullable String posterPath,
-                     @Nullable String releaseDate, @Nullable Integer runtime, @Nullable Double voteAverage) {
+    public TMDB(@Nullable String backdropPath, List<Genre> genres,
+                @Nullable String genreInfo, @NonNull Integer id, @Nullable String imdbId,
+                @Nullable String originalLanguage, @Nullable String originalTitle,
+                @Nullable String overview, @Nullable String posterPath, @Nullable String releaseDate,
+                @Nullable Integer runtime, @Nullable Double voteAverage, @Nullable String name,
+                @Nullable String firstAirDate, @Nullable String originalName, List<Season> seasons) {
         this.backdropPath = backdropPath;
         this.genres = genres;
         this.genreInfo = genreInfo;
@@ -120,6 +144,10 @@ public class MovieInfo implements Serializable {
         this.releaseDate = releaseDate;
         this.runtime = runtime;
         this.voteAverage = voteAverage;
+        this.name = name;
+        this.firstAirDate = firstAirDate;
+        this.originalName = originalName;
+        this.seasons = seasons;
     }
 
     @NonNull
@@ -233,12 +261,54 @@ public class MovieInfo implements Serializable {
         this.voteAverage = voteAverage;
     }
 
+    @Nullable
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@Nullable String name) {
+        this.name = name;
+    }
+
+    @Nullable
+    public String getFirstAirDate() {
+        return firstAirDate;
+    }
+
+    public void setFirstAirDate(@Nullable String firstAirDate) {
+        this.firstAirDate = firstAirDate;
+    }
+
+    @Nullable
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setOriginalName(@Nullable String originalName) {
+        this.originalName = originalName;
+    }
+
+    public List<Season> getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(List<Season> seasons) {
+        this.seasons = seasons;
+    }
+
+    @Nullable
     public String getGenreInfo() {
+        return genreInfo;
+    }
+
+    public String getGenresDetail() {
         StringBuilder genre = new StringBuilder();
-        genre.append(getGenres().get(0).getName());
-        for (int i=1; i<getGenres().size(); i++) {
-            genre.append(", ");
-            genre.append(getGenres().get(i).getName());
+        if (!getGenres().isEmpty()) {
+            genre.append(getGenres().get(0).getName());
+            for (int i = 1; i < getGenres().size(); i++) {
+                genre.append(", ");
+                genre.append(getGenres().get(i).getName());
+            }
         }
         return genre.toString();
     }

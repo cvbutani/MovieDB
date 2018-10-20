@@ -6,15 +6,13 @@ import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
-import com.example.chirag.moviedb.data.model.TvInfo;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -74,14 +72,14 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getMovieInfoRepo(int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-        mServiceApi.getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<MovieInfo>() {
+        mServiceApi.getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TMDB>() {
             @Override
-            public void onResponse(Call<MovieInfo> call, Response<MovieInfo> response) {
+            public void onResponse(Call<TMDB> call, Response<TMDB> response) {
                 if (response.isSuccessful()) {
-                    MovieInfo movieInfo = response.body();
+                    TMDB movieInfo = response.body();
                     if (movieInfo != null) {
                         callback.getMovieInfoSuccess(movieInfo);
-                        insertMovieInfo(movieInfo);
+                        insertInfo(movieInfo);
                     } else {
                         callback.getMovieInfoFailure("FAILURE");
                     }
@@ -91,7 +89,7 @@ public class RemoteService implements RepositoryContract {
             }
 
             @Override
-            public void onFailure(Call<MovieInfo> call, Throwable t) {
+            public void onFailure(Call<TMDB> call, Throwable t) {
                 callback.getMovieInfoFailure(t.getMessage());
             }
         });
@@ -99,13 +97,14 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTvInfoRepo(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback) {
-        mServiceApi.getTvInfoDataService(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TvInfo>() {
+        mServiceApi.getTvInfoDataService(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TMDB>() {
             @Override
-            public void onResponse(Call<TvInfo> call, Response<TvInfo> response) {
+            public void onResponse(Call<TMDB> call, Response<TMDB> response) {
                 if (response.isSuccessful()) {
-                    TvInfo tvInfo = response.body();
+                    TMDB tvInfo = response.body();
                     if (tvInfo != null) {
                         callback.getTvInfoSuccess(tvInfo);
+                        insertInfo(tvInfo);
                     } else {
                         callback.getTvInfoFailure("FAILURE");
                     }
@@ -115,7 +114,7 @@ public class RemoteService implements RepositoryContract {
             }
 
             @Override
-            public void onFailure(Call<TvInfo> call, Throwable t) {
+            public void onFailure(Call<TMDB> call, Throwable t) {
                 callback.getTvInfoFailure(t.getMessage());
             }
         });
@@ -131,7 +130,7 @@ public class RemoteService implements RepositoryContract {
                             Result item = response.body();
                             if (item != null) {
                                 callback.getPopularMovieSuccess(item);
-                                insertMovieId(item, CONTENT_TYPE_POPULAR);
+                                insertTmdbId(item, CONTENT_TYPE_POPULAR, CONTENT_MOVIE);
                             } else {
                                 callback.getPopularMovieFailure("FAILURE");
                             }
@@ -157,7 +156,7 @@ public class RemoteService implements RepositoryContract {
                             Result item = response.body();
                             if (item != null) {
                                 callback.getNowPlayingMovieSuccess(item);
-                                insertMovieId(item, CONTENT_TYPE_NOW_PLAYING);
+                                insertTmdbId(item, CONTENT_TYPE_NOW_PLAYING, CONTENT_MOVIE);
                             } else {
                                 callback.getNowPlayingMovieFailure("FAILURE");
                             }
@@ -182,7 +181,7 @@ public class RemoteService implements RepositoryContract {
                     Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getTopRatedMovieSuccess(item);
-                        insertMovieId(item, CONTENT_TYPE_TOP_RATED);
+                        insertTmdbId(item, CONTENT_TYPE_TOP_RATED, CONTENT_MOVIE);
                     } else {
                         callback.getTopRatedMovieFailure("FAILURE");
                     }
@@ -207,7 +206,7 @@ public class RemoteService implements RepositoryContract {
                     Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getUpcomingMovieSuccess(item);
-                        insertMovieId(item, CONTENT_TYPE_UPCOMING);
+                        insertTmdbId(item, CONTENT_TYPE_UPCOMING, CONTENT_MOVIE);
                     } else {
                         callback.getUpcomingMovieFailure("FAILURE");
                     }
@@ -333,6 +332,7 @@ public class RemoteService implements RepositoryContract {
                     Result item = response.body();
                     if (item != null && item.getResults() != null) {
                         callback.getPopularTvSuccess(item);
+                        insertTmdbId(item, CONTENT_TYPE_POPULAR, CONTENT_TV);
                     } else {
                         callback.getPopularTvFailure("FAILURE");
                     }
@@ -357,6 +357,7 @@ public class RemoteService implements RepositoryContract {
                     Result tvItem = response.body();
                     if (tvItem != null && tvItem.getResults() != null) {
                         callback.getTvTopRatedContentSuccess(tvItem);
+                        insertTmdbId(tvItem, CONTENT_TYPE_TOP_RATED, CONTENT_TV);
                     } else {
                         callback.getTvTopRatedContentFailure("FAILURE");
                     }
@@ -381,6 +382,7 @@ public class RemoteService implements RepositoryContract {
                     Result latestTv = response.body();
                     if (latestTv != null && latestTv.getResults() != null) {
                         callback.getLatestTvSuccess(latestTv);
+                        insertTmdbId(latestTv, CONTENT_TYPE_LATEST, CONTENT_TV);
                     } else {
                         callback.getLatestTvFailure("FAILURE");
                     }
@@ -396,15 +398,16 @@ public class RemoteService implements RepositoryContract {
         });
     }
 
-    private void insertMovieId(final Result item, final String movieType) {
+    private void insertTmdbId(final Result item, final String movieType, final String content) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (!mMovieDao.getMovieId(movieType).isEmpty()) {
+                if (!mMovieDao.getMovieId(movieType, content).isEmpty()) {
                     mMovieDao.deleteMovieId(movieType);
                 }
                 for (final ResultResponse info : item.getResults()) {
                     info.setType(movieType);
+                    info.setContent(content);
                     mMovieDao.insertMovieId(info);
                 }
             }
@@ -412,14 +415,14 @@ public class RemoteService implements RepositoryContract {
         mAppExecutors.getDiskIO().execute(runnable);
     }
 
-    private void insertMovieInfo(final MovieInfo item) {
+    private void insertInfo(final TMDB item) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (mMovieDao.getMovieInfo(item.getId()) != null) {
                     mMovieDao.deleteMovieInfo(item.getId());
                 }
-                item.setGenreInfo(item.getGenreInfo());
+                item.setGenreInfo(item.getGenresDetail());
                 mMovieDao.insertMovieInfo(item);
             }
         };

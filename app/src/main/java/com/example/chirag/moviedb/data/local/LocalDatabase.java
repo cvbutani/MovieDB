@@ -8,7 +8,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
@@ -17,7 +17,7 @@ import com.example.chirag.moviedb.data.model.TrailerResponse;
  * MovieDB
  * Created by Chirag on 24/09/18.
  */
-@Database(entities = {ResultResponse.class, TrailerResponse.class, ReviewResponse.class, MovieInfo.class}, version = 1, exportSchema = false)
+@Database(entities = {ResultResponse.class, TrailerResponse.class, ReviewResponse.class, TMDB.class}, version = 1, exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;

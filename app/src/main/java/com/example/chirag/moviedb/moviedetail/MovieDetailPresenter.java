@@ -4,14 +4,11 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
-import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.model.TvInfo;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -43,7 +40,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getMovieInfo(final int movieId) {
         mRepository.getMovieInfoData(movieId, new OnTaskCompletion.OnGetMovieInfoCompletion() {
             @Override
-            public void getMovieInfoSuccess(MovieInfo data) {
+            public void getMovieInfoSuccess(TMDB data) {
                 mCallback.getMovieInfoHome(movieId, data);
             }
 
@@ -58,7 +55,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getTvInfo(final int tvId) {
         mRepository.getTvInfoData(tvId, new OnTaskCompletion.OnGetTvInfoCompletion() {
             @Override
-            public void getTvInfoSuccess(TvInfo data) {
+            public void getTvInfoSuccess(TMDB data) {
                 mCallback.getTvInfoHome(tvId, data);
             }
 

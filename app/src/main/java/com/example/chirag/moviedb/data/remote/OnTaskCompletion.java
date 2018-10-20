@@ -1,12 +1,9 @@
 package com.example.chirag.moviedb.data.remote;
 
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.MovieInfo;
-import com.example.chirag.moviedb.data.model.ResultResponse;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
-import com.example.chirag.moviedb.data.model.TvInfo;
 
 /**
  * MovieDB
@@ -15,7 +12,7 @@ import com.example.chirag.moviedb.data.model.TvInfo;
 public interface OnTaskCompletion {
 
     interface OnGetMovieInfoCompletion {
-        void getMovieInfoSuccess(MovieInfo data);
+        void getMovieInfoSuccess(TMDB data);
         void getMovieInfoFailure(String errorMessage);
     }
 
@@ -70,7 +67,7 @@ public interface OnTaskCompletion {
     }
 
     interface OnGetTvInfoCompletion {
-        void getTvInfoSuccess(TvInfo data);
+        void getTvInfoSuccess(TMDB data);
         void getTvInfoFailure(String errorMessage);
     }
 

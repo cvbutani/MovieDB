@@ -6,7 +6,7 @@ import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.MovieDao;
 import com.example.chirag.moviedb.data.local.dao.ReviewDao;
 import com.example.chirag.moviedb.data.local.dao.TrailerDao;
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -18,6 +18,9 @@ import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
 
+import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_LATEST;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
@@ -66,7 +69,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final MovieInfo movieInfo = mMovieDao.getMovieInfo(movieId);
+                final TMDB movieInfo = mMovieDao.getMovieInfo(movieId);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -83,8 +86,24 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getTvInfoRepo(int tvId, OnTaskCompletion.OnGetTvInfoCompletion callback) {
-
+    public void getTvInfoRepo(final int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final TMDB movieInfo = mMovieDao.getMovieInfo(tvId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movieInfo != null) {
+                            callback.getTvInfoSuccess(movieInfo);
+                        } else {
+                            callback.getTvInfoFailure("LOCAL DATA FAILURE");
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
@@ -92,7 +111,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_POPULAR);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_POPULAR, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -115,7 +134,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_NOW_PLAYING);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_NOW_PLAYING, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -138,7 +157,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_TOP_RATED);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_TOP_RATED, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -161,7 +180,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_UPCOMING);
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_UPCOMING, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -231,17 +250,71 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getPopularTvRepo(OnTaskCompletion.OnGetPopularTvCompletion callback) {
-
+    public void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_POPULAR, CONTENT_TV);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movies.isEmpty()) {
+                            callback.getPopularTvFailure("LOCAL DATA FAILURE");
+                        } else {
+                            Result item = new Result();
+                            item.setResults(movies);
+                            callback.getPopularTvSuccess(item);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getTopRatedTvRepo(OnTaskCompletion.GetTopRatedTvCompletion callback) {
-
+    public void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_TOP_RATED, CONTENT_TV);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movies.isEmpty()) {
+                            callback.getTvTopRatedContentFailure("LOCAL DATA FAILURE");
+                        } else {
+                            Result item = new Result();
+                            item.setResults(movies);
+                            callback.getTvTopRatedContentSuccess(item);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     @Override
-    public void getLatestTvRepo(OnTaskCompletion.GetLatestTvCompletion callback) {
-
+    public void getLatestTvRepo(final OnTaskCompletion.GetLatestTvCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_LATEST, CONTENT_TV);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (movies.isEmpty()) {
+                            callback.getLatestTvFailure("LOCAL DATA FAILURE");
+                        } else {
+                            Result item = new Result();
+                            item.setResults(movies);
+                            callback.getLatestTvSuccess(item);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
     }
 }

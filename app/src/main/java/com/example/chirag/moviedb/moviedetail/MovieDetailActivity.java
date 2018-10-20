@@ -22,8 +22,7 @@ import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
 
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.MovieInfo;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Season;
@@ -32,7 +31,6 @@ import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 
-import com.example.chirag.moviedb.data.model.TvInfo;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -145,7 +143,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void getMovieInfoHome(int movieId, MovieInfo data) {
+    public void getMovieInfoHome(int movieId, TMDB data) {
         if (mContentType.equals(CONTENT_MOVIE)) {
             if (data != null) {
                 if (movieId == data.getId()) {
@@ -154,6 +152,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     double movieRating = data.getVoteAverage();
                     String movieOverview = data.getOverview();
                     String movieGenre;
+
+                    if (isConnected) {
+                        movieGenre = data.getGenresDetail();
+                    } else {
+                        movieGenre = data.getGenreInfo();
+                    }
 
                     StringBuilder builder = new StringBuilder();
                     String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
@@ -172,11 +176,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         mTextViewReleaseDate.setText(movieReleaseDate);
                     }
                     mTextViewLanguage.setText(movieLanguage);
-                    if (isConnected) {
-                        movieGenre = data.getGenreInfo();
-                    } else {
-                        movieGenre = "asdasd";
-                    }
                     mTextViewGenre.setText(movieGenre);
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
@@ -188,7 +187,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void getTvInfoHome(int tvId, TvInfo data) {
+    public void getTvInfoHome(int tvId, TMDB data) {
         if (mContentType.equals(CONTENT_TV)) {
             if (data != null) {
                 if (tvId == data.getId()) {
@@ -196,7 +195,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     String tvLanguage = data.getOriginalLanguage();
                     double tvRating = data.getVoteAverage();
                     String tvOverview = data.getOverview();
-                    String tvGenre = data.getGenreInfo();
+                    String tvGenre;
+
+                    if (isConnected) {
+                        tvGenre = data.getGenresDetail();
+                    } else {
+                        tvGenre = data.getGenreInfo();
+                    }
 
                     StringBuilder builder = new StringBuilder();
                     String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
@@ -220,12 +225,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     mTextViewOverview.setText(tvOverview);
 
                     mTextViewSimilarLabel.setText("Season Information");
-                    for (final Season item : data.getSeasons()) {
-                        View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
-                        ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-                        String imageSeasonPosterString = POSTER_IMAGE_URL + item.getPosterPath();
-                        Picasso.get().load(imageSeasonPosterString).into(poster);
-                        mLinearLayoutSimilarMovies.addView(parent);
+                    if (isConnected) {
+                        for (final Season item : data.getSeasons()) {
+                            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
+                            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+                            String imageSeasonPosterString = POSTER_IMAGE_URL + item.getPosterPath();
+                            Picasso.get().load(imageSeasonPosterString).into(poster);
+                            mLinearLayoutSimilarMovies.addView(parent);
+                        }
                     }
                 } else {
                     Logger.i(getString(R.string.movie_error));
