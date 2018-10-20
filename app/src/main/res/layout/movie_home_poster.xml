@@ -9,8 +9,9 @@
         android:id="@+id/movie_home_imageview"
         android:layout_width="100dp"
         android:layout_height="150dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginBottom="8dp" />
+
 </FrameLayout>

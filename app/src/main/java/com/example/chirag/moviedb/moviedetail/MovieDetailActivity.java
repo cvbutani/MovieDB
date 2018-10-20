@@ -9,16 +9,19 @@ import android.net.Uri;
 
 import android.os.Bundle;
 
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chirag.moviedb.R;
 
@@ -76,6 +79,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     boolean isConnected;
     String mContentType;
     boolean isContentClicked = false;
+    boolean appbarExpanded;
+    private Menu collapsedMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +115,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         mPresenter = new MovieDetailPresenter(getApplicationContext(), isConnected);
         mPresenter.attachView(this, mMovieId);
+
+        AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if (Math.abs(i) > 200) {
+                    appbarExpanded = false;
+                    invalidateOptionsMenu();
+                } else {
+                    appbarExpanded = true;
+                    invalidateOptionsMenu();
+                }
+            }
+        });
     }
 
     @Override
@@ -118,9 +137,29 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_favourite:
+                Toast.makeText(this, "Added to Favourite", Toast.LENGTH_SHORT).show();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_detail, menu);
+        collapsedMenu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (collapsedMenu != null && (!appbarExpanded || collapsedMenu.size() != 1)) {
+            collapsedMenu.findItem(R.id.action_favourite).setVisible(true);
+        } else {
+            collapsedMenu.findItem(R.id.action_favourite).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void viewHolder() {

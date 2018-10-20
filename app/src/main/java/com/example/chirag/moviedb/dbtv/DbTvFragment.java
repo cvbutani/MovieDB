@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
@@ -36,7 +37,12 @@ import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
  */
 public class DbTvFragment extends Fragment implements DBTvContract.View {
 
-    private Genre mGenreList;
+    CardView nowPlayingCardView;
+    CardView upcomingCardView;
+    CardView popularCardView;
+    CardView topRatedCardView;
+
+    RelativeLayout mNoInternet;
 
     private LinearLayout mLinearLayoutMovieHome;
     private LinearLayout mLinearLayoutNowPlaying;
@@ -71,16 +77,29 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
         View rootView = inflater.inflate(R.layout.movie_home, container, false);
         mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
         mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
-        CardView cardView = rootView.findViewById(R.id.now_playing_card);
-        cardView.setVisibility(View.GONE);
-        CardView upcomingCardView = rootView.findViewById(R.id.upcoming_card);
+        nowPlayingCardView = rootView.findViewById(R.id.now_playing_card);
+        nowPlayingCardView.setVisibility(View.GONE);
+        upcomingCardView = rootView.findViewById(R.id.upcoming_card);
         upcomingCardView.setVisibility(View.GONE);
+        topRatedCardView = rootView.findViewById(R.id.top_rated_card);
+        popularCardView = rootView.findViewById(R.id.popular_card);
         mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
         mTextViewTopRated = rootView.findViewById(R.id.movie_top_rated_label);
         mTextViewPopular = rootView.findViewById(R.id.popular_label);
         mTextViewLatest = rootView.findViewById(R.id.now_playing_label);
-
+        mNoInternet = rootView.findViewById(R.id.no_internet);
+        if (checkInternetConnection()) {
+            popularCardView.setVisibility(View.VISIBLE);
+            topRatedCardView.setVisibility(View.VISIBLE);
+            mNoInternet.setVisibility(View.GONE);
+        } else {
+            popularCardView.setVisibility(View.GONE);
+            upcomingCardView.setVisibility(View.GONE);
+            topRatedCardView.setVisibility(View.GONE);
+            nowPlayingCardView.setVisibility(View.GONE);
+            mNoInternet.setVisibility(View.VISIBLE);
+        }
         return rootView;
     }
 
@@ -108,24 +127,35 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
     }
 
     private void setLayout(Result data, LinearLayout layout, TextView textView, String title) {
-        layout.removeAllViews();
-        textView.setText(title);
-        for (final ResultResponse item : data.getResults()) {
-            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
-            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-            StringBuilder builder = new StringBuilder();
-            String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
-            Picasso.get().load(imagePosterString).into(poster);
+        if (checkInternetConnection()) {
+            if (data != null && !data.getResults().isEmpty()) {
+                popularCardView.setVisibility(View.VISIBLE);
+                topRatedCardView.setVisibility(View.VISIBLE);
+                layout.removeAllViews();
+                textView.setText(title);
+                for (final ResultResponse item : data.getResults()) {
+                    View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
+                    ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+                    StringBuilder builder = new StringBuilder();
+                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+                    Picasso.get().load(imagePosterString).into(poster);
 
-            poster.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mMovieId = item.getId();
-                    String movieName = item.getName();
-                    startNewActivity(mMovieId, movieName);
+                    poster.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mMovieId = item.getId();
+                            String movieName = item.getName();
+                            startNewActivity(mMovieId, movieName);
+                        }
+                    });
+                    layout.addView(parent);
                 }
-            });
-            layout.addView(parent);
+            }
+        } else {
+            popularCardView.setVisibility(View.GONE);
+            upcomingCardView.setVisibility(View.GONE);
+            topRatedCardView.setVisibility(View.GONE);
+            nowPlayingCardView.setVisibility(View.GONE);
         }
     }
 
