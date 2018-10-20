@@ -5,9 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.example.chirag.moviedb.data.local.dao.MovieDao;
-import com.example.chirag.moviedb.data.local.dao.ReviewDao;
-import com.example.chirag.moviedb.data.local.dao.TrailerDao;
+import com.example.chirag.moviedb.data.local.dao.TMDBDao;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
@@ -22,11 +20,7 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;
 
-    public abstract MovieDao localDao();
-
-    public abstract TrailerDao trailerDao();
-
-    public abstract ReviewDao reviewDao();
+    public abstract TMDBDao localDao();
 
     private static final Object sLock = new Object();
 

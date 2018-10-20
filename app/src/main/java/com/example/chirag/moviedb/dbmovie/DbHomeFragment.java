@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.fragment;
+package com.example.chirag.moviedb.dbmovie;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +33,7 @@ import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
  * MovieDB
  * Created by Chirag on 23/09/18.
  */
-public class MovieFragment extends Fragment implements DbHomeContract.View {
-
-    private Genre mGenreList;
+public class DbHomeFragment extends Fragment implements DbHomeContract.View {
 
     private LinearLayout mLinearLayoutMovieHome;
     private LinearLayout mLinearLayoutNowPlaying;
@@ -48,7 +47,7 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
 
     int mMovieId;
 
-    public MovieFragment() {
+    public DbHomeFragment() {
 
     }
 
@@ -70,7 +69,10 @@ public class MovieFragment extends Fragment implements DbHomeContract.View {
         mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
         mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
-
+        CardView cardView = rootView.findViewById(R.id.now_playing_card);
+        cardView.setVisibility(View.VISIBLE);
+        CardView upcomingCardView = rootView.findViewById(R.id.upcoming_card);
+        upcomingCardView.setVisibility(View.VISIBLE);
         return rootView;
     }
 

@@ -16,7 +16,6 @@ public interface DBTvContract {
 
         void getTopRatedTvHome(Result data);
 
-        void getLatestTvHome(Result data);
     }
 
     interface Presenter {
@@ -24,8 +23,6 @@ public interface DBTvContract {
         void getPopularTv();
 
         void getTopRatedTv();
-
-        void getLatestTv();
 
         void attachView(DBTvContract.View view);
     }

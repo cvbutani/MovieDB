@@ -12,8 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.chirag.moviedb.R;
-import com.example.chirag.moviedb.fragment.MovieFragment;
-import com.example.chirag.moviedb.fragment.TvFragment;
+import com.example.chirag.moviedb.dbtv.DbTvFragment;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -86,12 +85,12 @@ public class DBHomeActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_movie:
-                MovieFragment fragment = new MovieFragment();
+                DbHomeFragment fragment = new DbHomeFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
                 break;
             case R.id.nav_tv:
-                TvFragment tvFragment = new TvFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, tvFragment).commit();
+                DbTvFragment dbTvFragment = new DbTvFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, dbTvFragment).commit();
                 break;
             case R.id.nav_fav:
                 break;

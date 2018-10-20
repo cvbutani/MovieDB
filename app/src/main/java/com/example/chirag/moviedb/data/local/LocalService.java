@@ -3,9 +3,7 @@ package com.example.chirag.moviedb.data.local;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
-import com.example.chirag.moviedb.data.local.dao.MovieDao;
-import com.example.chirag.moviedb.data.local.dao.ReviewDao;
-import com.example.chirag.moviedb.data.local.dao.TrailerDao;
+import com.example.chirag.moviedb.data.local.dao.TMDBDao;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
@@ -20,7 +18,6 @@ import java.util.List;
 
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_LATEST;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
@@ -34,30 +31,22 @@ public class LocalService implements RepositoryContract {
 
     private static volatile LocalService INSTANCE;
 
-    private MovieDao mMovieDao;
-    private TrailerDao mTrailerDao;
-    private ReviewDao mReviewDao;
+    private TMDBDao mTMDBDao;
 
     private AppExecutors mAppExecutors;
 
     private LocalService(@NonNull AppExecutors appExecutors,
-                         @NonNull MovieDao movieDao,
-                         @NonNull TrailerDao trailerDao,
-                         @NonNull ReviewDao reviewDao) {
+                         @NonNull TMDBDao TMDBDao) {
         mAppExecutors = appExecutors;
-        mMovieDao = movieDao;
-        mTrailerDao = trailerDao;
-        mReviewDao = reviewDao;
+        mTMDBDao = TMDBDao;
     }
 
     public static LocalService getInstance(@NonNull AppExecutors appExecutors,
-                                           @NonNull MovieDao movieDao,
-                                           @NonNull TrailerDao trailerDao,
-                                           @NonNull ReviewDao reviewDao) {
+                                           @NonNull TMDBDao TMDBDao) {
         if (INSTANCE == null) {
             synchronized (LocalService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new LocalService(appExecutors, movieDao, trailerDao, reviewDao);
+                    INSTANCE = new LocalService(appExecutors, TMDBDao);
                 }
             }
         }
@@ -69,7 +58,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final TMDB movieInfo = mMovieDao.getMovieInfo(movieId);
+                final TMDB movieInfo = mTMDBDao.getMovieInfo(movieId);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -90,7 +79,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final TMDB movieInfo = mMovieDao.getMovieInfo(tvId);
+                final TMDB movieInfo = mTMDBDao.getMovieInfo(tvId);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -111,7 +100,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_POPULAR, CONTENT_MOVIE);
+                final List<ResultResponse> movies = mTMDBDao.getMovieId(CONTENT_TYPE_POPULAR, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -134,7 +123,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_NOW_PLAYING, CONTENT_MOVIE);
+                final List<ResultResponse> movies = mTMDBDao.getMovieId(CONTENT_TYPE_NOW_PLAYING, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -157,7 +146,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_TOP_RATED, CONTENT_MOVIE);
+                final List<ResultResponse> movies = mTMDBDao.getMovieId(CONTENT_TYPE_TOP_RATED, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -180,7 +169,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_UPCOMING, CONTENT_MOVIE);
+                final List<ResultResponse> movies = mTMDBDao.getMovieId(CONTENT_TYPE_UPCOMING, CONTENT_MOVIE);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -203,7 +192,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<TrailerResponse> trailers = mTrailerDao.getTrailers(movieId);
+                final List<TrailerResponse> trailers = mTMDBDao.getTrailers(movieId);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -226,7 +215,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ReviewResponse> reviews = mReviewDao.getReviews(movieId);
+                final List<ReviewResponse> reviews = mTMDBDao.getReviews(movieId);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -254,7 +243,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_POPULAR, CONTENT_TV);
+                final List<ResultResponse> movies = mTMDBDao.getMovieId(CONTENT_TYPE_POPULAR, CONTENT_TV);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -277,7 +266,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_TOP_RATED, CONTENT_TV);
+                final List<ResultResponse> movies = mTMDBDao.getMovieId(CONTENT_TYPE_TOP_RATED, CONTENT_TV);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -295,26 +284,4 @@ public class LocalService implements RepositoryContract {
         mAppExecutors.getDiskIO().execute(runnable);
     }
 
-    @Override
-    public void getLatestTvRepo(final OnTaskCompletion.GetLatestTvCompletion callback) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                final List<ResultResponse> movies = mMovieDao.getMovieId(CONTENT_TYPE_LATEST, CONTENT_TV);
-                mAppExecutors.getMainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (movies.isEmpty()) {
-                            callback.getLatestTvFailure("LOCAL DATA FAILURE");
-                        } else {
-                            Result item = new Result();
-                            item.setResults(movies);
-                            callback.getLatestTvSuccess(item);
-                        }
-                    }
-                });
-            }
-        };
-        mAppExecutors.getDiskIO().execute(runnable);
-    }
 }

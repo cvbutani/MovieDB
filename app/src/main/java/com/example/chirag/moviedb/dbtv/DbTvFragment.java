@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.fragment;
+package com.example.chirag.moviedb.dbtv;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
  * MovieDB
  * Created by Chirag on 23/09/18.
  */
-public class TvFragment extends Fragment implements DBTvContract.View {
+public class DbTvFragment extends Fragment implements DBTvContract.View {
 
     private Genre mGenreList;
 
@@ -53,7 +54,7 @@ public class TvFragment extends Fragment implements DBTvContract.View {
 
     int mMovieId;
 
-    public TvFragment() {
+    public DbTvFragment() {
     }
 
     @Override
@@ -70,6 +71,10 @@ public class TvFragment extends Fragment implements DBTvContract.View {
         View rootView = inflater.inflate(R.layout.movie_home, container, false);
         mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
         mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
+        CardView cardView = rootView.findViewById(R.id.now_playing_card);
+        cardView.setVisibility(View.GONE);
+        CardView upcomingCardView = rootView.findViewById(R.id.upcoming_card);
+        upcomingCardView.setVisibility(View.GONE);
         mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
         mTextViewTopRated = rootView.findViewById(R.id.movie_top_rated_label);
@@ -92,11 +97,6 @@ public class TvFragment extends Fragment implements DBTvContract.View {
     @Override
     public void getTopRatedTvHome(Result data) {
         setLayout(data, mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
-    }
-
-    @Override
-    public void getLatestTvHome(Result data) {
-        setLayout(data, mLinearLayoutNowPlaying, mTextViewLatest, "Latest TV Shows");
     }
 
     private void startNewActivity(int movieId, String name) {

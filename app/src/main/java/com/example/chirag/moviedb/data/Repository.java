@@ -127,13 +127,4 @@ public class Repository implements DataContract {
             mLocalService.getTopRatedTvRepo(callback);
         }
     }
-
-    @Override
-    public void getLatestTvData(OnTaskCompletion.GetLatestTvCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getLatestTvRepo(callback);
-        } else {
-            mLocalService.getLatestTvRepo(callback);
-        }
-    }
 }

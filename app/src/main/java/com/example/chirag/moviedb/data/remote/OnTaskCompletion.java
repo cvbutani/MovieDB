@@ -61,11 +61,6 @@ public interface OnTaskCompletion {
         void getTvTopRatedContentFailure(String errorMessage);
     }
 
-    interface GetLatestTvCompletion {
-        void getLatestTvSuccess(Result data);
-        void getLatestTvFailure(String errorMessage);
-    }
-
     interface OnGetTvInfoCompletion {
         void getTvInfoSuccess(TMDB data);
         void getTvInfoFailure(String errorMessage);

@@ -3,9 +3,7 @@ package com.example.chirag.moviedb.data.remote;
 import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
-import com.example.chirag.moviedb.data.local.dao.MovieDao;
-import com.example.chirag.moviedb.data.local.dao.ReviewDao;
-import com.example.chirag.moviedb.data.local.dao.TrailerDao;
+import com.example.chirag.moviedb.data.local.dao.TMDBDao;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
@@ -25,7 +23,6 @@ import retrofit2.Response;
 
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_LATEST;
 import static com.example.chirag.moviedb.data.Constant.LANGUAGE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
@@ -43,27 +40,22 @@ public class RemoteService implements RepositoryContract {
 
     private static volatile RemoteService INSTANCE;
 
-    private MovieDao mMovieDao;
-
-    private TrailerDao mTrailerDao;
-
-    private ReviewDao mReviewDao;
+    private TMDBDao mTMDBDao;
 
     private AppExecutors mAppExecutors;
 
-    RemoteService(@NonNull AppExecutors appExecutors, @NonNull MovieDao movieDao, @NonNull TrailerDao trailerDao, @NonNull ReviewDao reviewDao) {
+    RemoteService(@NonNull AppExecutors appExecutors, @NonNull TMDBDao TMDBDao) {
         mAppExecutors = appExecutors;
-        mMovieDao = movieDao;
-        mTrailerDao = trailerDao;
-        mReviewDao = reviewDao;
+        mTMDBDao = TMDBDao;
         mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
     }
 
-    public static RemoteService getInstance(@NonNull AppExecutors appExecutors, @NonNull MovieDao movieDao, @NonNull TrailerDao trailerDao, @NonNull ReviewDao reviewDao) {
+    public static RemoteService getInstance(@NonNull AppExecutors appExecutors,
+                                            @NonNull TMDBDao TMDBDao) {
         if (INSTANCE == null) {
             synchronized (RemoteService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new RemoteService(appExecutors, movieDao, trailerDao, reviewDao);
+                    INSTANCE = new RemoteService(appExecutors, TMDBDao);
                 }
             }
         }
@@ -235,11 +227,11 @@ public class RemoteService implements RepositoryContract {
                             @Override
                             public void run() {
                                 List<TrailerResponse> trailerList = trailerItem.getResults();
-                                List<TrailerResponse> trailerData = mTrailerDao.getTrailers(movieId);
+                                List<TrailerResponse> trailerData = mTMDBDao.getTrailers(movieId);
                                 if (trailerData.isEmpty()) {
                                     for (TrailerResponse list : trailerList) {
                                         list.setMovieId(movieId);
-                                        mTrailerDao.insertTrailer(list);
+                                        mTMDBDao.insertTrailer(list);
                                     }
                                 }
                             }
@@ -274,11 +266,11 @@ public class RemoteService implements RepositoryContract {
                             @Override
                             public void run() {
                                 List<ReviewResponse> reviewList = reviews.getResults();
-                                List<ReviewResponse> reviewData = mReviewDao.getReviews(movieId);
+                                List<ReviewResponse> reviewData = mTMDBDao.getReviews(movieId);
                                 if (reviewData.isEmpty()) {
                                     for (ReviewResponse list : reviewList) {
                                         list.setMovieId(movieId);
-                                        mReviewDao.insertReviews(list);
+                                        mTMDBDao.insertReviews(list);
                                     }
                                 }
                             }
@@ -373,42 +365,17 @@ public class RemoteService implements RepositoryContract {
         });
     }
 
-    @Override
-    public void getLatestTvRepo(final OnTaskCompletion.GetLatestTvCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_LATEST, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Result latestTv = response.body();
-                    if (latestTv != null && latestTv.getResults() != null) {
-                        callback.getLatestTvSuccess(latestTv);
-                        insertTmdbId(latestTv, CONTENT_TYPE_LATEST, CONTENT_TV);
-                    } else {
-                        callback.getLatestTvFailure("FAILURE");
-                    }
-                } else {
-                    callback.getLatestTvFailure("FAILURE");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                callback.getLatestTvFailure(t.getMessage());
-            }
-        });
-    }
-
     private void insertTmdbId(final Result item, final String movieType, final String content) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (!mMovieDao.getMovieId(movieType, content).isEmpty()) {
-                    mMovieDao.deleteMovieId(movieType);
+                if (!mTMDBDao.getMovieId(movieType, content).isEmpty()) {
+                    mTMDBDao.deleteMovieId(movieType);
                 }
                 for (final ResultResponse info : item.getResults()) {
                     info.setType(movieType);
                     info.setContent(content);
-                    mMovieDao.insertMovieId(info);
+                    mTMDBDao.insertMovieId(info);
                 }
             }
         };
@@ -419,11 +386,11 @@ public class RemoteService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (mMovieDao.getMovieInfo(item.getId()) != null) {
-                    mMovieDao.deleteMovieInfo(item.getId());
+                if (mTMDBDao.getMovieInfo(item.getId()) != null) {
+                    mTMDBDao.deleteMovieInfo(item.getId());
                 }
                 item.setGenreInfo(item.getGenresDetail());
-                mMovieDao.insertMovieInfo(item);
+                mTMDBDao.insertMovieInfo(item);
             }
         };
         mAppExecutors.getDiskIO().execute(runnable);
