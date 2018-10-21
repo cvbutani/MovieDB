@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data;
 
+import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 
 /**
@@ -29,4 +30,8 @@ public interface RepositoryContract {
     void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 
     void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback);
+
+    void getUserSignInInfo(final OnTaskCompletion.GetUserSignInCompletion callback);
+
+    void insertUserSignInInfo(User user);
 }

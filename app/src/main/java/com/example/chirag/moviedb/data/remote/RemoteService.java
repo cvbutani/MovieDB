@@ -11,6 +11,7 @@ import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
+import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -363,6 +364,16 @@ public class RemoteService implements RepositoryContract {
                 callback.getTvTopRatedContentFailure(t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void getUserSignInInfo(OnTaskCompletion.GetUserSignInCompletion callback) {
+        // Used in Local Data Storage
+    }
+
+    @Override
+    public void insertUserSignInInfo(User user) {
+        // Used in Local Data Storage
     }
 
     private void insertTmdbId(final Result item, final String movieType, final String content) {

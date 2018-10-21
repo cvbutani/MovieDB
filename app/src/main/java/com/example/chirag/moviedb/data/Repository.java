@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 
@@ -126,5 +127,15 @@ public class Repository implements DataContract {
         } else {
             mLocalService.getTopRatedTvRepo(callback);
         }
+    }
+
+    @Override
+    public void getUserSignInInfo(OnTaskCompletion.GetUserSignInCompletion callback) {
+        mLocalService.getUserSignInInfo(callback);
+    }
+
+    @Override
+    public void insertUserSignInInfo(User user) {
+        mLocalService.insertUserSignInInfo(user);
     }
 }

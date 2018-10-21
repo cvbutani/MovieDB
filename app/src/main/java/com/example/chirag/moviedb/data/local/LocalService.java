@@ -4,12 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;
+import com.example.chirag.moviedb.data.local.dao.UserDao;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
+import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -33,20 +35,23 @@ public class LocalService implements RepositoryContract {
 
     private TMDBDao mTMDBDao;
 
+    private UserDao mUserDao;
+
     private AppExecutors mAppExecutors;
 
     private LocalService(@NonNull AppExecutors appExecutors,
-                         @NonNull TMDBDao TMDBDao) {
+                         @NonNull TMDBDao TMDBDao, @NonNull UserDao userDao) {
         mAppExecutors = appExecutors;
         mTMDBDao = TMDBDao;
+        mUserDao = userDao;
     }
 
     public static LocalService getInstance(@NonNull AppExecutors appExecutors,
-                                           @NonNull TMDBDao TMDBDao) {
+                                           @NonNull TMDBDao TMDBDao, @NonNull UserDao userDao) {
         if (INSTANCE == null) {
             synchronized (LocalService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new LocalService(appExecutors, TMDBDao);
+                    INSTANCE = new LocalService(appExecutors, TMDBDao, userDao);
                 }
             }
         }
@@ -279,6 +284,38 @@ public class LocalService implements RepositoryContract {
                         }
                     }
                 });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
+    @Override
+    public void getUserSignInInfo(final OnTaskCompletion.GetUserSignInCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<User> user = mUserDao.getSignInDetail();
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (user.isEmpty()){
+                            callback.getUserInfoFailure("No user information available in local database");
+                        } else {
+                            callback.getUserInfoSuccess(user);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
+    @Override
+    public void insertUserSignInInfo(final User user) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mUserDao.insertUserRegisterInfo(user);
             }
         };
         mAppExecutors.getDiskIO().execute(runnable);

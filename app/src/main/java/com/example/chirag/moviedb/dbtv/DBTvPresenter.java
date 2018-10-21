@@ -23,7 +23,8 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public DBTvPresenter(Context context, boolean isConnected) {
 
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).localDao());
+                LocalDatabase.getInstance(context).localDao(),
+                LocalDatabase.getInstance(context).userDao());
 
         RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).localDao());
