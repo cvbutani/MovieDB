@@ -138,4 +138,16 @@ public class Repository implements DataContract {
     public void insertUserSignInInfo(User user) {
         mLocalService.insertUserSignInInfo(user);
     }
+
+    @Override
+    public void getUserAccountInfo(String emailId, final OnTaskCompletion.GetUserAccountCompletion callback) {
+        mLocalService.getUserAccountInfo(emailId, callback);
+    }
+
+    @Override
+    public void updateUserAccount(User user) {
+        mLocalService.updateUserAccount(user);
+    }
+
+
 }

@@ -14,10 +14,12 @@ import android.view.MenuItem;
 
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.dbtv.DbTvFragment;
-import com.example.chirag.moviedb.user.account.UserAccount;
+import com.example.chirag.moviedb.user.account.UserAccountActivity;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    String mUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +29,9 @@ public class DBHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        if (getIntent().hasExtra("EXTRA_EMAIL")) {
+            mUserEmail = getIntent().getStringExtra("EXTRA_EMAIL");
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -74,7 +71,8 @@ public class DBHomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_user) {
-            Intent intent = new Intent(this, UserAccount.class);
+            Intent intent = new Intent(this, UserAccountActivity.class);
+            intent.putExtra("EXTRA_EMAIL", mUserEmail);
             startActivity(intent);
             return true;
         }

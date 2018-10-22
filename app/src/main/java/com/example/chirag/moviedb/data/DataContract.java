@@ -33,4 +33,8 @@ public interface DataContract {
     void getUserSignInInfo(final OnTaskCompletion.GetUserSignInCompletion callback);
 
     void insertUserSignInInfo(User user);
+
+    void getUserAccountInfo(String emailId, final OnTaskCompletion.GetUserAccountCompletion callback);
+
+    void updateUserAccount(User user);
 }

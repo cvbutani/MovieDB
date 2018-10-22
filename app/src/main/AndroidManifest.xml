@@ -52,7 +52,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.chirag.moviedb.dbmovie.DBHomeActivity" />
         </activity>
-        <activity android:name=".user.account.UserAccount" />
+        <activity android:name=".user.account.UserAccountActivity" />
     </application>
 
 </manifest>

@@ -321,4 +321,36 @@ public class LocalService implements RepositoryContract {
         mAppExecutors.getDiskIO().execute(runnable);
     }
 
+    @Override
+    public void getUserAccountInfo(final String emailId, final OnTaskCompletion.GetUserAccountCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final User user = mUserDao.getUserInfo(emailId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (user != null){
+                            callback.getUserAccountSuccess(user);
+                        } else {
+                            callback.getUserAccountFailure("User Information is not available");
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
+    @Override
+    public void updateUserAccount(final User user) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mUserDao.updateUserAccountInfo(user);
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.example.chirag.moviedb.data.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -35,7 +36,7 @@ public class User {
 
     public User() {
     }
-
+    @Ignore
     public User(@NonNull String passWord, @NonNull String firstName, @NonNull String lastName, @NonNull String emailAddress) {
         this.passWord = passWord;
         this.firstName = firstName;

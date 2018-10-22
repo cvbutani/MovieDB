@@ -86,4 +86,15 @@ public interface OnTaskCompletion {
         void getUserInfoFailure(String errorMessage);
     }
 
+    interface GetUserAccountCompletion {
+        void getUserAccountSuccess(User user);
+
+        void getUserAccountFailure(String errorMessage);
+    }
+
+    interface  GetUpdatedUserAccountCompletion {
+        void getUpdatedUserAccountSuccess(User user);
+
+        void getUpdatedUserAccountFailure(String errorMessage);
+    }
 }

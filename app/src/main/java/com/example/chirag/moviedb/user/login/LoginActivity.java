@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                 if (password.equals(user.get(i).getPassWord())) {
                     showProgress(true);
                     Intent intent = new Intent(this, DBHomeActivity.class);
+                    intent.putExtra("EXTRA_EMAIL", emailAddress);
                     startActivity(intent);
                 } else {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));

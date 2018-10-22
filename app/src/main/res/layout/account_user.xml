@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <ImageView
+        android:id="@+id/account_profile_pic"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/profile_pic" />
 
     <LinearLayout
-        android:id="@+id/user_register_form"
-        android:layout_marginTop="16dp"
+        android:id="@+id/account_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="vertical">
-
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -54,13 +53,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/account_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
+                android:enabled="false"
                 android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
