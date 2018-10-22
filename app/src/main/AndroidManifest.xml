@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".login.LoginActivity">
+            android:name=".user.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".register.RegisterActivity" />
+        <activity android:name=".user.register.RegisterActivity" />
 
         <activity
             android:name=".dbmovie.DBHomeActivity"

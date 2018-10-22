@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.login;
+package com.example.chirag.moviedb.user.login;
 
 import com.example.chirag.moviedb.data.model.User;
 

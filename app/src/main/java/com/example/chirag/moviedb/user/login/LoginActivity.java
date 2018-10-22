@@ -1,4 +1,4 @@
-package com.example.chirag.moviedb.login;
+package com.example.chirag.moviedb.user.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.dbmovie.DBHomeActivity;
-import com.example.chirag.moviedb.register.RegisterActivity;
+import com.example.chirag.moviedb.user.register.RegisterActivity;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
