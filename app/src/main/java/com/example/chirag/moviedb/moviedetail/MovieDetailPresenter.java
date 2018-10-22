@@ -111,6 +111,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
+    public void insertTMDB(TMDB data) {
+        mRepository.updateTMDBData(data);
+    }
+
+    @Override
     public void attachView(MovieDetailContract.View view, int id) {
         mCallback = view;
         getMovieInfo(id);

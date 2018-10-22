@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -75,12 +77,22 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     CardView mReviewCardView;
 
     int mMovieId;
+
     String mMovieName;
+
     boolean isConnected;
+
     String mContentType;
+
     boolean isContentClicked = false;
+
     boolean appbarExpanded;
+
     private Menu collapsedMenu;
+
+    private TMDB mTMDBInfo;
+
+    private String mEmailAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +102,16 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         viewHolder();
 
         Logger.addLogAdapter(new AndroidLogAdapter());
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Item added to Favourites", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                insertTMDBInfo();
+            }
+        });
 
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -105,6 +127,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             }
             if (getIntent().hasExtra(CONTENT_TYPE)) {
                 mContentType = getIntent().getExtras().getString(CONTENT_TYPE);
+            }
+            if (getIntent().hasExtra("EXTRA_EMAIL")) {
+                mEmailAddress = getIntent().getExtras().getString("EXTRA_EMAIL");
             }
         }
 
@@ -185,6 +210,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void getMovieInfoHome(int movieId, TMDB data) {
         if (mContentType.equals(CONTENT_MOVIE)) {
             if (data != null) {
+                mTMDBInfo = data;
                 if (movieId == data.getId()) {
                     String movieReleaseDate = data.getReleaseDate();
                     String movieLanguage = data.getOriginalLanguage();
@@ -325,7 +351,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     }
 
-
     @Override
     public void getReviewDetail(Reviews data) {
         if (mContentType.equals(CONTENT_MOVIE)) {
@@ -393,6 +418,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 mTextViewTrailer.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void insertTMDBInfo() {
+        mTMDBInfo.setUserEmail(mEmailAddress);
+        mPresenter.insertTMDB(mTMDBInfo);
     }
 
     private void startNewActivity(int movieId, String movieName) {

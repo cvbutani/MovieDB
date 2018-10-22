@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
@@ -42,6 +43,8 @@ public interface TMDBDao {
     @Query("SELECT * FROM trailer WHERE movieId= :id")
     List<TrailerResponse> getTrailers(int id);
 
+    @Update
+    void updateTMDBInfo(TMDB data);
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
      *

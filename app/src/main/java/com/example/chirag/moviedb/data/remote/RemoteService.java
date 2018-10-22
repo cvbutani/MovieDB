@@ -378,12 +378,17 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getUserAccountInfo(String emailId, OnTaskCompletion.GetUserAccountCompletion callback) {
-        //
+        // Used in Local Data Storage
     }
 
     @Override
     public void updateUserAccount(User user) {
+        // Used in Local Data Storage
+    }
 
+    @Override
+    public void updateTMDBRepo(TMDB info) {
+        // Used in Local Data Storage
     }
 
     private void insertTmdbId(final Result item, final String movieType, final String content) {

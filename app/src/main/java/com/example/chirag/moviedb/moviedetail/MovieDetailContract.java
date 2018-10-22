@@ -23,6 +23,8 @@ public interface MovieDetailContract {
         void getReviewDetail(Reviews data);
 
         void getSimilarMovieDetail(Result data, int movieId);
+
+        void insertTMDBInfo();
     }
 
     interface Presenter {
@@ -35,6 +37,8 @@ public interface MovieDetailContract {
         void getReviews(int movieId);
 
         void getSimilarMovie(int movieId);
+
+        void insertTMDB(TMDB data);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

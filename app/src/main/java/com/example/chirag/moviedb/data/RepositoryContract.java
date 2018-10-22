@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data;
 
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 
@@ -38,4 +39,6 @@ public interface RepositoryContract {
     void getUserAccountInfo(String emailId, final OnTaskCompletion.GetUserAccountCompletion callback);
 
     void updateUserAccount(User user);
+
+    void updateTMDBRepo(TMDB info);
 }

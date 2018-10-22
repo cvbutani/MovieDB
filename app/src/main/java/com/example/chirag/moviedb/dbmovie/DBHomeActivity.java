@@ -84,14 +84,17 @@ public class DBHomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Bundle arg = new Bundle();
+        arg.putString("EXTRA_EMAIL", mUserEmail);
         switch (id) {
             case R.id.nav_movie:
                 DbHomeFragment fragment = new DbHomeFragment();
+                fragment.setArguments(arg);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
                 break;
             case R.id.nav_tv:
                 DbTvFragment dbTvFragment = new DbTvFragment();
+                dbTvFragment.setArguments(arg);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, dbTvFragment).commit();
                 break;
             case R.id.nav_fav:

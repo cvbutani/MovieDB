@@ -55,6 +55,8 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
 
     int mMovieId;
 
+    private String mUserEmail;
+
     public DbHomeFragment() {
 
     }
@@ -63,6 +65,9 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!getArguments().isEmpty()) {
+            mUserEmail = getArguments().getString("EXTRA_EMAIL");
+        }
         boolean isConnected = checkInternetConnection();
 
         DbHomePresenter presenter = new DbHomePresenter(getContext(), isConnected);
@@ -132,6 +137,7 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
         intent.putExtra(EXTRA_ID, movieId);
         intent.putExtra(EXTRA_TITLE, movieName);
+        intent.putExtra("EXTRA_EMAIL", mUserEmail);
         intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
         startActivity(intent);
     }

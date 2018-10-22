@@ -21,7 +21,6 @@ import java.util.List;
 public class TMDB implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @ColumnInfo(name = "primaryKey")
     private int primaryKey;
 
@@ -120,13 +119,17 @@ public class TMDB implements Serializable {
     @Ignore
     private List<Season> seasons = null;
 
+    @Nullable
+    @ColumnInfo(name = "userEmail")
+    private String userEmail;
+
     /**
      * No args constructor for use in serialization
      */
     public TMDB() {
     }
 
-    public TMDB(@Nullable String backdropPath, List<Genre> genres,
+    public TMDB(@Nullable String backdropPath, List<Genre> genres, @Nullable String email,
                 @Nullable String genreInfo, @NonNull Integer id, @Nullable String imdbId,
                 @Nullable String originalLanguage, @Nullable String originalTitle,
                 @Nullable String overview, @Nullable String posterPath, @Nullable String releaseDate,
@@ -148,14 +151,23 @@ public class TMDB implements Serializable {
         this.firstAirDate = firstAirDate;
         this.originalName = originalName;
         this.seasons = seasons;
+        this.userEmail = email;
     }
 
-    @NonNull
+    @Nullable
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(@Nullable String userEmail) {
+        this.userEmail = userEmail;
+    }
+
     public int getPrimaryKey() {
         return primaryKey;
     }
 
-    public void setPrimaryKey(@NonNull int primaryKey) {
+    public void setPrimaryKey(int primaryKey) {
         this.primaryKey = primaryKey;
     }
 
@@ -168,7 +180,7 @@ public class TMDB implements Serializable {
         this.backdropPath = backdropPath;
     }
 
-    public List<Genre> getGenres() {
+    private List<Genre> getGenres() {
         return genres;
     }
 

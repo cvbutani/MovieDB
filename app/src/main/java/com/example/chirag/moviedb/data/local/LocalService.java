@@ -353,4 +353,15 @@ public class LocalService implements RepositoryContract {
         mAppExecutors.getDiskIO().execute(runnable);
     }
 
+    @Override
+    public void updateTMDBRepo(final TMDB info) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mTMDBDao.updateTMDBInfo(info);
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
 }
