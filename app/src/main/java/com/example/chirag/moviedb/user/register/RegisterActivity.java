@@ -160,7 +160,13 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
             }
         }
 
-        User newUser = new User(password, firstName, lastName, email);
+        User newUser = new User();
+
+        newUser.setEmailAddress(email);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setPassWord(password);
+
         mPresenter.registerUser(newUser);
 
         Intent intent = new Intent(this, LoginActivity.class);

@@ -33,6 +33,9 @@ public class User {
     @ColumnInfo(name = "email_address")
     private String emailAddress;
 
+    public User() {
+    }
+
     public User(@NonNull String passWord, @NonNull String firstName, @NonNull String lastName, @NonNull String emailAddress) {
         this.passWord = passWord;
         this.firstName = firstName;

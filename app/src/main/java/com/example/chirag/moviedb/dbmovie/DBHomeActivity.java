@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.dbmovie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.dbtv.DbTvFragment;
+import com.example.chirag.moviedb.user.account.UserAccount;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -71,7 +73,9 @@ public class DBHomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_user) {
+            Intent intent = new Intent(this, UserAccount.class);
+            startActivity(intent);
             return true;
         }
 
