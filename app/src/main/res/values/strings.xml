@@ -27,4 +27,5 @@
     <string name="prompt_firstname">First name</string>
     <string name="prompt_lastname">Last name</string>
     <string name="error_invalid_name">Name is invalid</string>
+    <string name="error_user_exists">You already have account on MovieDB</string>
 </resources>

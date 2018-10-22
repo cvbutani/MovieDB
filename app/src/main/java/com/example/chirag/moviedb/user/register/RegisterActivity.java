@@ -1,45 +1,29 @@
 package com.example.chirag.moviedb.user.register;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.chirag.moviedb.R;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import com.example.chirag.moviedb.data.model.User;
+import com.example.chirag.moviedb.user.login.LoginActivity;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements RegisterContract.View {
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -47,12 +31,18 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mFirstName;
     private EditText mLastName;
 
-    private View mLoginFormView;
+    private List<User> userList;
+
+    RegisterPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        mPresenter = new RegisterPresenter(this, true);
+        mPresenter.attachView(this);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.register_email);
 
@@ -71,15 +61,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_register_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mEmailRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.register_form);
     }
 
     /**
@@ -119,14 +107,16 @@ public class RegisterActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(firstName) && !isNameValid(firstName)){
+        if (TextUtils.isEmpty(firstName) && isNameValid(firstName)) {
             mFirstName.setError(getString(R.string.error_invalid_name));
             focusView = mFirstName;
+            cancel = true;
         }
 
-        if(TextUtils.isEmpty(lastName) && !isNameValid(lastName)) {
+        if (TextUtils.isEmpty(lastName) && isNameValid(lastName)) {
             mLastName.setError(getString(R.string.error_invalid_name));
             focusView = mLastName;
+            cancel = true;
         }
 
         if (cancel) {
@@ -136,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-
+            createNewUser();
         }
     }
 
@@ -151,7 +141,40 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isNameValid(String name) {
-        return name.length() > 1;
+        return name.length() <= 1;
+    }
+
+    @Override
+    public void createNewUser() {
+
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+        String firstName = mFirstName.getText().toString();
+        String lastName = mLastName.getText().toString();
+        if (userList != null) {
+            for (User emailA : userList) {
+                if (email.equals(emailA.getEmailAddress())) {
+                    mEmailView.setError(getString(R.string.error_user_exists));
+                    return;
+                }
+            }
+        }
+
+        User newUser = new User(password, firstName, lastName, email);
+        mPresenter.registerUser(newUser);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void getUserDetail(List<User> user) {
+        userList = user;
+    }
+
+    @Override
+    public void createNewUserFailure(String errorMessage) {
+
     }
 }
 
