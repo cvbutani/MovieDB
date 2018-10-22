@@ -86,10 +86,4 @@ public interface OnTaskCompletion {
         void getUserInfoFailure(String errorMessage);
     }
 
-    interface InsertUserSignInCompletion {
-        void insertUserInfoSuccess(User user);
-
-        void insertUserInfoFailure(String errorMessage);
-    }
-
 }

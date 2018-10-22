@@ -1,67 +1,60 @@
-package com.example.chirag.moviedb.login;
+package com.example.chirag.moviedb.register;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.os.Build;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.app.LoaderManager.LoaderCallbacks;
+
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.chirag.moviedb.R;
-import com.example.chirag.moviedb.data.model.User;
-import com.example.chirag.moviedb.dbmovie.DBHomeActivity;
-import com.example.chirag.moviedb.register.RegisterActivity;
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.Logger;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View {
+import com.example.chirag.moviedb.R;
 
+import static android.Manifest.permission.READ_CONTACTS;
+
+/**
+ * A login screen that offers login via email/password.
+ */
+public class RegisterActivity extends AppCompatActivity {
+
+    // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
-    private LoginPresenter mPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
+        // Set up the login form.
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
-        mPresenter = new LoginPresenter(this, true);
-        mPresenter.attachView(this);
-
-        Logger.addLogAdapter(new AndroidLogAdapter());
-        findView();
-
-        Button button = findViewById(R.id.email_sign_in_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        Button registerButton = findViewById(R.id.email_register_button);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -72,40 +65,17 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                 return false;
             }
         });
-    }
 
-    private void findView() {
-        mEmailView = findViewById(R.id.email);
-        mPasswordView = findViewById(R.id.password);
-        mProgressView = findViewById(R.id.login_progress);
-        mLoginFormView = findViewById(R.id.login_form);
-    }
-
-    @Override
-    public void getUserDetail(List<User> user) {
-        String emailAddress = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        for (int i = 0; i < user.size(); i++) {
-            if (emailAddress.equals(user.get(i).getEmailAddress())) {
-                if (password.equals(user.get(i).getPassWord())) {
-                    showProgress(true);
-                    Intent intent = new Intent(this, DBHomeActivity.class);
-                    startActivity(intent);
-                } else {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                }
-            } else {
-                Logger.i("Something went wrong");
-                mPasswordView.setError(getString(R.string.error_incorrect_information));
-                mEmailView.setError(getString(R.string.error_incorrect_information));
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptLogin();
             }
-        }
-    }
+        });
 
-    @Override
-    public void getSignInError(String errorMessage) {
-
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
     }
 
     /**
@@ -150,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mPresenter.getUserAccountDetail();
+            showProgress(true);
         }
     }
 
@@ -200,3 +170,4 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         }
     }
 }
+

@@ -23,4 +23,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="error_incorrect_information">Email address or Password is incorrect</string>
+    <string name="prompt_firstname">First name</string>
+    <string name="prompt_lastname">Last name</string>
 </resources>

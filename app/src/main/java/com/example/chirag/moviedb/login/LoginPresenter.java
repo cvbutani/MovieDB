@@ -16,13 +16,13 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 21/10/18.
  */
-public class SignInPresenter implements SignInContract.Presenter {
+public class LoginPresenter implements LoginContract.Presenter {
 
-    SignInContract.View mCallback;
+    LoginContract.View mCallback;
 
     private Repository mRepository;
 
-    public SignInPresenter(Context context, boolean isConnected) {
+    public LoginPresenter(Context context, boolean isConnected) {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
@@ -48,12 +48,7 @@ public class SignInPresenter implements SignInContract.Presenter {
     }
 
     @Override
-    public void createNewUserAccount(User user) {
-        mRepository.insertUserSignInInfo(user);
-    }
-
-    @Override
-    public void attachView(SignInContract.View view) {
+    public void attachView(LoginContract.View view) {
         mCallback = view;
     }
 }
