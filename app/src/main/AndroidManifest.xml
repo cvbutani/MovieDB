@@ -13,9 +13,9 @@
         android:roundIcon="@drawable/tmdb_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name=".user.login.LoginActivity">
+            android:name=".user.login.LoginActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

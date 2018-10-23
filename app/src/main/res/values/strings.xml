@@ -30,4 +30,5 @@
     <string name="error_user_exists">You already have account on MovieDB</string>
     <string name="action_user">First name</string>
     <string name="action_save">Save</string>
+    <string name="action_exit">Logout</string>
 </resources>

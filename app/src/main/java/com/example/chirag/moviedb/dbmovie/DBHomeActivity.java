@@ -16,6 +16,7 @@ import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.dbtv.DbTvFragment;
 import com.example.chirag.moviedb.favourite.FavouriteFragment;
 import com.example.chirag.moviedb.user.account.UserAccountActivity;
+import com.example.chirag.moviedb.user.login.LoginActivity;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,8 +53,9 @@ public class DBHomeActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finish();
         }
+        super.onBackPressed();
     }
 
     @Override
@@ -76,6 +78,10 @@ public class DBHomeActivity extends AppCompatActivity
             intent.putExtra("EXTRA_EMAIL", mUserEmail);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_exit) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
