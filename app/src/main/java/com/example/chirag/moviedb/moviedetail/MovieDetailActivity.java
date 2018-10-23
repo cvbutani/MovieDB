@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.chirag.moviedb.R;
 
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
@@ -423,7 +424,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     public void insertTMDBInfo() {
         mTMDBInfo.setUserEmail(mEmailAddress);
-        mPresenter.insertTMDB(mTMDBInfo);
+
+        Favourite favourite = new Favourite(mTMDBInfo.getId(), mEmailAddress, mTMDBInfo.getPosterPath(), mTMDBInfo.getOriginalTitle());
+        mPresenter.insertTMDB(favourite);
     }
 
     private void startNewActivity(int movieId, String movieName) {

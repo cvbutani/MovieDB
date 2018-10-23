@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;
 import com.example.chirag.moviedb.data.local.dao.UserDao;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
@@ -354,7 +355,7 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void updateTMDBRepo(final TMDB info) {
+    public void updateTMDBRepo(final Favourite info) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -369,7 +370,7 @@ public class LocalService implements RepositoryContract {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final TMDB favouriteInfo = mTMDBDao.getFavouriteInfo(emailId);
+                final List<Favourite> favouriteInfo = mTMDBDao.getFavouriteInfo(emailId);
                 mAppExecutors.getMainThread().execute(new Runnable() {
                     @Override
                     public void run() {

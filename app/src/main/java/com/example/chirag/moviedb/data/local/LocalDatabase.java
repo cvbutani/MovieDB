@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;
 import com.example.chirag.moviedb.data.local.dao.UserDao;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
@@ -19,7 +20,7 @@ import com.example.chirag.moviedb.data.model.User;
  */
 @Database(entities = {ResultResponse.class,
         TrailerResponse.class, ReviewResponse.class,
-        TMDB.class, User.class},
+        TMDB.class, User.class, Favourite.class},
         version = 1,
         exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {

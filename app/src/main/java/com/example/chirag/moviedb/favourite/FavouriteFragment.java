@@ -18,9 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chirag.moviedb.R;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -66,7 +69,7 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Logger.addLogAdapter(new AndroidLogAdapter());
         if (!getArguments().isEmpty()) {
             mUserEmail = getArguments().getString("EXTRA_EMAIL");
         }
@@ -111,29 +114,28 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
     }
 
     @Override
-    public void getFavouriteTMDBInfo(final TMDB data) {
+    public void getFavouriteTMDBInfo(final List<Favourite> data) {
         if (data != null) {
             mLinearLayoutMovieHome.removeAllViews();
             popularCardView.setVisibility(View.VISIBLE);
             mNoInternet.setVisibility(View.GONE);
-
+            for (final Favourite info : data) {
                 View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutMovieHome, false);
                 ImageView poster = parent.findViewById(R.id.movie_home_imageview);
                 StringBuilder builder = new StringBuilder();
-                String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data.getPosterPath()).toString();
+                String imagePosterString = builder.append(POSTER_IMAGE_URL).append(info.getPoster()).toString();
                 Picasso.get().load(imagePosterString).into(poster);
 
                 poster.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int movieId = data.getId();
-                        String movieName = data.getOriginalName();
+                        int movieId = info.getId();
+                        String movieName = info.getTitle();
                         startNewActivity(movieId, movieName);
-
                     }
                 });
                 mLinearLayoutMovieHome.addView(parent);
-
+            }
         }
     }
 

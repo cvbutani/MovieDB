@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
@@ -151,7 +152,7 @@ public class Repository implements DataContract {
     }
 
     @Override
-    public void updateTMDBData(TMDB info) {
+    public void updateTMDBData(Favourite info) {
         mLocalService.updateTMDBRepo(info);
     }
 

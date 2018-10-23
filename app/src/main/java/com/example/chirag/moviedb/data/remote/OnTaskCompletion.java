@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data.remote;
 
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -93,7 +94,7 @@ public interface OnTaskCompletion {
     }
 
     interface  GetFavouriteTMDBCompletion {
-        void getFavouriteTMDBSuccess(TMDB data);
+        void getFavouriteTMDBSuccess(List<Favourite> data);
 
         void getFavouriteTMDBFailure(String errorMessage);
     }

@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.data;
 
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
@@ -39,7 +40,7 @@ public interface DataContract {
 
     void updateUserAccount(User user);
 
-    void updateTMDBData(TMDB info);
+    void updateTMDBData(Favourite info);
 
     void getFavouriteTMDBData(String emailId, final OnTaskCompletion.GetFavouriteTMDBCompletion callback);
 }

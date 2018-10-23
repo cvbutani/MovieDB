@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.favourite;
 
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface FavouriteContract {
 
     interface View {
-        void getFavouriteTMDBInfo(TMDB data);
+        void getFavouriteTMDBInfo(List<Favourite> data);
 
         void getFavouriteTMDBFailure(String errorMessage);
     }

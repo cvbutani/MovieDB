@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
@@ -387,7 +388,7 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void updateTMDBRepo(TMDB info) {
+    public void updateTMDBRepo(Favourite info) {
         // Used in Local Data Storage
     }
 

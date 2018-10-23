@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
@@ -39,8 +40,8 @@ public interface TMDBDao {
     @Query("SELECT * FROM movie_info WHERE id = :movieId ")
     TMDB getMovieInfo(int movieId);
 
-    @Query("SELECT * FROM movie_info WHERE userEmail= :emailId")
-    TMDB getFavouriteInfo(String emailId);
+    @Query("SELECT * FROM favourite WHERE email= :emailId")
+    List<Favourite> getFavouriteInfo(String emailId);
 
     @Query("SELECT * FROM review WHERE movieId= :id")
     List<ReviewResponse> getReviews(int id);
@@ -49,7 +50,7 @@ public interface TMDBDao {
     List<TrailerResponse> getTrailers(int id);
 
     @Insert(onConflict = REPLACE)
-    void updateTMDBInfo(TMDB data);
+    void updateTMDBInfo(Favourite data);
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.
      *

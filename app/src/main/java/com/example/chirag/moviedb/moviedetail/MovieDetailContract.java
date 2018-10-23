@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.moviedetail;
 
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -38,7 +39,7 @@ public interface MovieDetailContract {
 
         void getSimilarMovie(int movieId);
 
-        void insertTMDB(TMDB data);
+        void insertTMDB(Favourite data);
 
         void attachView(MovieDetailContract.View view, int movieId);
     }

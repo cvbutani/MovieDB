@@ -21,7 +21,6 @@ import java.io.Serializable;
 public class ResultResponse implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @ColumnInfo(name = "primary_key")
     private Integer primary_key;
 

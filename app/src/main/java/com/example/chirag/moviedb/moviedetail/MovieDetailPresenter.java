@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
@@ -111,7 +112,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void insertTMDB(TMDB data) {
+    public void insertTMDB(Favourite data) {
         mRepository.updateTMDBData(data);
     }
 

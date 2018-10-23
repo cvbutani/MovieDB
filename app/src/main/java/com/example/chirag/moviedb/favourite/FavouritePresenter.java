@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
@@ -36,7 +37,7 @@ public class FavouritePresenter implements FavouriteContract.Presenter{
     public void getFavouriteTMDB(String emailId) {
         mRepository.getFavouriteTMDBData(emailId, new OnTaskCompletion.GetFavouriteTMDBCompletion() {
             @Override
-            public void getFavouriteTMDBSuccess(TMDB data) {
+            public void getFavouriteTMDBSuccess(List<Favourite> data) {
                 mCallback.getFavouriteTMDBInfo(data);
             }
 
