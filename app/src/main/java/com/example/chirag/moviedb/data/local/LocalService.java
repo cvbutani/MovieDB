@@ -364,4 +364,25 @@ public class LocalService implements RepositoryContract {
         mAppExecutors.getDiskIO().execute(runnable);
     }
 
+    @Override
+    public void getFavouriteTMDBRepo(final String emailId, final OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final TMDB favouriteInfo = mTMDBDao.getFavouriteInfo(emailId);
+                mAppExecutors.getMainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (favouriteInfo == null) {
+                            callback.getFavouriteTMDBFailure("No Data Found");
+                        } else {
+                            callback.getFavouriteTMDBSuccess(favouriteInfo);
+                        }
+                    }
+                });
+            }
+        };
+        mAppExecutors.getDiskIO().execute(runnable);
+    }
+
 }

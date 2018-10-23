@@ -13,6 +13,8 @@ import com.example.chirag.moviedb.data.model.TrailerResponse;
 
 import java.util.List;
 
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+
 /**
  * MovieDB
  * Created by Chirag on 24/09/18.
@@ -37,13 +39,16 @@ public interface TMDBDao {
     @Query("SELECT * FROM movie_info WHERE id = :movieId ")
     TMDB getMovieInfo(int movieId);
 
+    @Query("SELECT * FROM movie_info WHERE userEmail= :emailId")
+    TMDB getFavouriteInfo(String emailId);
+
     @Query("SELECT * FROM review WHERE movieId= :id")
     List<ReviewResponse> getReviews(int id);
 
     @Query("SELECT * FROM trailer WHERE movieId= :id")
     List<TrailerResponse> getTrailers(int id);
 
-    @Update
+    @Insert(onConflict = REPLACE)
     void updateTMDBInfo(TMDB data);
     /**
      * Insert a movie in the database. If the movie already exists then it will still add it to database.

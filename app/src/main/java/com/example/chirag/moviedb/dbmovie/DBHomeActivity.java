@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.dbtv.DbTvFragment;
+import com.example.chirag.moviedb.favourite.FavouriteFragment;
 import com.example.chirag.moviedb.user.account.UserAccountActivity;
 
 public class DBHomeActivity extends AppCompatActivity
@@ -98,6 +99,9 @@ public class DBHomeActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, dbTvFragment).commit();
                 break;
             case R.id.nav_fav:
+                FavouriteFragment favouriteFragment = new FavouriteFragment();
+                favouriteFragment.setArguments(arg);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, favouriteFragment).commit();
                 break;
         }
 

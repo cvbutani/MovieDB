@@ -1,11 +1,11 @@
-package com.example.chirag.moviedb.user.login;
+package com.example.chirag.moviedb.favourite;
 
 import android.content.Context;
 
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
-import com.example.chirag.moviedb.data.model.User;
+import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.util.AppExecutors;
@@ -14,15 +14,15 @@ import java.util.List;
 
 /**
  * MovieDB
- * Created by Chirag on 21/10/18.
+ * Created by Chirag on 22/10/18.
  */
-public class LoginPresenter implements LoginContract.Presenter {
+public class FavouritePresenter implements FavouriteContract.Presenter{
 
-    LoginContract.View mCallback;
+    private FavouriteContract.View mCallback;
 
     private Repository mRepository;
 
-    LoginPresenter(Context context, boolean isConnected) {
+    FavouritePresenter(Context context, boolean isConnected) {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
@@ -33,22 +33,23 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void getUserAccountDetail() {
-        mRepository.getUserSignInInfo(new OnTaskCompletion.GetUserSignInCompletion() {
+    public void getFavouriteTMDB(String emailId) {
+        mRepository.getFavouriteTMDBData(emailId, new OnTaskCompletion.GetFavouriteTMDBCompletion() {
             @Override
-            public void getUserInfoSuccess(List<User> user) {
-                mCallback.getUserDetail(user);
+            public void getFavouriteTMDBSuccess(TMDB data) {
+                mCallback.getFavouriteTMDBInfo(data);
             }
 
             @Override
-            public void getUserInfoFailure(String errorMessage) {
-                mCallback.getSignInError(errorMessage);
+            public void getFavouriteTMDBFailure(String errorMessage) {
+                mCallback.getFavouriteTMDBFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void attachView(LoginContract.View view) {
+    public void attachView(FavouriteContract.View view, String emailId) {
         mCallback = view;
+        getFavouriteTMDB(emailId);
     }
 }

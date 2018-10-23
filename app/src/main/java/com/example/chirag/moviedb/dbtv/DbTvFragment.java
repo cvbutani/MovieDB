@@ -49,7 +49,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
     private LinearLayout mLinearLayoutTopRated;
     private LinearLayout mLinearLayoutUpcoming;
 
-    private TextView mTextViewTopRated;
+    TextView mTextViewTopRated;
     TextView mTextViewPopular;
     TextView mTextViewLatest;
 

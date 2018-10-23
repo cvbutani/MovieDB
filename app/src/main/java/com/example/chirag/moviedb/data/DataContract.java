@@ -40,4 +40,6 @@ public interface DataContract {
     void updateUserAccount(User user);
 
     void updateTMDBData(TMDB info);
+
+    void getFavouriteTMDBData(String emailId, final OnTaskCompletion.GetFavouriteTMDBCompletion callback);
 }

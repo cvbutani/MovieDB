@@ -92,9 +92,9 @@ public interface OnTaskCompletion {
         void getUserAccountFailure(String errorMessage);
     }
 
-    interface  GetUpdatedUserAccountCompletion {
-        void getUpdatedUserAccountSuccess(User user);
+    interface  GetFavouriteTMDBCompletion {
+        void getFavouriteTMDBSuccess(TMDB data);
 
-        void getUpdatedUserAccountFailure(String errorMessage);
+        void getFavouriteTMDBFailure(String errorMessage);
     }
 }

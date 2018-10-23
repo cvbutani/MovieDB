@@ -155,5 +155,10 @@ public class Repository implements DataContract {
         mLocalService.updateTMDBRepo(info);
     }
 
+    @Override
+    public void getFavouriteTMDBData(String emailId, OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
+        mLocalService.getFavouriteTMDBRepo(emailId, callback);
+    }
+
 
 }

@@ -391,6 +391,11 @@ public class RemoteService implements RepositoryContract {
         // Used in Local Data Storage
     }
 
+    @Override
+    public void getFavouriteTMDBRepo(String emailId, OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
+
+    }
+
     private void insertTmdbId(final Result item, final String movieType, final String content) {
         Runnable runnable = new Runnable() {
             @Override

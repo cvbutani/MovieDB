@@ -41,4 +41,6 @@ public interface RepositoryContract {
     void updateUserAccount(User user);
 
     void updateTMDBRepo(TMDB info);
+
+    void getFavouriteTMDBRepo(String emailId, final OnTaskCompletion.GetFavouriteTMDBCompletion callback);
 }
