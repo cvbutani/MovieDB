@@ -76,6 +76,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     CardView mTrailerCardView;
     CardView mReviewCardView;
+    CardView mSimilarCardView;
+    CardView mOverviewCardView;
 
     int mMovieId;
 
@@ -199,12 +201,16 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mTextViewTrailer = findViewById(R.id.trailers_label);
         mLinearLayoutTrailer = findViewById(R.id.movie_trailers);
         mLinearLayoutReview = findViewById(R.id.movie_review_layout);
-        mTrailerCardView = findViewById(R.id.movie_trailer_card);
-        mReviewCardView = findViewById(R.id.movie_review_card);
+
         mLinearLayoutSimilarMovies = findViewById(R.id.movie_similar);
         mTextViewReleaseDateLabel = findViewById(R.id.release_date_label);
         mTextViewSimilarLabel = findViewById(R.id.similar_label);
         mTextViewReview = findViewById(R.id.movie_review_label);
+
+        mTrailerCardView = findViewById(R.id.movie_trailer_card);
+        mReviewCardView = findViewById(R.id.movie_review_card);
+        mSimilarCardView = findViewById(R.id.movie_similar_card);
+        mOverviewCardView = findViewById(R.id.movie_overview_card);
     }
 
     @Override
@@ -246,6 +252,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
                 } else {
+                    mSimilarCardView.setVisibility(View.GONE);
+                    mReviewCardView.setVisibility(View.GONE);
+                    mTrailerCardView.setVisibility(View.GONE);
+                    mOverviewCardView.setVisibility(View.GONE);
                     Logger.i(getString(R.string.movie_error));
                 }
             }
@@ -301,6 +311,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         }
                     }
                 } else {
+
                     Logger.i(getString(R.string.movie_error));
                 }
             }

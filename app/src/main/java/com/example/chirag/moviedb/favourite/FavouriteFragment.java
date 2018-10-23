@@ -100,9 +100,6 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
         mNoInternet.setVisibility(View.GONE);
         if (checkInternetConnection()) {
             popularCardView.setVisibility(View.VISIBLE);
-            upcomingCardView.setVisibility(View.VISIBLE);
-            topRatedCardView.setVisibility(View.VISIBLE);
-            nowPlayingCardView.setVisibility(View.VISIBLE);
         } else {
             popularCardView.setVisibility(View.GONE);
             upcomingCardView.setVisibility(View.GONE);
@@ -136,6 +133,8 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
                 });
                 mLinearLayoutMovieHome.addView(parent);
             }
+        } else {
+            popularCardView.setVisibility(View.GONE);
         }
     }
 

@@ -17,6 +17,7 @@ import com.example.chirag.moviedb.dbtv.DbTvFragment;
 import com.example.chirag.moviedb.favourite.FavouriteFragment;
 import com.example.chirag.moviedb.user.account.UserAccountActivity;
 import com.example.chirag.moviedb.user.login.LoginActivity;
+import com.orhanobut.logger.Logger;
 
 public class DBHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -75,11 +76,14 @@ public class DBHomeActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_user) {
             Intent intent = new Intent(this, UserAccountActivity.class);
+            Logger.i(mUserEmail);
             intent.putExtra("EXTRA_EMAIL", mUserEmail);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_exit) {
             Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }
