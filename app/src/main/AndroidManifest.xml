@@ -17,6 +17,7 @@
         <!--User Login Activity-->
         <activity
             android:name=".user.login.LoginActivity"
+            android:theme="@style/SplashTheme"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

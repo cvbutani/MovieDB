@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -89,9 +90,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         for (int i = 0; i < user.size(); i++) {
             if (emailAddress.equals(user.get(i).getEmailAddress())) {
                 if (password.equals(user.get(i).getPassWord())) {
-                    showProgress(true);
                     Intent intent = new Intent(this, DBHomeActivity.class);
                     intent.putExtra("EXTRA_EMAIL", emailAddress);
+                    showProgress(true);
                     startActivity(intent);
                 } else {
                     mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -156,12 +157,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
