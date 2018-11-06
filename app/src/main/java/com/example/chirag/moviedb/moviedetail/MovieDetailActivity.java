@@ -7,15 +7,19 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +45,8 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import static com.example.chirag.moviedb.data.Constant.BACKDROP_IMAGE_URL;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
@@ -97,6 +103,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private String mEmailAddress;
 
+    List<Favourite> mFavouriteDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,13 +114,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         Logger.addLogAdapter(new AndroidLogAdapter());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Item added to Favourites", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                insertTMDBInfo();
+                fab.setImageResource(R.drawable.ic_favourite);
+                insertFavInfo(view);
             }
         });
 
@@ -142,7 +150,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         getSupportActionBar().setTitle(mMovieName);
 
         mPresenter = new MovieDetailPresenter(getApplicationContext(), isConnected);
-        mPresenter.attachView(this, mMovieId);
+        mPresenter.attachView(this, mMovieId, mEmailAddress);
 
         AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -159,6 +167,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -166,7 +175,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 onBackPressed();
                 return true;
             case R.id.action_favourite:
-                Toast.makeText(this, "Added to Favourite", Toast.LENGTH_SHORT).show();
+                collapsedMenu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_favourite));
+                insertFavInfo(getWindow().getDecorView());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -376,16 +386,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     TextView tvAuthor = parent.findViewById(R.id.movie_review_author);
                     final TextView tvContent = parent.findViewById(R.id.movie_review_content);
 
-                    tvContent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (isContentClicked) {
-                                tvContent.setMaxLines(2);
-                                isContentClicked = false;
-                            } else {
-                                tvContent.setMaxLines(Integer.MAX_VALUE);
-                                isContentClicked = true;
-                            }
+                    tvContent.setOnClickListener(view -> {
+                        if (isContentClicked) {
+                            tvContent.setMaxLines(2);
+                            isContentClicked = false;
+                        } else {
+                            tvContent.setMaxLines(Integer.MAX_VALUE);
+                            isContentClicked = true;
                         }
                     });
                     tvAuthor.setText("-- " + response.getAuthor());
@@ -433,11 +440,26 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void insertTMDBInfo() {
-        mTMDBInfo.setUserEmail(mEmailAddress);
+    public void getFavouriteTMDBInfo(List<Favourite> data) {
+        mFavouriteDb = data;
+    }
 
-        Favourite favourite = new Favourite(mTMDBInfo.getId(), mEmailAddress, mTMDBInfo.getPosterPath(), mTMDBInfo.getOriginalTitle());
-        mPresenter.insertTMDB(favourite);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void insertTMDBInfo() {
+        boolean exists = mFavouriteDb.stream().anyMatch(item -> mTMDBInfo.getId().equals(item.getId()));
+        if (!exists) {
+            mTMDBInfo.setUserEmail(mEmailAddress);
+            Favourite favourite = new Favourite(mTMDBInfo.getId(), mEmailAddress, mTMDBInfo.getPosterPath(), mTMDBInfo.getOriginalTitle());
+            mPresenter.insertTMDB(favourite);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void insertFavInfo(View view) {
+        Snackbar.make(view, "Item added to Favourites", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        insertTMDBInfo();
     }
 
     private void startNewActivity(int movieId, String movieName) {

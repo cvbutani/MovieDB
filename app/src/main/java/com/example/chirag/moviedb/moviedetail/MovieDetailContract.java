@@ -6,6 +6,8 @@ import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 
+import java.util.List;
+
 /**
  * MovieDB
  * Created by Chirag on 15/09/18.
@@ -25,6 +27,8 @@ public interface MovieDetailContract {
 
         void getSimilarMovieDetail(Result data, int movieId);
 
+        void getFavouriteTMDBInfo(List<Favourite> data);
+
         void insertTMDBInfo();
     }
 
@@ -41,7 +45,9 @@ public interface MovieDetailContract {
 
         void insertTMDB(Favourite data);
 
-        void attachView(MovieDetailContract.View view, int movieId);
+        void getFavouriteTMDB(String emailId);
+
+        void attachView(MovieDetailContract.View view, int movieId, String emailId);
     }
 
 }

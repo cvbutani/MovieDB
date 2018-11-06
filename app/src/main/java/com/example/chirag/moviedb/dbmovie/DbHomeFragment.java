@@ -18,9 +18,6 @@ import android.widget.RelativeLayout;
 
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.dbmovie.DbHomeContract;
-import com.example.chirag.moviedb.dbmovie.DbHomePresenter;
-import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
@@ -72,27 +69,33 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
 
         DbHomePresenter presenter = new DbHomePresenter(getContext(), isConnected);
         presenter.attachView(this);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.movie_home, container, false);
+
         mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
         mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
         mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
+
         nowPlayingCardView = rootView.findViewById(R.id.now_playing_card);
         nowPlayingCardView.setVisibility(View.VISIBLE);
+
         upcomingCardView = rootView.findViewById(R.id.upcoming_card);
         upcomingCardView.setVisibility(View.VISIBLE);
+
         topRatedCardView = rootView.findViewById(R.id.top_rated_card);
         topRatedCardView.setVisibility(View.VISIBLE);
+
         popularCardView = rootView.findViewById(R.id.popular_card);
         topRatedCardView.setVisibility(View.VISIBLE);
+
         mNoInternet = rootView.findViewById(R.id.no_internet);
         mNoInternet.setVisibility(View.GONE);
+
         if (checkInternetConnection()) {
             popularCardView.setVisibility(View.VISIBLE);
             upcomingCardView.setVisibility(View.VISIBLE);
@@ -144,17 +147,19 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
 
     private void setLayout(Result data, LinearLayout layout) {
         if (data != null && !data.getResults().isEmpty()) {
+
             layout.removeAllViews();
+
             popularCardView.setVisibility(View.VISIBLE);
             upcomingCardView.setVisibility(View.VISIBLE);
             topRatedCardView.setVisibility(View.VISIBLE);
             nowPlayingCardView.setVisibility(View.VISIBLE);
             mNoInternet.setVisibility(View.GONE);
+
             for (final ResultResponse item : data.getResults()) {
                 View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
                 ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-                StringBuilder builder = new StringBuilder();
-                String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+                String imagePosterString = POSTER_IMAGE_URL + item.getPoster();
                 Picasso.get().load(imagePosterString).into(poster);
 
                 poster.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +168,6 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
                         mMovieId = item.getId();
                         String movieName = item.getTitle();
                         startNewActivity(mMovieId, movieName);
-
                     }
                 });
                 layout.addView(parent);

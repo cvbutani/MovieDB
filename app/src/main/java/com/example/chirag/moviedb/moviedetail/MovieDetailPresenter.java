@@ -14,6 +14,8 @@ import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 import com.example.chirag.moviedb.util.AppExecutors;
 
+import java.util.List;
+
 /**
  * MovieDB
  * Created by Chirag on 15/09/18.
@@ -117,12 +119,28 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void attachView(MovieDetailContract.View view, int id) {
+    public void getFavouriteTMDB(String emailId) {
+        mRepository.getFavouriteTMDBData(emailId, new OnTaskCompletion.GetFavouriteTMDBCompletion() {
+            @Override
+            public void getFavouriteTMDBSuccess(List<Favourite> data) {
+                mCallback.getFavouriteTMDBInfo(data);
+            }
+
+            @Override
+            public void getFavouriteTMDBFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void attachView(MovieDetailContract.View view, int id, String emailId) {
         mCallback = view;
         getMovieInfo(id);
         getTvInfo(id);
         getTrailer(id);
         getReviews(id);
         getSimilarMovie(id);
+        getFavouriteTMDB(emailId);
     }
 }

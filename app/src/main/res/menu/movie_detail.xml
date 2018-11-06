@@ -7,5 +7,5 @@
         android:orderInCategory="100"
         android:title="Add To Favourite"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_favourite"/>
+        android:icon="@drawable/ic_add_fav" />
 </menu>

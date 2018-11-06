@@ -83,21 +83,29 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.movie_home, container, false);
+
         mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
         mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
-        nowPlayingCardView = rootView.findViewById(R.id.now_playing_card);
-        nowPlayingCardView.setVisibility(View.GONE);
-        upcomingCardView = rootView.findViewById(R.id.upcoming_card);
-        upcomingCardView.setVisibility(View.GONE);
-        topRatedCardView = rootView.findViewById(R.id.top_rated_card);
-        popularCardView = rootView.findViewById(R.id.popular_card);
         mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
         mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
+
+        nowPlayingCardView = rootView.findViewById(R.id.now_playing_card);
+        nowPlayingCardView.setVisibility(View.GONE);
+
+        upcomingCardView = rootView.findViewById(R.id.upcoming_card);
+        upcomingCardView.setVisibility(View.GONE);
+
+        topRatedCardView = rootView.findViewById(R.id.top_rated_card);
+
+        popularCardView = rootView.findViewById(R.id.popular_card);
+
+        mNoInternet = rootView.findViewById(R.id.no_internet);
+        mNoInternet.setVisibility(View.GONE);
+
         mTextViewTopRated = rootView.findViewById(R.id.movie_top_rated_label);
         mTextViewPopular = rootView.findViewById(R.id.popular_label);
         mTextViewLatest = rootView.findViewById(R.id.now_playing_label);
-        mNoInternet = rootView.findViewById(R.id.no_internet);
-        mNoInternet.setVisibility(View.GONE);
+
         if (checkInternetConnection()) {
             popularCardView.setVisibility(View.VISIBLE);
         } else {
