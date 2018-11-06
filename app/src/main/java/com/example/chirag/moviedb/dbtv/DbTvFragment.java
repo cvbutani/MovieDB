@@ -59,13 +59,17 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
     private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     int mMovieId;
-
+    String mUserEmail;
     public DbTvFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!getArguments().isEmpty()) {
+            mUserEmail = getArguments().getString("EXTRA_EMAIL");
+        }
 
         DBTvPresenter tvPresenter = new DBTvPresenter(getContext(), checkInternetConnection());
         tvPresenter.attachView(this);
@@ -122,6 +126,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
         intent.putExtra(EXTRA_ID, movieId);
         intent.putExtra(EXTRA_TITLE, name);
+        intent.putExtra("EXTRA_EMAIL", mUserEmail);
         intent.putExtra(CONTENT_TYPE, CONTENT_TV);
         startActivity(intent);
     }

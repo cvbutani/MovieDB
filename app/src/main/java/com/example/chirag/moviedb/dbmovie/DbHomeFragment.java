@@ -118,7 +118,11 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
 
     @Override
     public void getResultFailure(String errorMessage) {
-
+        popularCardView.setVisibility(View.GONE);
+        upcomingCardView.setVisibility(View.GONE);
+        topRatedCardView.setVisibility(View.GONE);
+        nowPlayingCardView.setVisibility(View.GONE);
+        mNoInternet.setVisibility(View.VISIBLE);
     }
 
     @Override

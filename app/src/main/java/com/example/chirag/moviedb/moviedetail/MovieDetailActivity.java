@@ -75,9 +75,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     LinearLayout mLinearLayoutTrailer;
     LinearLayout mLinearLayoutReview;
-
-    MovieDetailPresenter mPresenter;
-
     LinearLayout mLinearLayoutSimilarMovies;
 
     CardView mTrailerCardView;
@@ -85,25 +82,21 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     CardView mSimilarCardView;
     CardView mOverviewCardView;
 
-    int mMovieId;
-
-    String mMovieName;
-
-    boolean isConnected;
-
-    String mContentType;
-
-    boolean isContentClicked = false;
-
-    boolean appbarExpanded;
+    MovieDetailPresenter mPresenter;
 
     private Menu collapsedMenu;
-
     private TMDB mTMDBInfo;
+    private List<Favourite> mFavouriteDb;
 
+    private int mMovieId;
+
+    private String mMovieName;
     private String mEmailAddress;
+    private String mContentType;
 
-    List<Favourite> mFavouriteDb;
+    private boolean isContentClicked = false;
+    private boolean appbarExpanded;
+    private boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,9 +132,13 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             if (getIntent().hasExtra(CONTENT_TYPE)) {
                 mContentType = getIntent().getExtras().getString(CONTENT_TYPE);
             }
-            if (getIntent().hasExtra("EXTRA_EMAIL")) {
-                mEmailAddress = getIntent().getExtras().getString("EXTRA_EMAIL");
+            if (mEmailAddress == null) {
+                if (getIntent().hasExtra("EXTRA_EMAIL")) {
+                    mEmailAddress = getIntent().getExtras().getString("EXTRA_EMAIL");
+                }
             }
+
+            Logger.i(mEmailAddress);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -276,6 +273,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void getTvInfoHome(int tvId, TMDB data) {
         if (mContentType.equals(CONTENT_TV)) {
             if (data != null) {
+                mTMDBInfo = data;
                 if (tvId == data.getId()) {
                     String tvReleaseDate = data.getFirstAirDate();
                     String tvLanguage = data.getOriginalLanguage();
@@ -310,7 +308,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     mTextViewRating.setText(String.valueOf(tvRating));
                     mTextViewOverview.setText(tvOverview);
 
-                    mTextViewSimilarLabel.setText("Season Information");
+                    mTextViewSimilarLabel.setText(R.string.season_information);
                     if (isConnected) {
                         for (final Season item : data.getSeasons()) {
                             View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
@@ -450,7 +448,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         boolean exists = mFavouriteDb.stream().anyMatch(item -> mTMDBInfo.getId().equals(item.getId()));
         if (!exists) {
             mTMDBInfo.setUserEmail(mEmailAddress);
-            Favourite favourite = new Favourite(mTMDBInfo.getId(), mEmailAddress, mTMDBInfo.getPosterPath(), mTMDBInfo.getOriginalTitle());
+            int id = mTMDBInfo.getId();
+            String poster = mTMDBInfo.getPosterPath();
+            String title;
+            if (mContentType.equals(CONTENT_MOVIE)) {
+                title = mTMDBInfo.getOriginalTitle();
+            } else {
+                title = mTMDBInfo.getOriginalName();
+            }
+            Favourite favourite = new Favourite(id, mEmailAddress, poster, title);
             mPresenter.insertTMDB(favourite);
         }
     }
