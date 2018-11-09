@@ -17,9 +17,9 @@
         <!--User Login Activity-->
         <activity
             android:name=".user.login.LoginActivity"
+            android:launchMode="singleTop"
             android:theme="@style/SplashTheme"
-            android:windowSoftInputMode="stateHidden"
-            android:launchMode="singleTop">
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -53,7 +53,7 @@
                 android:value="com.example.chirag.moviedb.dbmovie.DBHomeActivity" />
         </activity>
 
-          <!--User Account Activity-->
+        <!--User Account Activity-->
         <activity android:name=".user.account.UserAccountActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

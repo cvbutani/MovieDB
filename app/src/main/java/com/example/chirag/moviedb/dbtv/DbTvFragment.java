@@ -80,6 +80,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
                 View rootView = inflater.inflate(R.layout.movie_home, container, false);
+
                 mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
                 mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
                 mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);

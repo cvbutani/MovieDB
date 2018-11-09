@@ -197,17 +197,21 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
         private void viewHolder() {
                 mImageViewAppBar = findViewById(R.id.imageViewCollapsing);
+
                 mTextViewReleaseDate = findViewById(R.id.listview_item_release_date);
                 mTextViewLanguage = findViewById(R.id.listview_item_language);
                 mTextViewGenre = findViewById(R.id.listview_item_genre);
                 mTextViewRating = findViewById(R.id.listview_item_rating);
+
                 mImageViewPoster = findViewById(R.id.listview_item_image);
+
                 mTextViewOverview = findViewById(R.id.movie_detail_overview);
                 mTextViewTrailer = findViewById(R.id.trailers_label);
+
                 mLinearLayoutTrailer = findViewById(R.id.movie_trailers);
                 mLinearLayoutReview = findViewById(R.id.movie_review_layout);
-
                 mLinearLayoutSimilarMovies = findViewById(R.id.movie_similar);
+
                 mTextViewReleaseDateLabel = findViewById(R.id.release_date_label);
                 mTextViewSimilarLabel = findViewById(R.id.similar_label);
                 mTextViewReview = findViewById(R.id.movie_review_label);
@@ -226,7 +230,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                                 if (movieId == data.getId()) {
                                         String movieReleaseDate = data.getReleaseDate();
                                         String movieLanguage = data.getOriginalLanguage();
-                                        double movieRating = data.getVoteAverage();
+                                        double movieRating = 0;
+                                        if (data.getVoteAverage() != null) {
+                                                movieRating = data.getVoteAverage();
+                                        }
                                         String movieOverview = data.getOverview();
                                         String movieGenre;
 
@@ -275,7 +282,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                                 if (tvId == data.getId()) {
                                         String tvReleaseDate = data.getFirstAirDate();
                                         String tvLanguage = data.getOriginalLanguage();
-                                        double tvRating = data.getVoteAverage();
+                                        double tvRating = 0;
+                                        if (data.getVoteAverage() != null) {
+                                                tvRating = data.getVoteAverage();
+                                        }
                                         String tvOverview = data.getOverview();
                                         String tvGenre;
 
@@ -450,15 +460,19 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
                         int id = mTMDBInfo.getId();
                         String poster = mTMDBInfo.getPosterPath();
-                        String title;
-                        if (mContentType.equals(CONTENT_MOVIE)) {
-                                title = mTMDBInfo.getOriginalTitle();
-                        } else {
-                                title = mTMDBInfo.getOriginalName();
+                        String title="";
+                        if (mTMDBInfo.getOriginalTitle() != null || mTMDBInfo.getOriginalName() != null) {
+                                if (mContentType.equals(CONTENT_MOVIE)) {
+                                        title = mTMDBInfo.getOriginalTitle();
+                                } else {
+                                        title = mTMDBInfo.getOriginalName();
+                                }
                         }
 
-                        Favourite favourite = new Favourite(id, mEmailAddress, poster, title, mContentType);
-                        mPresenter.insertTMDB(favourite);
+                        if (poster != null && title != null) {
+                                Favourite favourite = new Favourite(id, mEmailAddress, poster, title, mContentType);
+                                mPresenter.insertTMDB(favourite);
+                        }
                 }
         }
 

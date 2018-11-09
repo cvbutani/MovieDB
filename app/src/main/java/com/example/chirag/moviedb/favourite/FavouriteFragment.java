@@ -57,7 +57,7 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
         ConnectivityManager mConnectivityManager;
         NetworkInfo mActiveNetwork;
 
-        String mUserEmail;git
+        String mUserEmail;
         String mContentType;
 
         FavouritePresenter mPresenter;
@@ -129,7 +129,7 @@ public class FavouriteFragment extends Fragment implements FavouriteContract.Vie
                                 if (info.getContent_type().equals(CONTENT_MOVIE)) {
                                         setLayout(info, mLinearLayoutMovieHome, mTextViewPopular, "Favourite Movies");
                                 } else if (info.getContent_type().equals(CONTENT_TV)) {
-                                        setLayout(info, mLinearLayoutTopRated, mTextViewTopRated,"Favourite Tv Shows");
+                                        setLayout(info, mLinearLayoutTopRated, mTextViewTopRated,"Favourite TV Shows");
                                 }
                         }
                 } else {
