@@ -26,6 +26,7 @@ import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
+import static com.example.chirag.moviedb.data.Constant.POSTER_IMAGE_URL;
 
 /**
  * MovieDB
@@ -47,8 +48,6 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View {
 
         private ConnectivityManager mConnectivityManager;
         private NetworkInfo mActiveNetwork;
-
-        private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
         int mMovieId;
 

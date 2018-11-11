@@ -25,5 +25,4 @@ public class Constant {
 
     public static final String EXTRA_ID = "_ID";
     public static final String EXTRA_TITLE = "EXTRA_TITLE";
-    public static final String EXTRA_GENRE = "GENRE";
 }

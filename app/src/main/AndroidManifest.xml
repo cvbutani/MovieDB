@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -51,6 +52,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.chirag.moviedb.dbmovie.DBHomeActivity" />
+            <intent-filter>
+                <action android:name="android.net.ConnectivityManager.EXTRA_NETWORK"/>
+            </intent-filter>
         </activity>
 
         <!--User Account Activity-->
@@ -59,6 +63,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".dbmovie.DBHomeActivity" />
         </activity>
+
     </application>
 
 </manifest>
