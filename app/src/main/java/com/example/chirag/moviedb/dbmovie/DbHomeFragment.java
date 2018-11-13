@@ -54,16 +54,16 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
         NetworkChangeReceiver mBroadCastReceiver;
         Context mContext;
 
-        private  int mMovieId;
-       private boolean isConnected;
+        private int mMovieId;
+        private boolean isConnected;
         private String mUserEmail;
 
-        public DbHomeFragment() {
+        public DbHomeFragment () {
 
         }
 
         @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
+        public void onCreate (@Nullable Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
 
                 if (!getArguments().isEmpty()) {
@@ -74,7 +74,7 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
 
         @Nullable
         @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        public View onCreateView (@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
                 View rootView = inflater.inflate(R.layout.movie_home, container, false);
 
                 IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -129,12 +129,12 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
         }
 
         @Override
-        public void getPopularMovieHome(Result data) {
+        public void getPopularMovieHome (Result data) {
                 setLayout(data, mLinearLayoutMovieHome);
         }
 
         @Override
-        public void getResultFailure(String errorMessage) {
+        public void getResultFailure (String errorMessage) {
                 popularCardView.setVisibility(View.GONE);
                 upcomingCardView.setVisibility(View.GONE);
                 topRatedCardView.setVisibility(View.GONE);
@@ -143,21 +143,21 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
         }
 
         @Override
-        public void getNowPlayingMovieHome(Result data) {
+        public void getNowPlayingMovieHome (Result data) {
                 setLayout(data, mLinearLayoutNowPlaying);
         }
 
         @Override
-        public void getTopRatedMovieHome(Result data) {
+        public void getTopRatedMovieHome (Result data) {
                 setLayout(data, mLinearLayoutTopRated);
         }
 
         @Override
-        public void getUpcomingMovieHome(Result data) {
+        public void getUpcomingMovieHome (Result data) {
                 setLayout(data, mLinearLayoutUpcoming);
         }
 
-        private void startNewActivity(int movieId, String movieName) {
+        private void startNewActivity (int movieId, String movieName) {
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
                 intent.putExtra(EXTRA_ID, movieId);
                 intent.putExtra(EXTRA_TITLE, movieName);
@@ -166,7 +166,7 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
                 startActivity(intent);
         }
 
-        private void setLayout(Result data, LinearLayout layout) {
+        private void setLayout (Result data, LinearLayout layout) {
                 if (data != null && !data.getResults().isEmpty()) {
 
                         layout.removeAllViews();

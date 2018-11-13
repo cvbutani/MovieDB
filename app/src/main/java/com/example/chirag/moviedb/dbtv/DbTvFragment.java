@@ -43,21 +43,18 @@ import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
  */
 public class DbTvFragment extends Fragment implements DBTvContract.View, NetworkChangeReceiver.ConnectionListener {
 
-        CardView nowPlayingCardView;
-        CardView upcomingCardView;
-        CardView popularCardView;
-        CardView topRatedCardView;
+        CardView extraNowPlayingCardView;
+        CardView extraUpcomingCardView;
+        CardView popularTvCardView;
+        CardView topRatedTvCardView;
 
         RelativeLayout mNoInternet;
 
-        LinearLayout mLinearLayoutMovieHome;
-        LinearLayout mLinearLayoutNowPlaying;
-        LinearLayout mLinearLayoutTopRated;
-        LinearLayout mLinearLayoutUpcoming;
+        LinearLayout mLinearLayoutPopularTv;
+        LinearLayout mLinearLayoutTopRatedTv;
 
-        TextView mTextViewTopRated;
-        TextView mTextViewPopular;
-        TextView mTextViewLatest;
+        TextView mTextViewTopRatedTv;
+        TextView mTextViewPopularTv;
 
         NetworkChangeReceiver mBroadCastReceiver;
         Context mContext;
@@ -88,35 +85,34 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
                 IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
                 mContext.registerReceiver(mBroadCastReceiver, filter);
 
-                mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
-                mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
-                mLinearLayoutTopRated = rootView.findViewById(R.id.movie_top_rated);
-                mLinearLayoutUpcoming = rootView.findViewById(R.id.movie_upcoming);
+                mLinearLayoutPopularTv = rootView.findViewById(R.id.movie_popular);
+                mLinearLayoutTopRatedTv = rootView.findViewById(R.id.movie_top_rated);
 
-                nowPlayingCardView = rootView.findViewById(R.id.now_playing_card);
-                nowPlayingCardView.setVisibility(View.GONE);
+                topRatedTvCardView = rootView.findViewById(R.id.top_rated_card);
+                popularTvCardView = rootView.findViewById(R.id.popular_card);
 
-                upcomingCardView = rootView.findViewById(R.id.upcoming_card);
-                upcomingCardView.setVisibility(View.GONE);
-
-                topRatedCardView = rootView.findViewById(R.id.top_rated_card);
-
-                popularCardView = rootView.findViewById(R.id.popular_card);
-
-                mTextViewTopRated = rootView.findViewById(R.id.movie_top_rated_label);
-                mTextViewPopular = rootView.findViewById(R.id.popular_label);
-                mTextViewLatest = rootView.findViewById(R.id.now_playing_label);
+                mTextViewTopRatedTv = rootView.findViewById(R.id.movie_top_rated_label);
+                mTextViewPopularTv = rootView.findViewById(R.id.popular_label);
 
                 mNoInternet = rootView.findViewById(R.id.no_internet);
+
+                extraNowPlayingCardView = rootView.findViewById(R.id.now_playing_card);
+                extraNowPlayingCardView.setVisibility(View.GONE);
+
+                extraUpcomingCardView = rootView.findViewById(R.id.upcoming_card);
+                extraUpcomingCardView.setVisibility(View.GONE);
+
                 if (isConnected) {
-                        popularCardView.setVisibility(View.VISIBLE);
-                        topRatedCardView.setVisibility(View.VISIBLE);
+                        popularTvCardView.setVisibility(View.VISIBLE);
+                        topRatedTvCardView.setVisibility(View.VISIBLE);
                         mNoInternet.setVisibility(View.GONE);
                 } else {
-                        popularCardView.setVisibility(View.GONE);
-                        upcomingCardView.setVisibility(View.GONE);
-                        topRatedCardView.setVisibility(View.GONE);
-                        nowPlayingCardView.setVisibility(View.GONE);
+                        popularTvCardView.setVisibility(View.GONE);
+                        topRatedTvCardView.setVisibility(View.GONE);
+
+                        extraNowPlayingCardView.setVisibility(View.GONE);
+                        extraUpcomingCardView.setVisibility(View.GONE);
+
                         mNoInternet.setVisibility(View.VISIBLE);
                 }
                 return rootView;
@@ -136,7 +132,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
 
         @Override
         public void getPopularTvHome (Result data) {
-                setLayout(data, mLinearLayoutMovieHome, mTextViewPopular, "Popular TV Shows");
+                setLayout(data, mLinearLayoutPopularTv, mTextViewPopularTv, "Popular TV Shows");
         }
 
         @Override
@@ -146,7 +142,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
 
         @Override
         public void getTopRatedTvHome (Result data) {
-                setLayout(data, mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
+                setLayout(data, mLinearLayoutTopRatedTv, mTextViewTopRatedTv, "Top Rated TV Shows");
         }
 
         private void startNewActivity (int movieId, String name) {
@@ -161,8 +157,8 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
         private void setLayout (Result data, LinearLayout layout, TextView textView, String title) {
                 if (isConnected) {
                         if (data != null && !data.getResults().isEmpty()) {
-                                popularCardView.setVisibility(View.VISIBLE);
-                                topRatedCardView.setVisibility(View.VISIBLE);
+                                popularTvCardView.setVisibility(View.VISIBLE);
+                                topRatedTvCardView.setVisibility(View.VISIBLE);
                                 layout.removeAllViews();
                                 textView.setText(title);
                                 for (final ResultResponse item : data.getResults()) {
@@ -183,10 +179,11 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
                                 }
                         }
                 } else {
-                        popularCardView.setVisibility(View.GONE);
-                        upcomingCardView.setVisibility(View.GONE);
-                        topRatedCardView.setVisibility(View.GONE);
-                        nowPlayingCardView.setVisibility(View.GONE);
+                        popularTvCardView.setVisibility(View.GONE);
+                        topRatedTvCardView.setVisibility(View.GONE);
+
+                        extraUpcomingCardView.setVisibility(View.GONE);
+                        extraNowPlayingCardView.setVisibility(View.GONE);
                 }
         }
 
