@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.moviedetail;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -60,10 +61,12 @@ import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
 import static com.example.chirag.moviedb.data.Constant.POSTER_IMAGE_URL;
+import static com.example.chirag.moviedb.data.Constant.TYPE_MOBILE;
+import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
 import static com.example.chirag.moviedb.data.Constant.YOUTUBE_THUMBNAIL_URL;
 import static com.example.chirag.moviedb.data.Constant.YOUTUBE_URL;
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View, NetworkChangeReceiver.ConnectionListener {
 
     ImageView mImageViewAppBar;
     ImageView mImageViewPoster;
@@ -101,40 +104,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     private boolean isContentClicked = false;
     private boolean appbarExpanded;
-    private boolean isConnected = true;
+    private boolean isConnected;
 
-//    BroadcastReceiver mBroadCastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
-//                    WifiManager.WIFI_STATE_UNKNOWN);
-//            switch (wifiStateExtra) {
-//                case WifiManager.WIFI_STATE_ENABLED:
-//                    isConnected = true;
-//                    Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
-//                    break;
-//                case WifiManager.WIFI_STATE_DISABLED:
-//                    isConnected = false;
-//                    Toast.makeText(context, "Disconnected", Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//        }
-//    };
-
-    NetworkChangeReceiver mBroadCastReceiver = new NetworkChangeReceiver();
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter filter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        registerReceiver(mBroadCastReceiver, filter);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(mBroadCastReceiver);
-    }
+    NetworkChangeReceiver mBroadCastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +114,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         setContentView(R.layout.activity_movie_detail);
 
         viewHolder();
-
+        mBroadCastReceiver = new NetworkChangeReceiver(this);
         Logger.addLogAdapter(new AndroidLogAdapter());
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -176,9 +148,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(mMovieName);
-
-        mPresenter = new MovieDetailPresenter(getApplicationContext(), isConnected);
-        mPresenter.attachView(this, mMovieId, mEmailAddress);
 
         AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -225,6 +194,19 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             collapsedMenu.findItem(R.id.action_favourite).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mBroadCastReceiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mBroadCastReceiver);
     }
 
     private void viewHolder() {
@@ -521,5 +503,19 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         intent.putExtra(EXTRA_TITLE, movieName);
         intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
         startActivity(intent);
+    }
+
+    @Override
+    public void connectionInfo(Context context, boolean isConnected, int type) {
+        this.isConnected = isConnected;
+        if (type == TYPE_WIFI) {
+            Toast.makeText(context, "Connected to Wifi", Toast.LENGTH_SHORT).show();
+        } else if (type == TYPE_MOBILE) {
+            Toast.makeText(context, "Connected to Mobile data", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+        }
+        mPresenter = new MovieDetailPresenter(context, isConnected);
+        mPresenter.attachView(this, mMovieId, mEmailAddress);
     }
 }

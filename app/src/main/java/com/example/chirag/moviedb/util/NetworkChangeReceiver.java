@@ -6,9 +6,16 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
+import com.example.chirag.moviedb.data.Constant;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
+
+import static com.example.chirag.moviedb.data.Constant.TYPE_MOBILE;
+import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
 
 /**
  * MovieDB
@@ -16,21 +23,36 @@ import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
  */
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    public NetworkChangeReceiver() {
+    ConnectivityManager mConnectivityManager;
+    NetworkInfo mActiveNetwork;
+    NetworkChangeReceiver.ConnectionListener mCallBack;
+
+    public interface ConnectionListener {
+        void connectionInfo(Context context, boolean isConnected, int type);
+    }
+
+    public NetworkChangeReceiver(NetworkChangeReceiver.ConnectionListener callback) {
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        this.mCallBack = callback;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
-                WifiManager.WIFI_STATE_UNKNOWN);
-        switch (wifiStateExtra) {
-            case WifiManager.WIFI_STATE_ENABLED:
-                Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
-                new MovieDetailActivity();
-                break;
-            case WifiManager.WIFI_STATE_DISABLED:
-                Toast.makeText(context, "Disconnected", Toast.LENGTH_SHORT).show();
-                break;
+
+        if (context.getApplicationInfo() != null) {
+            mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        }
+        if (mConnectivityManager != null) {
+            mActiveNetwork = mConnectivityManager.getActiveNetworkInfo();
+        }
+        if ((mActiveNetwork != null) && (mActiveNetwork.isConnectedOrConnecting())) {
+            if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getType() == TYPE_WIFI) {
+                mCallBack.connectionInfo(context,true, TYPE_WIFI);
+            } else if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getType() == Constant.TYPE_MOBILE) {
+                mCallBack.connectionInfo(context, true, TYPE_MOBILE);
+            }
+        } else {
+            mCallBack.connectionInfo(context, false,2);
         }
     }
 }

@@ -25,4 +25,7 @@ public class Constant {
 
     public static final String EXTRA_ID = "_ID";
     public static final String EXTRA_TITLE = "EXTRA_TITLE";
+
+    public static final int TYPE_WIFI = 1;
+    public static final int TYPE_MOBILE = 0;
 }
