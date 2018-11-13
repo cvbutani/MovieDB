@@ -23,36 +23,36 @@ import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
  */
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    ConnectivityManager mConnectivityManager;
-    NetworkInfo mActiveNetwork;
-    NetworkChangeReceiver.ConnectionListener mCallBack;
+        ConnectivityManager mConnectivityManager;
+        NetworkInfo mActiveNetwork;
+        NetworkChangeReceiver.ConnectionListener mCallBack;
 
-    public interface ConnectionListener {
-        void connectionInfo(Context context, boolean isConnected, int type);
-    }
-
-    public NetworkChangeReceiver(NetworkChangeReceiver.ConnectionListener callback) {
-        Logger.addLogAdapter(new AndroidLogAdapter());
-        this.mCallBack = callback;
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-        if (context.getApplicationInfo() != null) {
-            mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        public interface ConnectionListener {
+                void connectionInfo(Context context, boolean isConnected, int type);
         }
-        if (mConnectivityManager != null) {
-            mActiveNetwork = mConnectivityManager.getActiveNetworkInfo();
+
+        public NetworkChangeReceiver(NetworkChangeReceiver.ConnectionListener callback) {
+                Logger.addLogAdapter(new AndroidLogAdapter());
+                this.mCallBack = callback;
         }
-        if ((mActiveNetwork != null) && (mActiveNetwork.isConnectedOrConnecting())) {
-            if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getType() == TYPE_WIFI) {
-                mCallBack.connectionInfo(context,true, TYPE_WIFI);
-            } else if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getType() == Constant.TYPE_MOBILE) {
-                mCallBack.connectionInfo(context, true, TYPE_MOBILE);
-            }
-        } else {
-            mCallBack.connectionInfo(context, false,2);
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+                if (context.getApplicationInfo() != null) {
+                        mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                }
+                if (mConnectivityManager != null) {
+                        mActiveNetwork = mConnectivityManager.getActiveNetworkInfo();
+                }
+                if ((mActiveNetwork != null) && (mActiveNetwork.isConnectedOrConnecting())) {
+                        if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getType() == TYPE_WIFI) {
+                                mCallBack.connectionInfo(context, true, TYPE_WIFI);
+                        } else if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getType() == Constant.TYPE_MOBILE) {
+                                mCallBack.connectionInfo(context, true, TYPE_MOBILE);
+                        }
+                } else {
+                        mCallBack.connectionInfo(context, false, 2);
+                }
         }
-    }
 }

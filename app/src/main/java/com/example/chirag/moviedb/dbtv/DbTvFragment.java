@@ -2,6 +2,7 @@ package com.example.chirag.moviedb.dbtv;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.data.model.Result;
@@ -24,18 +26,22 @@ import com.example.chirag.moviedb.dbtv.DBTvContract;
 import com.example.chirag.moviedb.dbtv.DBTvPresenter;
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
+import com.example.chirag.moviedb.util.NetworkChangeReceiver;
 import com.squareup.picasso.Picasso;
 
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
+import static com.example.chirag.moviedb.data.Constant.POSTER_IMAGE_URL;
+import static com.example.chirag.moviedb.data.Constant.TYPE_MOBILE;
+import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
 
 /**
  * MovieDB
  * Created by Chirag on 23/09/18.
  */
-public class DbTvFragment extends Fragment implements DBTvContract.View {
+public class DbTvFragment extends Fragment implements DBTvContract.View, NetworkChangeReceiver.ConnectionListener {
 
         CardView nowPlayingCardView;
         CardView upcomingCardView;
@@ -44,42 +50,43 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
 
         RelativeLayout mNoInternet;
 
-        private LinearLayout mLinearLayoutMovieHome;
-        private LinearLayout mLinearLayoutNowPlaying;
-        private LinearLayout mLinearLayoutTopRated;
-        private LinearLayout mLinearLayoutUpcoming;
+        LinearLayout mLinearLayoutMovieHome;
+        LinearLayout mLinearLayoutNowPlaying;
+        LinearLayout mLinearLayoutTopRated;
+        LinearLayout mLinearLayoutUpcoming;
 
         TextView mTextViewTopRated;
         TextView mTextViewPopular;
         TextView mTextViewLatest;
 
-        private ConnectivityManager mConnectivityManager;
-        private NetworkInfo mActiveNetwork;
+        NetworkChangeReceiver mBroadCastReceiver;
+        Context mContext;
 
-        private static final String POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
+        private int mMovieId;
+        private boolean isConnected;
+        private String mUserEmail;
 
-        int mMovieId;
-        String mUserEmail;
-
-        public DbTvFragment() {
+        public DbTvFragment () {
         }
 
         @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
+        public void onCreate (@Nullable Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
 
                 if (!getArguments().isEmpty()) {
                         mUserEmail = getArguments().getString("EXTRA_EMAIL");
                 }
 
-                DBTvPresenter tvPresenter = new DBTvPresenter(getContext(), checkInternetConnection());
-                tvPresenter.attachView(this);
+                mBroadCastReceiver = new NetworkChangeReceiver(this);
         }
 
         @Nullable
         @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        public View onCreateView (@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
                 View rootView = inflater.inflate(R.layout.movie_home, container, false);
+
+                IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                mContext.registerReceiver(mBroadCastReceiver, filter);
 
                 mLinearLayoutMovieHome = rootView.findViewById(R.id.movie_popular);
                 mLinearLayoutNowPlaying = rootView.findViewById(R.id.movie_now_playing);
@@ -101,7 +108,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
                 mTextViewLatest = rootView.findViewById(R.id.now_playing_label);
 
                 mNoInternet = rootView.findViewById(R.id.no_internet);
-                if (checkInternetConnection()) {
+                if (isConnected) {
                         popularCardView.setVisibility(View.VISIBLE);
                         topRatedCardView.setVisibility(View.VISIBLE);
                         mNoInternet.setVisibility(View.GONE);
@@ -116,21 +123,33 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
         }
 
         @Override
-        public void getPopularTvHome(Result data) {
+        public void onAttach (Context context) {
+                super.onAttach(context);
+                this.mContext = context;
+        }
+
+        @Override
+        public void onDestroyView () {
+                super.onDestroyView();
+                mContext.unregisterReceiver(mBroadCastReceiver);
+        }
+
+        @Override
+        public void getPopularTvHome (Result data) {
                 setLayout(data, mLinearLayoutMovieHome, mTextViewPopular, "Popular TV Shows");
         }
 
         @Override
-        public void getResultFailure(String errorMessage) {
+        public void getResultFailure (String errorMessage) {
 
         }
 
         @Override
-        public void getTopRatedTvHome(Result data) {
+        public void getTopRatedTvHome (Result data) {
                 setLayout(data, mLinearLayoutTopRated, mTextViewTopRated, "Top Rated TV Shows");
         }
 
-        private void startNewActivity(int movieId, String name) {
+        private void startNewActivity (int movieId, String name) {
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
                 intent.putExtra(EXTRA_ID, movieId);
                 intent.putExtra(EXTRA_TITLE, name);
@@ -139,8 +158,8 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
                 startActivity(intent);
         }
 
-        private void setLayout(Result data, LinearLayout layout, TextView textView, String title) {
-                if (checkInternetConnection()) {
+        private void setLayout (Result data, LinearLayout layout, TextView textView, String title) {
+                if (isConnected) {
                         if (data != null && !data.getResults().isEmpty()) {
                                 popularCardView.setVisibility(View.VISIBLE);
                                 topRatedCardView.setVisibility(View.VISIBLE);
@@ -149,13 +168,12 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
                                 for (final ResultResponse item : data.getResults()) {
                                         View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
                                         ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-                                        StringBuilder builder = new StringBuilder();
-                                        String imagePosterString = builder.append(POSTER_IMAGE_URL).append(item.getPoster()).toString();
+                                        String imagePosterString = POSTER_IMAGE_URL + item.getPoster();
                                         Picasso.get().load(imagePosterString).into(poster);
 
                                         poster.setOnClickListener(new View.OnClickListener() {
                                                 @Override
-                                                public void onClick(View view) {
+                                                public void onClick (View view) {
                                                         mMovieId = item.getId();
                                                         String movieName = item.getName();
                                                         startNewActivity(mMovieId, movieName);
@@ -172,15 +190,17 @@ public class DbTvFragment extends Fragment implements DBTvContract.View {
                 }
         }
 
-        private boolean checkInternetConnection() {
-
-                if (getActivity() != null) {
-                        mConnectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        @Override
+        public void connectionInfo (Context context, boolean isConnected, int type) {
+                this.isConnected = isConnected;
+                if (type == TYPE_WIFI) {
+                        Toast.makeText(context, "Connected to Wifi", Toast.LENGTH_SHORT).show();
+                } else if (type == TYPE_MOBILE) {
+                        Toast.makeText(context, "Connected to Mobile data", Toast.LENGTH_SHORT).show();
+                } else {
+                        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 }
-                if (mConnectivityManager != null) {
-                        mActiveNetwork = mConnectivityManager.getActiveNetworkInfo();
-                }
-
-                return (mActiveNetwork != null) && (mActiveNetwork.isConnectedOrConnecting());
+                DBTvPresenter tvPresenter = new DBTvPresenter(context, isConnected);
+                tvPresenter.attachView(this);
         }
 }

@@ -3,6 +3,8 @@ package com.example.chirag.moviedb.network;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.chirag.moviedb.data.Constant.BASE_URL;
+
 /**
  * MovieDB
  * Created by Chirag on 04/09/18.
@@ -10,7 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceInstance {
 
     private static Retrofit mRetrofit;
-    private static final String BASE_URL = "http://api.themoviedb.org/3/";
 
     public static Retrofit getServiceInstance() {
         if (mRetrofit == null) {

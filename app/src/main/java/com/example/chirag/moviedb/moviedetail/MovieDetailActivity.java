@@ -91,6 +91,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     CardView mOverviewCardView;
 
     MovieDetailPresenter mPresenter;
+    NetworkChangeReceiver mBroadCastReceiver;
 
     private Menu collapsedMenu;
     private TMDB mTMDBInfo;
@@ -105,8 +106,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private boolean isContentClicked = false;
     private boolean appbarExpanded;
     private boolean isConnected;
-
-    NetworkChangeReceiver mBroadCastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
