@@ -1,9 +1,12 @@
 package com.example.chirag.moviedb.moviedetail;
 
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.TMDB;
+import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -12,46 +15,39 @@ import com.example.chirag.moviedb.model.TrailerItem;
 public interface MovieDetailContract {
 
     interface View {
-        void onTrailerListSuccess(TrailerItem data);
+        void getMovieInfoHome(int movieId, TMDB data);
 
-        void onTrailerListFailure(String errorMessage);
+        void getTvInfoHome(int tvId, TMDB data);
 
-        void onMovieDetail(HeaderItem data, int movieId);
+        void getTrailerDetail(Trailer data);
 
-        void onReviewDetail(Reviews data);
+        void getResultFailure(String errorMessage);
 
-        void onGenreDetail(GenreItem data);
+        void getReviewDetail(Reviews data);
 
-        void onNowPlayingMovie(HeaderItem data, int movieId);
+        void getSimilarMovieDetail(Result data, int movieId);
 
-        void onTopRatedMovie(HeaderItem data, int movieId);
+        void getFavouriteTMDBInfo(List<Favourite> data);
 
-        void onUpcomingMovie(HeaderItem data, int movieId);
-
-        void onSimilarMovieSuccess(HeaderItem data, int movieId);
-
-        void onSimilarMovieFailure(String errorMessage);
+        void insertTMDBInfo();
     }
 
     interface Presenter {
+        void getMovieInfo(int movieId);
 
-        void getTrailerList(int movieId);
+        void getTvInfo(int tvId);
 
-        void getMovieData(int movieId);
-
-        void getNowPlayingData(int movieId);
-
-        void getTopRatedData(int movieId);
-
-        void getUpcomingData(int movieId);
-
-        void getGenreItem();
+        void getTrailer(int movieId);
 
         void getReviews(int movieId);
 
-        void getSimilarData(int movieId);
+        void getSimilarMovie(int movieId);
 
-        void attachView(MovieDetailContract.View view, int movieId);
+        void insertTMDB(Favourite data);
+
+        void getFavouriteTMDB(String emailId);
+
+        void attachView(MovieDetailContract.View view, int movieId, String emailId);
     }
 
 }

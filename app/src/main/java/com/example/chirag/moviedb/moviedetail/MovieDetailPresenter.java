@@ -2,12 +2,19 @@ package com.example.chirag.moviedb.moviedetail;
 
 import android.content.Context;
 
+import com.example.chirag.moviedb.data.local.LocalDatabase;
+import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.TMDB;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.data.remote.RemoteRepository;
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.Repository;
+import com.example.chirag.moviedb.data.remote.RemoteService;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.util.AppExecutors;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -15,145 +22,125 @@ import com.example.chirag.moviedb.model.TrailerItem;
  */
 public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
-    private RemoteRepository mRemoteRepository;
+    private Repository mRepository;
 
     private MovieDetailContract.View mCallback;
 
-    MovieDetailPresenter(Context context) {
-        mRemoteRepository = RemoteRepository.getInstance(context);
+    MovieDetailPresenter(Context context, boolean isConnected) {
+        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+                LocalDatabase.getInstance(context).localDao(),
+                LocalDatabase.getInstance(context).userDao());
+        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
+                LocalDatabase.getInstance(context).localDao());
+
+        mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override
-    public void getTrailerList(int movieId) {
-
-        mRemoteRepository.getTrailerList(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
+    public void getMovieInfo(final int movieId) {
+        mRepository.getMovieInfoData(movieId, new OnTaskCompletion.OnGetMovieInfoCompletion() {
             @Override
-            public void onTrailerItemSuccess(TrailerItem data) {
-                mCallback.onTrailerListSuccess(data);
+            public void getMovieInfoSuccess(TMDB data) {
+                mCallback.getMovieInfoHome(movieId, data);
             }
 
             @Override
-            public void onTrailerItemFailure(String errorMessage) {
-                mCallback.onTrailerListFailure(errorMessage);
+            public void getMovieInfoFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getMovieData(final int movieId) {
-        mRemoteRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
+    public void getTvInfo(final int tvId) {
+        mRepository.getTvInfoData(tvId, new OnTaskCompletion.OnGetTvInfoCompletion() {
             @Override
-            public void onHeaderItemSuccess(HeaderItem data) {
-                mCallback.onMovieDetail(data, movieId);
+            public void getTvInfoSuccess(TMDB data) {
+                mCallback.getTvInfoHome(tvId, data);
             }
 
             @Override
-            public void onHeaderItemFailure(String errorMessage) {
-
-            }
-        });
-    }
-
-    @Override
-    public void getNowPlayingData(final int movieId) {
-        mRemoteRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
-            @Override
-            public void onNowPlayingMovieSuccess(HeaderItem data) {
-                mCallback.onNowPlayingMovie(data, movieId);
-            }
-
-            @Override
-            public void onNowPlayingMovieFailure(String errorMessage) {
-
+            public void getTvInfoFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void getTopRatedData(final int movieId) {
-        mRemoteRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
+    public void getTrailer(int movieId) {
+
+        mRepository.getTrailerListData(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
             @Override
-            public void onTopRatedMovieSuccess(HeaderItem data) {
-                mCallback.onTopRatedMovie(data, movieId);
+            public void getTrailerItemSuccess(Trailer data) {
+                mCallback.getTrailerDetail(data);
             }
 
             @Override
-            public void onTopRatedMovieFailure(String errorMessage) {
-
-            }
-        });
-    }
-
-    @Override
-    public void getUpcomingData(final int movieId) {
-        mRemoteRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
-            @Override
-            public void onUpcomingMovieSuccess(HeaderItem data) {
-                mCallback.onUpcomingMovie(data, movieId);
-            }
-
-            @Override
-            public void onUpcomingMovieFailure(String errorMessage) {
-
+            public void getTrailerItemFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
-    @Override
-    public void getGenreItem() {
-        mRemoteRepository.getGenreList(new OnTaskCompletion.OnGetGenresCompletion() {
-            @Override
-            public void onGenreListSuccess(GenreItem data) {
-                mCallback.onGenreDetail(data);
-            }
-
-            @Override
-            public void onGenreListFailure(String errorMessage) {
-
-            }
-        });
-    }
 
     @Override
     public void getReviews(int movieId) {
-        mRemoteRepository.getReviews(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
+        mRepository.getReviewsListData(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
             @Override
-            public void onReviewResponseSuccess(Reviews data) {
-                mCallback.onReviewDetail(data);
+            public void getReviewResponseSuccess(Reviews data) {
+                mCallback.getReviewDetail(data);
             }
 
             @Override
-            public void onReviewResponseFailure(String errorMessage) {
-
-            }
-        });
-    }
-
-    @Override
-    public void getSimilarData(final int movieId) {
-        mRemoteRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
-            @Override
-            public void onSimilarMovieSuccess(HeaderItem data) {
-                mCallback.onSimilarMovieSuccess(data, movieId);
-            }
-
-            @Override
-            public void onSimilarMovieFailure(String errorMessage) {
-                mCallback.onSimilarMovieFailure(errorMessage);
+            public void getReviewResponseFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
 
     @Override
-    public void attachView(MovieDetailContract.View view, int movieId) {
+    public void getSimilarMovie(final int movieId) {
+        mRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
+            @Override
+            public void getSimilarMovieSuccess(Result data) {
+                mCallback.getSimilarMovieDetail(data, movieId);
+            }
+
+            @Override
+            public void getSimilarMovieFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void insertTMDB(Favourite data) {
+        mRepository.updateTMDBData(data);
+    }
+
+    @Override
+    public void getFavouriteTMDB(String emailId) {
+        mRepository.getFavouriteTMDBData(emailId, new OnTaskCompletion.GetFavouriteTMDBCompletion() {
+            @Override
+            public void getFavouriteTMDBSuccess(List<Favourite> data) {
+                mCallback.getFavouriteTMDBInfo(data);
+            }
+
+            @Override
+            public void getFavouriteTMDBFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void attachView(MovieDetailContract.View view, int id, String emailId) {
         mCallback = view;
-        getTrailerList(movieId);
-        getMovieData(movieId);
-        getReviews(movieId);
-        getNowPlayingData(movieId);
-        getTopRatedData(movieId);
-        getUpcomingData(movieId);
-        getSimilarData(movieId);
-        getGenreItem();
+        getMovieInfo(id);
+        getTvInfo(id);
+        getTrailer(id);
+        getReviews(id);
+        getSimilarMovie(id);
+        getFavouriteTMDB(emailId);
     }
 }

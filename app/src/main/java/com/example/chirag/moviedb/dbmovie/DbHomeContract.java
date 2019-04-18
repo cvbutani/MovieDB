@@ -1,8 +1,8 @@
 package com.example.chirag.moviedb.dbmovie;
 
 
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.Result;
 
 /**
  * MovieDB
@@ -11,30 +11,19 @@ import com.example.chirag.moviedb.model.HeaderItem;
 public interface DbHomeContract {
 
     interface View {
-        void onHeaderResultSuccess(HeaderItem data);
+        void getPopularMovieHome(Result data);
 
-        void onHeaderResultFailure(String errorMessage);
+        void getResultFailure(String errorMessage);
 
-        void onGenreListSuccess(GenreItem data);
+        void getNowPlayingMovieHome(Result data);
 
-        void onGenreListFailure(String errorMessage);
+        void getTopRatedMovieHome(Result data);
 
-        void onNowPlayingMovieSuccess(HeaderItem data);
-
-        void onNowPlayingMovieFailure(String errorMessage);
-
-        void onTopRatedMovieSuccess(HeaderItem data);
-
-        void onTopRatedMovieFailure(String errorMessage);
-
-        void onUpcomingMovieSuccess(HeaderItem data);
-
-        void onUpcomingMovieFailure(String errorMessage);
+        void getUpcomingMovieHome(Result data);
 
     }
 
     interface Presenter {
-
         void getNowPlayingMovies();
 
         void getPopularMovies();
@@ -42,8 +31,6 @@ public interface DbHomeContract {
         void getTopRatedMovies();
 
         void getUpcomingMovies();
-
-        void getGenreList();
 
         void attachView(DbHomeContract.View view);
     }

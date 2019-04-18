@@ -1,9 +1,13 @@
 package com.example.chirag.moviedb.data.remote;
 
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.TMDB;
+import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
+import com.example.chirag.moviedb.data.model.User;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -11,67 +15,87 @@ import com.example.chirag.moviedb.model.TrailerItem;
  */
 public interface OnTaskCompletion {
 
-    interface OnGetMovieCompletion {
+    interface OnGetMovieInfoCompletion {
+        void getMovieInfoSuccess(TMDB data);
 
-        void onHeaderItemSuccess(HeaderItem data);
-
-        void onHeaderItemFailure(String errorMessage);
-
+        void getMovieInfoFailure(String errorMessage);
     }
 
-    interface OnGetGenresCompletion {
+    interface OnGetMovieCompletion {
+        void getPopularMovieSuccess(Result data);
 
-        void onGenreListSuccess(GenreItem data);
-
-        void onGenreListFailure(String errorMessage);
+        void getPopularMovieFailure(String errorMessage);
     }
 
     interface OnGetTrailerCompletion {
+        void getTrailerItemSuccess(Trailer data);
 
-        void onTrailerItemSuccess(TrailerItem data);
-
-        void onTrailerItemFailure(String errorMessage);
+        void getTrailerItemFailure(String errorMessage);
     }
 
     interface OnGetReviewCompletion {
+        void getReviewResponseSuccess(Reviews data);
 
-        void onReviewResponseSuccess(Reviews data);
-
-        void onReviewResponseFailure(String errorMessage);
+        void getReviewResponseFailure(String errorMessage);
     }
 
     interface OnGetNowPlayingCompletion {
+        void getNowPlayingMovieSuccess(Result data);
 
-        void onNowPlayingMovieSuccess(HeaderItem data);
-
-        void onNowPlayingMovieFailure(String errorMessage);
+        void getNowPlayingMovieFailure(String errorMessage);
     }
 
     interface OnGetTopRatedMovieCompletion {
+        void getTopRatedMovieSuccess(Result data);
 
-        void onTopRatedMovieSuccess(HeaderItem data);
-
-        void onTopRatedMovieFailure(String errorMessage);
+        void getTopRatedMovieFailure(String errorMessage);
     }
 
     interface OnGetUpcomingMovieCompletion {
+        void getUpcomingMovieSuccess(Result data);
 
-        void onUpcomingMovieSuccess(HeaderItem data);
-
-        void onUpcomingMovieFailure(String errorMessage);
+        void getUpcomingMovieFailure(String errorMessage);
     }
 
     interface OnGetSimilarMovieCompletion {
+        void getSimilarMovieSuccess(Result data);
 
-        void onSimilarMovieSuccess(HeaderItem data);
-
-        void onSimilarMovieFailure(String errorMessage);
+        void getSimilarMovieFailure(String errorMessage);
     }
 
     interface OnGetPopularTvCompletion {
+        void getPopularTvSuccess(Result data);
 
-        void onPopularTvSuccess(HeaderItem data);
+        void getPopularTvFailure(String errorMessage);
+    }
 
-        void onPopularTvFailure(String errorMessage);
+    interface GetTopRatedTvCompletion {
+        void getTvTopRatedContentSuccess(Result data);
+
+        void getTvTopRatedContentFailure(String errorMessage);
+    }
+
+    interface OnGetTvInfoCompletion {
+        void getTvInfoSuccess(TMDB data);
+
+        void getTvInfoFailure(String errorMessage);
+    }
+
+    interface GetUserSignInCompletion {
+        void getUserInfoSuccess(List<User> user);
+
+        void getUserInfoFailure(String errorMessage);
+    }
+
+    interface GetUserAccountCompletion {
+        void getUserAccountSuccess(User user);
+
+        void getUserAccountFailure(String errorMessage);
+    }
+
+    interface  GetFavouriteTMDBCompletion {
+        void getFavouriteTMDBSuccess(List<Favourite> data);
+
+        void getFavouriteTMDBFailure(String errorMessage);
     }
 }

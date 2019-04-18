@@ -1,5 +1,6 @@
 package com.example.chirag.moviedb.dbmovie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,96 +13,112 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.chirag.moviedb.R;
-import com.example.chirag.moviedb.fragment.MovieFragment;
-import com.example.chirag.moviedb.fragment.TvFragment;
+import com.example.chirag.moviedb.dbtv.DbTvFragment;
+import com.example.chirag.moviedb.favourite.FavouriteFragment;
+import com.example.chirag.moviedb.user.account.UserAccountActivity;
+import com.example.chirag.moviedb.user.login.LoginActivity;
+import com.orhanobut.logger.Logger;
 
 public class DBHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+                implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dbhome);
+        private String mUserEmail;
 
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_dbhome);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+                if (getIntent().hasExtra("EXTRA_EMAIL")) {
+                        mUserEmail = getIntent().getStringExtra("EXTRA_EMAIL");
+                }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                toggle.syncState();
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0).setChecked(true));
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.dbhome, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.setNavigationItemSelectedListener(this);
+                onNavigationItemSelected(navigationView.getMenu().getItem(0).setChecked(true));
         }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.nav_movie:
-                MovieFragment fragment = new MovieFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
-                break;
-            case R.id.nav_tv:
-                TvFragment tvFragment = new TvFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, tvFragment).commit();
-                break;
-            case R.id.nav_fav:
-                break;
+        @Override
+        public void onBackPressed() {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                        drawer.closeDrawer(GravityCompat.START);
+                } else {
+                        finish();
+                }
+                super.onBackPressed();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+                // Inflate the menu; this adds items to the action bar if it is present.
+                getMenuInflater().inflate(R.menu.dbhome, menu);
+                return true;
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+                // Handle action bar item clicks here. The action bar will
+                // automatically handle clicks on the Home/Up button, so long
+                // as you specify a parent activity in AndroidManifest.xml.
+                int id = item.getItemId();
+
+                //noinspection SimplifiableIfStatement
+                if (id == R.id.action_user) {
+                        Intent intent = new Intent(this, UserAccountActivity.class);
+                        Logger.i(mUserEmail);
+                        intent.putExtra("EXTRA_EMAIL", mUserEmail);
+                        startActivity(intent);
+                        return true;
+                } else if (id == R.id.action_exit) {
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                }
+
+                return super.onOptionsItemSelected(item);
+        }
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Handle navigation view item clicks here.
+                int id = item.getItemId();
+                Bundle arg = new Bundle();
+                arg.putString("EXTRA_EMAIL", mUserEmail);
+                switch (id) {
+                        case R.id.nav_movie:
+                                DbHomeFragment fragment = new DbHomeFragment();
+                                fragment.setArguments(arg);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+                                break;
+                        case R.id.nav_tv:
+                                DbTvFragment dbTvFragment = new DbTvFragment();
+                                dbTvFragment.setArguments(arg);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.content, dbTvFragment).commit();
+                                break;
+                        case R.id.nav_fav:
+                                FavouriteFragment favouriteFragment = new FavouriteFragment();
+                                favouriteFragment.setArguments(arg);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.content, favouriteFragment).commit();
+                                break;
+                }
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+        }
 
 }
 

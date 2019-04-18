@@ -1,9 +1,11 @@
 package com.example.chirag.moviedb.service;
 
-import com.example.chirag.moviedb.model.GenreItem;
-import com.example.chirag.moviedb.model.HeaderItem;
-import com.example.chirag.moviedb.model.Reviews;
-import com.example.chirag.moviedb.model.TrailerItem;
+import com.example.chirag.moviedb.data.model.Genre;
+import com.example.chirag.moviedb.data.model.TMDB;
+import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
+import com.example.chirag.moviedb.data.model.Reviews;
+import com.example.chirag.moviedb.data.model.Trailer;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,58 +18,58 @@ import retrofit2.http.Query;
  */
 public interface GetDataService {
 
-    @GET("movie/popular")
-    Call<HeaderItem> getPopularMoviesInfo(
+    @GET("{result}/{movie_type}")
+    Call<Result> getContentDataService(
+            @Path("result") String result,
+            @Path("movie_type") String movieType,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
-    @GET("movie/now_playing")
-    Call<HeaderItem> getNowPlayingInfo(
+    @GET("movie/{movie_id}")
+    Call<TMDB> getMovieInfoDataService(
+            @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
-    @GET("movie/top_rated")
-    Call<HeaderItem> getTopRatedInfo(
+    @GET("tv/{tv_id}")
+    Call<TMDB> getTvInfoDataService(
+            @Path("tv_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
-    @GET("movie/upcoming")
-    Call<HeaderItem> getUpcomingInfo(
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
-
-    @GET("genre/movie/list")
-    Call<GenreItem> getGenreList(
+    @GET("genre/{content_type}/list")
+    Call<Genre> getGenreDataService(
+            @Path("content_type") String contentType,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
     @GET("movie/{movie_id}/videos")
-    Call<TrailerItem> getTrailerList(
+    Call<Trailer> GetTrailerDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey
     );
 
     @GET("movie/{movie_id}/reviews")
-    Call<Reviews> getReviewList(
+    Call<Reviews> getReviewDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
     @GET("movie/{movie_id}/similar")
-    Call<HeaderItem> getSimilarMovieList(
+    Call<Result> getSimilarMovieDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );
 
-    @GET("tv/popular")
-    Call<HeaderItem> getPopularTvInfo(
+    @GET("tv/{tv_id}")
+    Call<ResultResponse> getTvSeasonDataService(
+            @Path("tv_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );

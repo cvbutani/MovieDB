@@ -2,9 +2,13 @@ package com.example.chirag.moviedb.dbtv;
 
 import android.content.Context;
 
+import com.example.chirag.moviedb.data.local.LocalDatabase;
+import com.example.chirag.moviedb.data.local.LocalService;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
-import com.example.chirag.moviedb.data.remote.RemoteRepository;
-import com.example.chirag.moviedb.model.HeaderItem;
+import com.example.chirag.moviedb.data.Repository;
+import com.example.chirag.moviedb.data.remote.RemoteService;
+import com.example.chirag.moviedb.util.AppExecutors;
 
 /**
  * MovieDB
@@ -14,23 +18,46 @@ public class DBTvPresenter implements DBTvContract.Presenter {
 
     private DBTvContract.View mCallback;
 
-    private RemoteRepository mRemoteRepo;
+    private Repository mRepository;
 
-    public DBTvPresenter(Context context) {
-        this.mRemoteRepo = RemoteRepository.getInstance(context);
+    public DBTvPresenter(Context context, boolean isConnected) {
+
+        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+                LocalDatabase.getInstance(context).localDao(),
+                LocalDatabase.getInstance(context).userDao());
+
+        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
+                LocalDatabase.getInstance(context).localDao());
+
+        this.mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override
     public void getPopularTv() {
-        mRemoteRepo.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
+        mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
             @Override
-            public void onPopularTvSuccess(HeaderItem data) {
-                mCallback.onPopularTvSuccess(data);
+            public void getPopularTvSuccess(Result data) {
+                mCallback.getPopularTvHome(data);
             }
 
             @Override
-            public void onPopularTvFailure(String errorMessage) {
-                mCallback.onPopularTvFailure(errorMessage);
+            public void getPopularTvFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
+            }
+        });
+    }
+
+    @Override
+    public void getTopRatedTv() {
+        mRepository.getTopRatedTvData(new OnTaskCompletion.GetTopRatedTvCompletion() {
+            @Override
+            public void getTvTopRatedContentSuccess(Result data) {
+                mCallback.getTopRatedTvHome(data);
+            }
+
+            @Override
+            public void getTvTopRatedContentFailure(String errorMessage) {
+                mCallback.getResultFailure(errorMessage);
             }
         });
     }
@@ -39,5 +66,6 @@ public class DBTvPresenter implements DBTvContract.Presenter {
     public void attachView(DBTvContract.View view) {
         this.mCallback = view;
         getPopularTv();
+        getTopRatedTv();
     }
 }
