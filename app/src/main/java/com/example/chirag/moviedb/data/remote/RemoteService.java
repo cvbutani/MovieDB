@@ -1,6 +1,6 @@
 package com.example.chirag.moviedb.data.remote;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;

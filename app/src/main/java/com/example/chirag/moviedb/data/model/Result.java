@@ -14,7 +14,7 @@ public class Result implements Serializable {
 
     @SerializedName("results")
     @Expose
-    private List<ResultResponse> results = null;
+    public List<ResultResponse> results = null;
 
     /**
      * No args constructor for use in serialization

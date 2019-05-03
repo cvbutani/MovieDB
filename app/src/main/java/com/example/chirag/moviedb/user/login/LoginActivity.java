@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -20,7 +20,6 @@ import com.example.chirag.moviedb.R;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.dbmovie.DBHomeActivity;
 import com.example.chirag.moviedb.user.register.RegisterActivity;
-import com.example.chirag.moviedb.util.AppExecutors;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 

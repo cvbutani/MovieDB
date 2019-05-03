@@ -5,12 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.support.design.widget.Snackbar;
-import android.widget.Toast;
 
 import com.example.chirag.moviedb.data.Constant;
-import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 

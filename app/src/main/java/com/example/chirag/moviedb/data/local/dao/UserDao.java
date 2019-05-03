@@ -1,9 +1,11 @@
 package com.example.chirag.moviedb.data.local.dao;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 import com.example.chirag.moviedb.data.model.User;
 
