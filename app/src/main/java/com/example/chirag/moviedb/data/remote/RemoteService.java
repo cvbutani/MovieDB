@@ -60,7 +60,7 @@ public class RemoteService implements RepositoryContract {
     RemoteService(@NonNull AppExecutors appExecutors, @NonNull TMDBDao TMDBDao) {
         mAppExecutors = appExecutors;
         mTMDBDao = TMDBDao;
-        mServiceApi = ServiceInstance.getServiceInstance().create(GetDataService.class);
+        mServiceApi = ServiceInstance.getServiceInstance();
     }
 
     public static RemoteService getInstance(@NonNull AppExecutors appExecutors,
@@ -78,27 +78,28 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getMovieInfoRepo(int movieId,
                                  final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-        mServiceApi.getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TMDB>() {
-            @Override
-            public void onResponse(Call<TMDB> call, Response<TMDB> response) {
-                if (response.isSuccessful()) {
-                    TMDB movieInfo = response.body();
-                    if (movieInfo != null) {
-                        callback.getMovieInfoSuccess(movieInfo);
-                        insertInfo(movieInfo);
-                    } else {
-                        callback.getMovieInfoFailure("FAILURE");
-                    }
-                } else {
-                    callback.getMovieInfoFailure("FAILURE");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TMDB> call, Throwable t) {
-                callback.getMovieInfoFailure(t.getMessage());
-            }
-        });
+//        mServiceApi.getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new
+//        Callback<TMDB>() {
+//            @Override
+//            public void onResponse(Call<TMDB> call, Response<TMDB> response) {
+//                if (response.isSuccessful()) {
+//                    TMDB movieInfo = response.body();
+//                    if (movieInfo != null) {
+//                        callback.getMovieInfoSuccess(movieInfo);
+//                        insertInfo(movieInfo);
+//                    } else {
+//                        callback.getMovieInfoFailure("FAILURE");
+//                    }
+//                } else {
+//                    callback.getMovieInfoFailure("FAILURE");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<TMDB> call, Throwable t) {
+//                callback.getMovieInfoFailure(t.getMessage());
+//            }
+//        });
     }
 
     @Override
@@ -145,12 +146,14 @@ public class RemoteService implements RepositoryContract {
                 .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
                     @Override
                     public void onSuccess(List<ResultResponse> resultResponses) {
-
+                        Result result = new Result();
+                        result.results = resultResponses;
+                        callback.getPopularMovieSuccess(result);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        callback.getPopularMovieFailure(e.getMessage());
                     }
                 });
     }
@@ -169,25 +172,29 @@ public class RemoteService implements RepositoryContract {
     public void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
         mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY,
                 LANGUAGE)
-                .enqueue(new Callback<Result>() {
+                .map(Result::getResults)
+                .flatMapIterable(data -> data)
+                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+                        LANGUAGE))
+                .flatMap(data -> Flowable.zip(
+                        Flowable.just(data),
+                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+                        this::addTrailerInfo))
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
                     @Override
-                    public void onResponse(Call<Result> call, Response<Result> response) {
-                        if (response.isSuccessful()) {
-                            Result item = response.body();
-                            if (item != null) {
-                                callback.getNowPlayingMovieSuccess(item);
-                                insertTmdbId(item, CONTENT_TYPE_NOW_PLAYING, CONTENT_MOVIE);
-                            } else {
-                                callback.getNowPlayingMovieFailure("FAILURE");
-                            }
-                        } else {
-                            callback.getNowPlayingMovieFailure("FAILURE");
-                        }
+                    public void onSuccess(List<ResultResponse> resultResponses) {
+                        Result result = new Result();
+                        result.results = resultResponses;
+                        callback.getNowPlayingMovieSuccess(result);
                     }
 
                     @Override
-                    public void onFailure(Call<Result> call, Throwable t) {
-                        callback.getNowPlayingMovieFailure(t.getMessage());
+                    public void onError(Throwable e) {
+                        callback.getNowPlayingMovieFailure(e.getMessage());
                     }
                 });
     }
@@ -195,134 +202,144 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
         mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
-                LANGUAGE).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Result item = response.body();
-                    if (item != null && item.getResults() != null) {
-                        callback.getTopRatedMovieSuccess(item);
-                        insertTmdbId(item, CONTENT_TYPE_TOP_RATED, CONTENT_MOVIE);
-                    } else {
-                        callback.getTopRatedMovieFailure("FAILURE");
+                LANGUAGE).map(Result::getResults)
+                .flatMapIterable(data -> data)
+                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+                        LANGUAGE))
+                .flatMap(data -> Flowable.zip(
+                        Flowable.just(data),
+                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+                        this::addTrailerInfo))
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                    @Override
+                    public void onSuccess(List<ResultResponse> resultResponses) {
+                        Result result = new Result();
+                        result.results = resultResponses;
+                        callback.getTopRatedMovieSuccess(result);
                     }
-                } else {
-                    callback.getTopRatedMovieFailure("FAILURE");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                callback.getTopRatedMovieFailure(t.getMessage());
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.getTopRatedMovieFailure(e.getMessage());
+                    }
+                });
     }
 
     @Override
     public void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
         mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_UPCOMING, TMDB_API_KEY,
-                LANGUAGE).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Result item = response.body();
-                    if (item != null && item.getResults() != null) {
-                        callback.getUpcomingMovieSuccess(item);
-                        insertTmdbId(item, CONTENT_TYPE_UPCOMING, CONTENT_MOVIE);
-                    } else {
-                        callback.getUpcomingMovieFailure("FAILURE");
+                LANGUAGE).map(Result::getResults)
+                .flatMapIterable(data -> data)
+                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+                        LANGUAGE))
+                .flatMap(data -> Flowable.zip(
+                        Flowable.just(data),
+                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+                        this::addTrailerInfo))
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                    @Override
+                    public void onSuccess(List<ResultResponse> resultResponses) {
+                        Result result = new Result();
+                        result.results = resultResponses;
+                        callback.getUpcomingMovieSuccess(result);
                     }
-                } else {
-                    callback.getUpcomingMovieFailure("FAILURE");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                callback.getUpcomingMovieFailure(t.getMessage());
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.getUpcomingMovieFailure(e.getMessage());
+                    }
+                });
     }
 
     @Override
     public void getTrailersRepo(final int movieId,
                                 final OnTaskCompletion.OnGetTrailerCompletion callback) {
-        mServiceApi.GetTrailerDataService(movieId, TMDB_API_KEY).enqueue(new Callback<Trailer>() {
-            @Override
-            public void onResponse(Call<Trailer> call, Response<Trailer> response) {
-                if (response.isSuccessful()) {
-                    final Trailer trailerItem = response.body();
-                    if (trailerItem != null && trailerItem.getResults() != null) {
-                        callback.getTrailerItemSuccess(trailerItem);
-                        Runnable trailerRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                List<TrailerResponse> trailerList = trailerItem.getResults();
-                                List<TrailerResponse> trailerData = mTMDBDao.getTrailers(movieId);
-                                if (trailerData.isEmpty()) {
-                                    for (TrailerResponse list : trailerList) {
-                                        list.setMovieId(movieId);
-                                        mTMDBDao.insertTrailer(list);
-                                    }
-                                }
-                            }
-                        };
-                        mAppExecutors.getDiskIO().execute(trailerRunnable);
-                    } else {
-                        callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING " +
-                                "TRAILER");
-                    }
-                } else {
-                    callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Trailer> call, Throwable t) {
-                callback.getTrailerItemFailure(t.getMessage());
-            }
-        });
+//        mServiceApi.GetTrailerDataService(movieId, TMDB_API_KEY).enqueue(new Callback<Trailer>() {
+//            @Override
+//            public void onResponse(Call<Trailer> call, Response<Trailer> response) {
+//                if (response.isSuccessful()) {
+//                    final Trailer trailerItem = response.body();
+//                    if (trailerItem != null && trailerItem.getResults() != null) {
+//                        callback.getTrailerItemSuccess(trailerItem);
+//                        Runnable trailerRunnable = new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                List<TrailerResponse> trailerList = trailerItem.getResults();
+//                                List<TrailerResponse> trailerData = mTMDBDao.getTrailers(movieId);
+//                                if (trailerData.isEmpty()) {
+//                                    for (TrailerResponse list : trailerList) {
+//                                        list.setMovieId(movieId);
+//                                        mTMDBDao.insertTrailer(list);
+//                                    }
+//                                }
+//                            }
+//                        };
+//                        mAppExecutors.getDiskIO().execute(trailerRunnable);
+//                    } else {
+//                        callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING " +
+//                                "TRAILER");
+//                    }
+//                } else {
+//                    callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Trailer> call, Throwable t) {
+//                callback.getTrailerItemFailure(t.getMessage());
+//            }
+//        });
 
     }
 
     @Override
     public void getReviewsRepo(final int movieId,
                                final OnTaskCompletion.OnGetReviewCompletion callback) {
-        mServiceApi.getReviewDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Reviews>() {
-            @Override
-            public void onResponse(Call<Reviews> call, Response<Reviews> response) {
-                if (response.isSuccessful()) {
-                    final Reviews reviews = response.body();
-                    if (reviews != null && reviews.getResults() != null) {
-                        callback.getReviewResponseSuccess(reviews);
-                        Runnable reviewRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                List<ReviewResponse> reviewList = reviews.getResults();
-                                List<ReviewResponse> reviewData = mTMDBDao.getReviews(movieId);
-                                if (reviewData.isEmpty()) {
-                                    for (ReviewResponse list : reviewList) {
-                                        list.setMovieId(movieId);
-                                        mTMDBDao.insertReviews(list);
-                                    }
-                                }
-                            }
-                        };
-                        mAppExecutors.getDiskIO().execute(reviewRunnable);
-                    } else {
-                        callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING " +
-                                "TRAILER");
-                    }
-                } else {
-                    callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Reviews> call, Throwable t) {
-                callback.getReviewResponseFailure(t.getMessage());
-            }
-        });
+//        mServiceApi.getReviewDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new
+//        Callback<Reviews>() {
+//            @Override
+//            public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+//                if (response.isSuccessful()) {
+//                    final Reviews reviews = response.body();
+//                    if (reviews != null && reviews.getResults() != null) {
+//                        callback.getReviewResponseSuccess(reviews);
+//                        Runnable reviewRunnable = new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                List<ReviewResponse> reviewList = reviews.getResults();
+//                                List<ReviewResponse> reviewData = mTMDBDao.getReviews(movieId);
+//                                if (reviewData.isEmpty()) {
+//                                    for (ReviewResponse list : reviewList) {
+//                                        list.setMovieId(movieId);
+//                                        mTMDBDao.insertReviews(list);
+//                                    }
+//                                }
+//                            }
+//                        };
+//                        mAppExecutors.getDiskIO().execute(reviewRunnable);
+//                    } else {
+//                        callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING " +
+//                                "TRAILER");
+//                    }
+//                } else {
+//                    callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING
+//                    TRAILER");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Reviews> call, Throwable t) {
+//                callback.getReviewResponseFailure(t.getMessage());
+//            }
+//        });
     }
 
     @Override
@@ -352,54 +369,59 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
+        //  NEED TO VERIFY RESULT RESPONSE AND API CALL FOR TV CONTENT.
         mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
-                LANGUAGE).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Result item = response.body();
-                    if (item != null && item.getResults() != null) {
-                        callback.getPopularTvSuccess(item);
-                        insertTmdbId(item, CONTENT_TYPE_POPULAR, CONTENT_TV);
-                    } else {
-                        callback.getPopularTvFailure("FAILURE");
-                    }
-                } else {
-                    callback.getPopularTvFailure("FAILURE");
-                }
-            }
+                LANGUAGE).map(Result::getResults)
+                .flatMapIterable(data -> data)
+                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+                        LANGUAGE))
+                .flatMap(data -> Flowable.zip(
+                        Flowable.just(data),
+                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+                        this::addTrailerInfo))
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                    @Override
+                    public void onSuccess(List<ResultResponse> resultResponses) {
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                callback.getPopularTvFailure(t.getMessage());
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     @Override
     public void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback) {
         mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
-                LANGUAGE).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Result tvItem = response.body();
-                    if (tvItem != null && tvItem.getResults() != null) {
-                        callback.getTvTopRatedContentSuccess(tvItem);
-                        insertTmdbId(tvItem, CONTENT_TYPE_TOP_RATED, CONTENT_TV);
-                    } else {
-                        callback.getTvTopRatedContentFailure("FAILURE");
-                    }
-                } else {
-                    callback.getTvTopRatedContentFailure("FAILURE");
-                }
-            }
+                LANGUAGE).map(Result::getResults)
+                .flatMapIterable(data -> data)
+                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+                        LANGUAGE))
+                .flatMap(data -> Flowable.zip(
+                        Flowable.just(data),
+                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+                        this::addTrailerInfo))
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                    @Override
+                    public void onSuccess(List<ResultResponse> resultResponses) {
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                callback.getTvTopRatedContentFailure(t.getMessage());
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     @Override
@@ -435,34 +457,34 @@ public class RemoteService implements RepositoryContract {
     }
 
     private void insertTmdbId(final Result item, final String movieType, final String content) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!mTMDBDao.getMovieId(movieType, content).isEmpty()) {
-                    mTMDBDao.deleteMovieId(movieType);
-                }
-                for (final ResultResponse info : item.getResults()) {
-                    info.setType(movieType);
-                    info.setContent(content);
-                    mTMDBDao.insertMovieId(info);
-                }
-            }
-        };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!mTMDBDao.getMovieId(movieType, content).isEmpty()) {
+//                    mTMDBDao.deleteMovieId(movieType);
+//                }
+//                for (final ResultResponse info : item.getResults()) {
+//                    info.setType(movieType);
+//                    info.setContent(content);
+//                    mTMDBDao.insertMovieId(info);
+//                }
+//            }
+//        };
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
     private void insertInfo(final TMDB item) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mTMDBDao.getMovieInfo(item.getId()) != null) {
-                    mTMDBDao.deleteMovieInfo(item.getId());
-                }
-                item.setGenreInfo(item.getGenresDetail());
-                mTMDBDao.insertMovieInfo(item);
-            }
-        };
-        mAppExecutors.getDiskIO().execute(runnable);
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mTMDBDao.getMovieInfo(item.getId()) != null) {
+//                    mTMDBDao.deleteMovieInfo(item.getId());
+//                }
+//                item.setGenreInfo(item.getGenresDetail());
+//                mTMDBDao.insertMovieInfo(item);
+//            }
+//        };
+//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
 }
