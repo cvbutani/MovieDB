@@ -7,21 +7,21 @@ import java.util.List;
  * Project - MovieDB
  */
 public interface TMDBInterface {
-
-    String getBackDropPath();
-    List<Genre> getGenre();
-    String getGenreInfo();
-    Integer getID();
-    String getImdbId();
-    String getOriginalLanguange();
-    String getOriginalTitle();
-    String getOverView();
-    String getPosterPath();
-    String getReleaseDate();
-    Integer getRunTime();
-    Double getVoteAvg();
-    String getName();
-    String getFirstAirDate();
-    String getOriginalName();
-    List<Season> getSeasons();
+//
+//    String getBackDropPath();
+//    List<Genre> getGenre();
+//    String getGenreInfo();
+//    Integer getID();
+//    String getImdbId();
+//    String getOriginalLanguange();
+//    String getOriginalTitle();
+//    String getOverView();
+//    String getPosterPath();
+//    String getReleaseDate();
+//    Integer getRunTime();
+//    Double getVoteAvg();
+//    String getName();
+//    String getFirstAirDate();
+//    String getOriginalName();
+//    List<Season> getSeasons();
 }

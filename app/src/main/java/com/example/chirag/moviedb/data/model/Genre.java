@@ -11,31 +11,31 @@ import java.util.List;
  * Created by Chirag on 09/09/18.
  */
 public class Genre implements Serializable {
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    /**
-     * No args constructor for use in serialization
-     */
-    public Genre() {
-    }
-
-    /**
-     * @param name
-     */
-    public Genre(String name) {
-        super();
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//
+//    @SerializedName("name")
+//    @Expose
+//    private String name;
+//
+//    /**
+//     * No args constructor for use in serialization
+//     */
+//    public Genre() {
+//    }
+//
+//    /**
+//     * @param name
+//     */
+//    public Genre(String name) {
+//        super();
+//        this.name = name;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
 }

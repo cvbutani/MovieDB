@@ -7,6 +7,7 @@ import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 
+import io.reactivex.Flowable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -19,7 +20,7 @@ import retrofit2.http.Query;
 public interface GetDataService {
 
     @GET("{result}/{movie_type}")
-    Call<Result> getContentDataService(
+    Flowable<Result> getContentDataService(
             @Path("result") String result,
             @Path("movie_type") String movieType,
             @Query("api_key") String apiKey,
@@ -27,7 +28,7 @@ public interface GetDataService {
     );
 
     @GET("movie/{movie_id}")
-    Call<TMDB> getMovieInfoDataService(
+    Flowable<ResultResponse> getMovieInfoDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
@@ -48,13 +49,13 @@ public interface GetDataService {
     );
 
     @GET("movie/{movie_id}/videos")
-    Call<Trailer> GetTrailerDataService(
+    Flowable<ResultResponse> getTrailerDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey
     );
 
     @GET("movie/{movie_id}/reviews")
-    Call<Reviews> getReviewDataService(
+    Flowable<ResultResponse> getReviewDataService(
             @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language

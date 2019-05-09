@@ -17,66 +17,66 @@ import java.io.Serializable;
  */
 @Entity(tableName = "review")
 public class ReviewResponse implements Serializable {
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    @ColumnInfo(name = "primaryKey")
-    private int primaryKey;
-
-    @NonNull
-    @ColumnInfo(name = "movieId")
-    private Integer movieId;
-
-    @SerializedName("author")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "author")
-    private String author;
-    @SerializedName("content")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "content")
-    private String content;
-
-    public ReviewResponse(@NonNull int primaryKey, @NonNull Integer movieId, @Nullable String author, @Nullable String content) {
-        this.primaryKey = primaryKey;
-        this.movieId = movieId;
-        this.author = author;
-        this.content = content;
-    }
-
-    @NonNull
-    public int getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(@NonNull int primaryKey) {
-        this.primaryKey = primaryKey;
-    }
-
-    @NonNull
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(@NonNull Integer movieId) {
-        this.movieId = movieId;
-    }
-
-    @Nullable
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(@Nullable String author) {
-        this.author = author;
-    }
-
-    @Nullable
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(@Nullable String content) {
-        this.content = content;
-    }
+//    @PrimaryKey(autoGenerate = true)
+//    @NonNull
+//    @ColumnInfo(name = "primaryKey")
+//    private int primaryKey;
+//
+//    @NonNull
+//    @ColumnInfo(name = "movieId")
+//    private Integer movieId;
+//
+//    @SerializedName("author")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "author")
+//    private String author;
+//    @SerializedName("content")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "content")
+//    private String content;
+//
+//    public ReviewResponse(@NonNull int primaryKey, @NonNull Integer movieId, @Nullable String author, @Nullable String content) {
+//        this.primaryKey = primaryKey;
+//        this.movieId = movieId;
+//        this.author = author;
+//        this.content = content;
+//    }
+//
+//    @NonNull
+//    public int getPrimaryKey() {
+//        return primaryKey;
+//    }
+//
+//    public void setPrimaryKey(@NonNull int primaryKey) {
+//        this.primaryKey = primaryKey;
+//    }
+//
+//    @NonNull
+//    public Integer getMovieId() {
+//        return movieId;
+//    }
+//
+//    public void setMovieId(@NonNull Integer movieId) {
+//        this.movieId = movieId;
+//    }
+//
+//    @Nullable
+//    public String getAuthor() {
+//        return author;
+//    }
+//
+//    public void setAuthor(@Nullable String author) {
+//        this.author = author;
+//    }
+//
+//    @Nullable
+//    public String getContent() {
+//        return content;
+//    }
+//
+//    public void setContent(@Nullable String content) {
+//        this.content = content;
+//    }
 }

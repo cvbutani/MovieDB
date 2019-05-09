@@ -18,51 +18,51 @@ import java.io.Serializable;
  */
 @Entity(tableName = "trailer")
 public class TrailerResponse implements Serializable {
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    @ColumnInfo(name = "primaryKey")
-    private int primaryKey;
-
-    @NonNull
-    @ColumnInfo(name = "movieId")
-    private Integer movieId;
-
-    @SerializedName("key")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "key")
-    private String key;
-
-    public TrailerResponse(@NonNull int primaryKey, @NonNull Integer movieId, @Nullable String key) {
-        this.primaryKey = primaryKey;
-        this.movieId = movieId;
-        this.key = key;
-    }
-
-    @NonNull
-    public int getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(@NonNull int primaryKey) {
-        this.primaryKey = primaryKey;
-    }
-
-    @Nullable
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(@Nullable String key) {
-        this.key = key;
-    }
-
-    @NonNull
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(@NonNull Integer movieId) {
-        this.movieId = movieId;
-    }
+//    @PrimaryKey(autoGenerate = true)
+//    @NonNull
+//    @ColumnInfo(name = "primaryKey")
+//    private int primaryKey;
+//
+//    @NonNull
+//    @ColumnInfo(name = "movieId")
+//    private Integer movieId;
+//
+//    @SerializedName("key")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "key")
+//    private String key;
+//
+//    public TrailerResponse(@NonNull int primaryKey, @NonNull Integer movieId, @Nullable String key) {
+//        this.primaryKey = primaryKey;
+//        this.movieId = movieId;
+//        this.key = key;
+//    }
+//
+//    @NonNull
+//    public int getPrimaryKey() {
+//        return primaryKey;
+//    }
+//
+//    public void setPrimaryKey(@NonNull int primaryKey) {
+//        this.primaryKey = primaryKey;
+//    }
+//
+//    @Nullable
+//    public String getKey() {
+//        return key;
+//    }
+//
+//    public void setKey(@Nullable String key) {
+//        this.key = key;
+//    }
+//
+//    @NonNull
+//    public Integer getMovieId() {
+//        return movieId;
+//    }
+//
+//    public void setMovieId(@NonNull Integer movieId) {
+//        this.movieId = movieId;
+//    }
 }

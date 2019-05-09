@@ -19,195 +19,195 @@ import java.util.List;
  */
 @Entity(tableName = "movie_info")
 public class TMDB implements TMDBInterface {
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "primaryKey")
-    private int primaryKey;
-
-    @SerializedName("backdrop_path")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "backdrop_path")
-    private String backdropPath;
-
-    @SerializedName("genres")
-    @Expose
-    @Ignore
-    private List<Genre> genres = null;
-
-    @Nullable
-    @ColumnInfo(name = "genre")
-    private String genreInfo;
-
-    @SerializedName("id")
-    @Expose
-    @NonNull
-    @ColumnInfo(name = "id")
-    private Integer id;
-
-    @SerializedName("imdb_id")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "imdb_id")
-    private String imdbId;
-
-    @SerializedName("original_language")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "language")
-    private String originalLanguage;
-
-    @SerializedName("original_title")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "original_title")
-    private String originalTitle;
-
-    @SerializedName("overview")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "overview")
-    private String overview;
-
-    //    @SerializedName("popularity")
+//
+//    @PrimaryKey(autoGenerate = true)
+//    @ColumnInfo(name = "primaryKey")
+//    private int primaryKey;
+//
+//    @SerializedName("backdrop_path")
 //    @Expose
-//    private Double popularity;
-
-    @SerializedName("poster_path")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "poster_path")
-    private String posterPath;
-
-    @SerializedName("release_date")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "release_date")
-    private String releaseDate;
-
-    @SerializedName("runtime")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "runtime")
-    private Integer runtime;
-
-    @SerializedName("vote_average")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "vote_average")
-    private Double voteAverage;
-
-    @SerializedName("name")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "name")
-    private String name;
-    @SerializedName("first_air_date")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "first_air_date")
-    private String firstAirDate;
-
-    @SerializedName("original_name")
-    @Expose
-    @Nullable
-    @ColumnInfo(name = "original_name")
-    private String originalName;
-
-    @SerializedName("seasons")
-    @Expose
-    @Ignore
-    private List<Season> seasons = null;
-
-    @Nullable
-    @ColumnInfo(name = "userEmail")
-    private String userEmail;
-
-    /**
-     * No args constructor for use in serialization
-     */
-    public TMDB() {
-    }
-
-    @Override
-    public String getBackDropPath() {
-        return backdropPath;
-    }
-
-    @Override
-    public List<Genre> getGenre() {
-        return genres;
-    }
-
-    @Override
-    public String getGenreInfo() {
-        return genreInfo;
-    }
-
-    @Override
-    public Integer getID() {
-        return id;
-    }
-
-    @Override
-    public String getImdbId() {
-        return imdbId;
-    }
-
-    @Override
-    public String getOriginalLanguange() {
-        return originalLanguage;
-    }
-
-    @Override
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    @Override
-    public String getOverView() {
-        return overview;
-    }
-
-    @Override
-    public String getPosterPath() {
-        return posterPath;
-    }
-
-    @Override
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    @Override
-    public Integer getRunTime() {
-        return runtime;
-    }
-
-    @Override
-    public Double getVoteAvg() {
-        return voteAverage;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getFirstAirDate() {
-        return firstAirDate;
-    }
-
-    @Override
-    public String getOriginalName() {
-        return originalName;
-    }
-
-    @Override
-    public List<Season> getSeasons() {
-        return seasons;
-    }
+//    @Nullable
+//    @ColumnInfo(name = "backdrop_path")
+//    private String backdropPath;
+//
+//    @SerializedName("genres")
+//    @Expose
+//    @Ignore
+//    private List<Genre> genres = null;
+//
+//    @Nullable
+//    @ColumnInfo(name = "genre")
+//    private String genreInfo;
+//
+//    @SerializedName("id")
+//    @Expose
+//    @NonNull
+//    @ColumnInfo(name = "id")
+//    private Integer id;
+//
+//    @SerializedName("imdb_id")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "imdb_id")
+//    private String imdbId;
+//
+//    @SerializedName("original_language")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "language")
+//    private String originalLanguage;
+//
+//    @SerializedName("original_title")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "original_title")
+//    private String originalTitle;
+//
+//    @SerializedName("overview")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "overview")
+//    private String overview;
+//
+//    //    @SerializedName("popularity")
+////    @Expose
+////    private Double popularity;
+//
+//    @SerializedName("poster_path")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "poster_path")
+//    private String posterPath;
+//
+//    @SerializedName("release_date")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "release_date")
+//    private String releaseDate;
+//
+//    @SerializedName("runtime")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "runtime")
+//    private Integer runtime;
+//
+//    @SerializedName("vote_average")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "vote_average")
+//    private Double voteAverage;
+//
+//    @SerializedName("name")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "name")
+//    private String name;
+//    @SerializedName("first_air_date")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "first_air_date")
+//    private String firstAirDate;
+//
+//    @SerializedName("original_name")
+//    @Expose
+//    @Nullable
+//    @ColumnInfo(name = "original_name")
+//    private String originalName;
+//
+//    @SerializedName("seasons")
+//    @Expose
+//    @Ignore
+//    private List<Season> seasons = null;
+//
+//    @Nullable
+//    @ColumnInfo(name = "userEmail")
+//    private String userEmail;
+//
+//    /**
+//     * No args constructor for use in serialization
+//     */
+//    public TMDB() {
+//    }
+//
+//    @Override
+//    public String getBackDropPath() {
+//        return backdropPath;
+//    }
+//
+//    @Override
+//    public List<Genre> getGenre() {
+//        return genres;
+//    }
+//
+//    @Override
+//    public String getGenreInfo() {
+//        return genreInfo;
+//    }
+//
+//    @Override
+//    public Integer getID() {
+//        return id;
+//    }
+//
+//    @Override
+//    public String getImdbId() {
+//        return imdbId;
+//    }
+//
+//    @Override
+//    public String getOriginalLanguange() {
+//        return originalLanguage;
+//    }
+//
+//    @Override
+//    public String getOriginalTitle() {
+//        return originalTitle;
+//    }
+//
+//    @Override
+//    public String getOverView() {
+//        return overview;
+//    }
+//
+//    @Override
+//    public String getPosterPath() {
+//        return posterPath;
+//    }
+//
+//    @Override
+//    public String getReleaseDate() {
+//        return releaseDate;
+//    }
+//
+//    @Override
+//    public Integer getRunTime() {
+//        return runtime;
+//    }
+//
+//    @Override
+//    public Double getVoteAvg() {
+//        return voteAverage;
+//    }
+//
+//    @Override
+//    public String getName() {
+//        return name;
+//    }
+//
+//    @Override
+//    public String getFirstAirDate() {
+//        return firstAirDate;
+//    }
+//
+//    @Override
+//    public String getOriginalName() {
+//        return originalName;
+//    }
+//
+//    @Override
+//    public List<Season> getSeasons() {
+//        return seasons;
+//    }
 
 //    public TMDB(@Nullable String backdropPath, List<Genre> genres, @Nullable String email,
 //                @Nullable String genreInfo, @NonNull Integer id, @Nullable String imdbId,

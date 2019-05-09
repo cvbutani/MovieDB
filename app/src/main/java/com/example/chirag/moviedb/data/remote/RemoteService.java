@@ -17,8 +17,19 @@ import com.example.chirag.moviedb.network.ServiceInstance;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.util.AppExecutors;
 
+import org.reactivestreams.Publisher;
+
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +76,8 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void getMovieInfoRepo(int movieId, final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
+    public void getMovieInfoRepo(int movieId,
+                                 final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
         mServiceApi.getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TMDB>() {
             @Override
             public void onResponse(Call<TMDB> call, Response<TMDB> response) {
@@ -116,33 +128,47 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE)
-                .enqueue(new Callback<Result>() {
+        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
+                LANGUAGE)
+                .map(Result::getResults)
+                .flatMapIterable(data -> data)
+                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+                        LANGUAGE))
+                .flatMap(data -> Flowable.zip(
+                        Flowable.just(data),
+                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+                        this::addTrailerInfo))
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
                     @Override
-                    public void onResponse(Call<Result> call, Response<Result> response) {
-                        if (response.isSuccessful()) {
-                            Result item = response.body();
-                            if (item != null) {
-                                callback.getPopularMovieSuccess(item);
-                                insertTmdbId(item, CONTENT_TYPE_POPULAR, CONTENT_MOVIE);
-                            } else {
-                                callback.getPopularMovieFailure("FAILURE");
-                            }
-                        } else {
-                            callback.getPopularMovieFailure("FAILURE");
-                        }
+                    public void onSuccess(List<ResultResponse> resultResponses) {
+
                     }
 
                     @Override
-                    public void onFailure(Call<Result> call, Throwable t) {
-                        callback.getPopularMovieFailure(t.getMessage());
+                    public void onError(Throwable e) {
+
                     }
                 });
     }
 
+    private ResultResponse addTrailerInfo(ResultResponse t1, ResultResponse t2, ResultResponse t3) {
+        t1.mKey = t2.mKey;
+
+        t1.mReviewAuthor = t3.mReviewAuthor;
+        t1.mReviewText = t3.mReviewText;
+
+        return t1;
+    }
+
+
     @Override
     public void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY, LANGUAGE)
+        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY,
+                LANGUAGE)
                 .enqueue(new Callback<Result>() {
                     @Override
                     public void onResponse(Call<Result> call, Response<Result> response) {
@@ -168,7 +194,8 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
+        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
+                LANGUAGE).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
@@ -193,7 +220,8 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_UPCOMING, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
+        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_UPCOMING, TMDB_API_KEY,
+                LANGUAGE).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
@@ -217,7 +245,8 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void getTrailersRepo(final int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback) {
+    public void getTrailersRepo(final int movieId,
+                                final OnTaskCompletion.OnGetTrailerCompletion callback) {
         mServiceApi.GetTrailerDataService(movieId, TMDB_API_KEY).enqueue(new Callback<Trailer>() {
             @Override
             public void onResponse(Call<Trailer> call, Response<Trailer> response) {
@@ -240,7 +269,8 @@ public class RemoteService implements RepositoryContract {
                         };
                         mAppExecutors.getDiskIO().execute(trailerRunnable);
                     } else {
-                        callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                        callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING " +
+                                "TRAILER");
                     }
                 } else {
                     callback.getTrailerItemFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
@@ -256,7 +286,8 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void getReviewsRepo(final int movieId, final OnTaskCompletion.OnGetReviewCompletion callback) {
+    public void getReviewsRepo(final int movieId,
+                               final OnTaskCompletion.OnGetReviewCompletion callback) {
         mServiceApi.getReviewDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
@@ -279,7 +310,8 @@ public class RemoteService implements RepositoryContract {
                         };
                         mAppExecutors.getDiskIO().execute(reviewRunnable);
                     } else {
-                        callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
+                        callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING " +
+                                "TRAILER");
                     }
                 } else {
                     callback.getReviewResponseFailure("SOMETHING WENT WRONG WHILE GETTING TRAILER");
@@ -294,7 +326,8 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void getSimilarMoviesRepo(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+    public void getSimilarMoviesRepo(int movieId,
+                                     final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
         mServiceApi.getSimilarMovieDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -319,7 +352,8 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
+        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
+                LANGUAGE).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
@@ -344,7 +378,8 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
+        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
+                LANGUAGE).enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.isSuccessful()) {
@@ -378,7 +413,8 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void getUserAccountInfo(String emailId, OnTaskCompletion.GetUserAccountCompletion callback) {
+    public void getUserAccountInfo(String emailId,
+                                   OnTaskCompletion.GetUserAccountCompletion callback) {
         // Used in Local Data Storage
     }
 
@@ -393,7 +429,8 @@ public class RemoteService implements RepositoryContract {
     }
 
     @Override
-    public void getFavouriteTMDBRepo(String emailId, OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
+    public void getFavouriteTMDBRepo(String emailId,
+                                     OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
 
     }
 
