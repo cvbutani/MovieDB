@@ -17,7 +17,7 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 22/10/18.
  */
-public class FavouritePresenter implements FavouriteContract.Presenter{
+public class FavouritePresenter implements FavouriteContract.Presenter {
 
     private FavouriteContract.View mCallback;
 
@@ -27,15 +27,16 @@ public class FavouritePresenter implements FavouriteContract.Presenter{
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
-        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).localDao());
+        RemoteService mRemoteService =
+                RemoteService.getInstance(LocalDatabase.getInstance(context).localDao());
 
         mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }
 
     @Override
     public void getFavouriteTMDB(String emailId) {
-        mRepository.getFavouriteTMDBData(emailId, new OnTaskCompletion.GetFavouriteTMDBCompletion() {
+        mRepository.getFavouriteTMDBData(emailId,
+                new OnTaskCompletion.GetFavouriteTMDBCompletion() {
             @Override
             public void getFavouriteTMDBSuccess(List<Favourite> data) {
                 mCallback.getFavouriteTMDBInfo(data);

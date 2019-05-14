@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.cardview.widget.CardView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,8 @@ import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.example.chirag.moviedb.util.NetworkChangeReceiver;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
@@ -99,18 +103,18 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
                 mNoInternet = rootView.findViewById(R.id.no_internet);
                 mNoInternet.setVisibility(View.GONE);
 
-                if (isConnected) {
+//                if (isConnected) {
                         popularCardView.setVisibility(View.VISIBLE);
                         upcomingCardView.setVisibility(View.VISIBLE);
                         topRatedCardView.setVisibility(View.VISIBLE);
                         nowPlayingCardView.setVisibility(View.VISIBLE);
-                } else {
-                        popularCardView.setVisibility(View.GONE);
-                        upcomingCardView.setVisibility(View.GONE);
-                        topRatedCardView.setVisibility(View.GONE);
-                        nowPlayingCardView.setVisibility(View.GONE);
-                        mNoInternet.setVisibility(View.VISIBLE);
-                }
+//                } else {
+//                        popularCardView.setVisibility(View.GONE);
+//                        upcomingCardView.setVisibility(View.GONE);
+//                        topRatedCardView.setVisibility(View.GONE);
+//                        nowPlayingCardView.setVisibility(View.GONE);
+//                        mNoInternet.setVisibility(View.VISIBLE);
+//                }
                 return rootView;
         }
 
@@ -128,45 +132,45 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
         }
 
         @Override
-        public void getPopularMovieHome (Result data) {
+        public void getPopularMovieHome (List<ResultResponse> data) {
                 setLayout(data, mLinearLayoutMovieHome);
         }
 
         @Override
         public void getResultFailure (String errorMessage) {
-                popularCardView.setVisibility(View.GONE);
-                upcomingCardView.setVisibility(View.GONE);
-                topRatedCardView.setVisibility(View.GONE);
-                nowPlayingCardView.setVisibility(View.GONE);
-                mNoInternet.setVisibility(View.VISIBLE);
+//                popularCardView.setVisibility(View.GONE);
+//                upcomingCardView.setVisibility(View.GONE);
+//                topRatedCardView.setVisibility(View.GONE);
+//                nowPlayingCardView.setVisibility(View.GONE);
+//                mNoInternet.setVisibility(View.VISIBLE);
         }
 
         @Override
-        public void getNowPlayingMovieHome (Result data) {
+        public void getNowPlayingMovieHome (List<ResultResponse> data) {
                 setLayout(data, mLinearLayoutNowPlaying);
         }
 
         @Override
-        public void getTopRatedMovieHome (Result data) {
+        public void getTopRatedMovieHome (List<ResultResponse> data) {
                 setLayout(data, mLinearLayoutTopRated);
         }
 
         @Override
-        public void getUpcomingMovieHome (Result data) {
+        public void getUpcomingMovieHome (List<ResultResponse> data) {
                 setLayout(data, mLinearLayoutUpcoming);
         }
 
-        private void startNewActivity (int movieId, String movieName) {
+        private void startNewActivity (int movieId) {
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
                 intent.putExtra(EXTRA_ID, movieId);
-                intent.putExtra(EXTRA_TITLE, movieName);
+//                intent.putExtra(EXTRA_TITLE, movieName);
                 intent.putExtra("EXTRA_EMAIL", mUserEmail);
                 intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
                 startActivity(intent);
         }
 
-        private void setLayout (Result data, LinearLayout layout) {
-                if (data != null && !data.getResults().isEmpty()) {
+        private void setLayout (List<ResultResponse> data, LinearLayout layout) {
+                if (data != null && !data.isEmpty()) {
 
                         layout.removeAllViews();
 
@@ -176,7 +180,7 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
                         nowPlayingCardView.setVisibility(View.VISIBLE);
                         mNoInternet.setVisibility(View.GONE);
 
-                        for (final ResultResponse item : data.getResults()) {
+                        for (final ResultResponse item : data) {
                                 View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
                                 ImageView poster = parent.findViewById(R.id.movie_home_imageview);
                                 String imagePosterString = POSTER_IMAGE_URL + item.getPoster();
@@ -186,8 +190,8 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
                                         @Override
                                         public void onClick (View view) {
                                                 mMovieId = item.getId();
-                                                String movieName = item.getTitle();
-                                                startNewActivity(mMovieId, movieName);
+//                                                String movieName = item.getTitle();
+                                                startNewActivity(mMovieId);
                                         }
                                 });
                                 layout.addView(parent);

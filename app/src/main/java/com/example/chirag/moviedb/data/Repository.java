@@ -31,7 +31,7 @@ public class Repository implements DataContract {
             mRemoteService = remoteService;
             mLocalService = localService;
         }
-        isConnected = connection;
+        isConnected = true;
         return sRepository;
     }
 

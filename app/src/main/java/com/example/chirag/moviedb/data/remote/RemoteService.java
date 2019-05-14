@@ -1,5 +1,7 @@
 package com.example.chirag.moviedb.data.remote;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
@@ -18,6 +20,8 @@ import com.example.chirag.moviedb.service.GetDataService;
 import com.example.chirag.moviedb.util.AppExecutors;
 
 import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
@@ -26,10 +30,14 @@ import io.reactivex.Scheduler;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,20 +63,16 @@ public class RemoteService implements RepositoryContract {
 
     private TMDBDao mTMDBDao;
 
-    private AppExecutors mAppExecutors;
-
-    RemoteService(@NonNull AppExecutors appExecutors, @NonNull TMDBDao TMDBDao) {
-        mAppExecutors = appExecutors;
+    RemoteService(@NonNull TMDBDao TMDBDao) {
         mTMDBDao = TMDBDao;
         mServiceApi = ServiceInstance.getServiceInstance();
     }
 
-    public static RemoteService getInstance(@NonNull AppExecutors appExecutors,
-                                            @NonNull TMDBDao TMDBDao) {
+    public static RemoteService getInstance(@NonNull TMDBDao TMDBDao) {
         if (INSTANCE == null) {
             synchronized (RemoteService.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new RemoteService(appExecutors, TMDBDao);
+                    INSTANCE = new RemoteService(TMDBDao);
                 }
             }
         }
@@ -78,28 +82,37 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getMovieInfoRepo(int movieId,
                                  final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-//        mServiceApi.getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new
-//        Callback<TMDB>() {
-//            @Override
-//            public void onResponse(Call<TMDB> call, Response<TMDB> response) {
-//                if (response.isSuccessful()) {
-//                    TMDB movieInfo = response.body();
-//                    if (movieInfo != null) {
-//                        callback.getMovieInfoSuccess(movieInfo);
-//                        insertInfo(movieInfo);
-//                    } else {
-//                        callback.getMovieInfoFailure("FAILURE");
-//                    }
-//                } else {
-//                    callback.getMovieInfoFailure("FAILURE");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TMDB> call, Throwable t) {
-//                callback.getMovieInfoFailure(t.getMessage());
-//            }
-//        });
+        mServiceApi
+                .getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE)
+                .flatMap(data ->
+                        Flowable.zip(
+                                Flowable.just(data),
+                                mServiceApi.getTrailerDataService(movieId,
+                                        TMDB_API_KEY),
+                                mServiceApi.getReviewDataService(movieId,
+                                        TMDB_API_KEY, LANGUAGE),
+                                this::mergeInfo
+                        )
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSubscriber<ResultResponse>() {
+                    @Override
+                    public void onNext(ResultResponse resultResponse) {
+                        callback.getMovieInfoSuccess(resultResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        callback.getMovieInfoFailure(t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     @Override
@@ -129,132 +142,142 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
-                LANGUAGE)
-                .map(Result::getResults)
-                .flatMapIterable(data -> data)
-                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-                        LANGUAGE))
-                .flatMap(data -> Flowable.zip(
-                        Flowable.just(data),
-                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-                        this::addTrailerInfo))
-                .toList()
+//        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
+//                LANGUAGE).map(Result::getResults)
+//                .flatMapIterable(data -> data)
+//                .take(10)
+//                .flatMap(item ->
+//                        mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY, LANGUAGE))
+//                .filter(data -> data != null)
+//                .flatMap(data ->
+//                        Flowable.zip(
+//                                Flowable.just(data),
+//                                mServiceApi.getTrailerDataService(data.mId,
+//                                        TMDB_API_KEY),
+//                                mServiceApi.getReviewDataService(data.mId,
+//                                        TMDB_API_KEY, LANGUAGE),
+//                                (t1, t2, t3) -> mergeInfo(t1, t2, t3)
+//                        )
+//                )
+//                .toList()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+//                    @Override
+//                    public void onSuccess(List<ResultResponse> resultResponses) {
+//                        callback.getPopularMovieSuccess(resultResponses);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        callback.getPopularMovieFailure(e.getMessage());
+//                    }
+//                });
+        mServiceApi
+                .getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_POPULAR, TMDB_API_KEY, LANGUAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                .subscribe(new DisposableSubscriber<Result>() {
                     @Override
-                    public void onSuccess(List<ResultResponse> resultResponses) {
-                        Result result = new Result();
-                        result.results = resultResponses;
-                        callback.getPopularMovieSuccess(result);
+                    public void onNext(Result result) {
+                        callback.getPopularMovieSuccess(result.getResults());
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        callback.getPopularMovieFailure(e.getMessage());
+                    public void onError(Throwable t) {
+                        callback.getPopularMovieFailure(t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
+
     }
 
-    private ResultResponse addTrailerInfo(ResultResponse t1, ResultResponse t2, ResultResponse t3) {
-        t1.mKey = t2.mKey;
+    private ResultResponse mergeInfo(ResultResponse t1, ResultResponse t2, ResultResponse t3) {
 
-        t1.mReviewAuthor = t3.mReviewAuthor;
-        t1.mReviewText = t3.mReviewText;
-
+        t1.mKey = t2.getTrailerKey();
+        if (t3 != null) {
+            t1.mReviewAuthor = t3.getReviewAuthor();
+            t1.mReviewText = t3.getReviewText();
+        }
         return t1;
     }
 
 
     @Override
     public void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY,
-                LANGUAGE)
-                .map(Result::getResults)
-                .flatMapIterable(data -> data)
-                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-                        LANGUAGE))
-                .flatMap(data -> Flowable.zip(
-                        Flowable.just(data),
-                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-                        this::addTrailerInfo))
-                .toList()
+        mServiceApi
+                .getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_NOW_PLAYING, TMDB_API_KEY,
+                        LANGUAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                .subscribe(new DisposableSubscriber<Result>() {
                     @Override
-                    public void onSuccess(List<ResultResponse> resultResponses) {
-                        Result result = new Result();
-                        result.results = resultResponses;
-                        callback.getNowPlayingMovieSuccess(result);
+                    public void onNext(Result result) {
+                        callback.getNowPlayingMovieSuccess(result.getResults());
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        callback.getNowPlayingMovieFailure(e.getMessage());
+                    public void onError(Throwable t) {
+                        callback.getNowPlayingMovieFailure(t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
 
     @Override
     public void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
-                LANGUAGE).map(Result::getResults)
-                .flatMapIterable(data -> data)
-                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-                        LANGUAGE))
-                .flatMap(data -> Flowable.zip(
-                        Flowable.just(data),
-                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-                        this::addTrailerInfo))
-                .toList()
+        mServiceApi
+                .getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
+                        LANGUAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                .subscribe(new DisposableSubscriber<Result>() {
                     @Override
-                    public void onSuccess(List<ResultResponse> resultResponses) {
-                        Result result = new Result();
-                        result.results = resultResponses;
-                        callback.getTopRatedMovieSuccess(result);
+                    public void onNext(Result result) {
+                        callback.getTopRatedMovieSuccess(result.getResults());
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        callback.getTopRatedMovieFailure(e.getMessage());
+                    public void onError(Throwable t) {
+                        callback.getTopRatedMovieFailure(t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
 
     @Override
     public void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_UPCOMING, TMDB_API_KEY,
-                LANGUAGE).map(Result::getResults)
-                .flatMapIterable(data -> data)
-                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-                        LANGUAGE))
-                .flatMap(data -> Flowable.zip(
-                        Flowable.just(data),
-                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-                        this::addTrailerInfo))
-                .toList()
+        mServiceApi
+                .getContentDataService(CONTENT_MOVIE, CONTENT_TYPE_UPCOMING, TMDB_API_KEY, LANGUAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+                .subscribe(new DisposableSubscriber<Result>() {
                     @Override
-                    public void onSuccess(List<ResultResponse> resultResponses) {
-                        Result result = new Result();
-                        result.results = resultResponses;
-                        callback.getUpcomingMovieSuccess(result);
+                    public void onNext(Result result) {
+                        callback.getUpcomingMovieSuccess(result.getResults());
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        callback.getUpcomingMovieFailure(e.getMessage());
+                    public void onError(Throwable t) {
+                        callback.getUpcomingMovieFailure(t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
@@ -370,58 +393,58 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
         //  NEED TO VERIFY RESULT RESPONSE AND API CALL FOR TV CONTENT.
-        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
-                LANGUAGE).map(Result::getResults)
-                .flatMapIterable(data -> data)
-                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-                        LANGUAGE))
-                .flatMap(data -> Flowable.zip(
-                        Flowable.just(data),
-                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-                        this::addTrailerInfo))
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
-                    @Override
-                    public void onSuccess(List<ResultResponse> resultResponses) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+//        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
+//                LANGUAGE).map(Result::getResults)
+//                .flatMapIterable(data -> data)
+//                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+//                        LANGUAGE))
+//                .flatMap(data -> Flowable.zip(
+//                        Flowable.just(data),
+//                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+//                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+//                        this::addTrailerInfo))
+//                .toList()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+//                    @Override
+//                    public void onSuccess(List<ResultResponse> resultResponses) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//                });
     }
 
     @Override
     public void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback) {
-        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
-                LANGUAGE).map(Result::getResults)
-                .flatMapIterable(data -> data)
-                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-                        LANGUAGE))
-                .flatMap(data -> Flowable.zip(
-                        Flowable.just(data),
-                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-                        this::addTrailerInfo))
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
-                    @Override
-                    public void onSuccess(List<ResultResponse> resultResponses) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+//        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
+//                LANGUAGE).map(Result::getResults)
+//                .flatMapIterable(data -> data)
+//                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
+//                        LANGUAGE))
+//                .flatMap(data -> Flowable.zip(
+//                        Flowable.just(data),
+//                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
+//                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
+//                        this::addTrailerInfo))
+//                .toList()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
+//                    @Override
+//                    public void onSuccess(List<ResultResponse> resultResponses) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//                });
     }
 
     @Override

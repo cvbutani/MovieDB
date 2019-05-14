@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.data.remote;
 
 import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -16,13 +17,13 @@ import java.util.List;
 public interface OnTaskCompletion {
 
     interface OnGetMovieInfoCompletion {
-        void getMovieInfoSuccess(TMDB data);
+        void getMovieInfoSuccess(ResultResponse data);
 
         void getMovieInfoFailure(String errorMessage);
     }
 
     interface OnGetMovieCompletion {
-        void getPopularMovieSuccess(Result data);
+        void getPopularMovieSuccess(List<ResultResponse> data);
 
         void getPopularMovieFailure(String errorMessage);
     }
@@ -40,19 +41,19 @@ public interface OnTaskCompletion {
     }
 
     interface OnGetNowPlayingCompletion {
-        void getNowPlayingMovieSuccess(Result data);
+        void getNowPlayingMovieSuccess(List<ResultResponse> data);
 
         void getNowPlayingMovieFailure(String errorMessage);
     }
 
     interface OnGetTopRatedMovieCompletion {
-        void getTopRatedMovieSuccess(Result data);
+        void getTopRatedMovieSuccess(List<ResultResponse> data);
 
         void getTopRatedMovieFailure(String errorMessage);
     }
 
     interface OnGetUpcomingMovieCompletion {
-        void getUpcomingMovieSuccess(Result data);
+        void getUpcomingMovieSuccess(List<ResultResponse> data);
 
         void getUpcomingMovieFailure(String errorMessage);
     }

@@ -82,8 +82,8 @@ public interface TMDBDao {
      *
      * @param movie the resultResponse to be inserted.
      */
-    @Insert
-    void insertMovieId(ResultResponse movie);
+//    @Insert
+//    void insertMovieId(ResultResponse movie);
 //
 //    /**
 //     * Insert a movie in the database. If the movie already exists then it will still add it to database.

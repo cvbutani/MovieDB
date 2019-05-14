@@ -3,6 +3,9 @@ package com.example.chirag.moviedb.dbmovie;
 
 import com.example.chirag.moviedb.data.model.Genre;
 import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -11,15 +14,15 @@ import com.example.chirag.moviedb.data.model.Result;
 public interface DbHomeContract {
 
     interface View {
-        void getPopularMovieHome(Result data);
+        void getPopularMovieHome(List<ResultResponse> data);
 
         void getResultFailure(String errorMessage);
 
-        void getNowPlayingMovieHome(Result data);
+        void getNowPlayingMovieHome(List<ResultResponse> data);
 
-        void getTopRatedMovieHome(Result data);
+        void getTopRatedMovieHome(List<ResultResponse> data);
 
-        void getUpcomingMovieHome(Result data);
+        void getUpcomingMovieHome(List<ResultResponse> data);
 
     }
 

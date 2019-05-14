@@ -20,7 +20,7 @@ import com.example.chirag.moviedb.data.model.User;
  * MovieDB
  * Created by Chirag on 24/09/18.
  */
-@Database(entities = {ResultResponse.class},
+@Database(entities = {ResultResponse.class, User.class},
         version = 1,
         exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
@@ -29,7 +29,7 @@ public abstract class LocalDatabase extends RoomDatabase {
 
     public abstract TMDBDao localDao();
 
-//    public abstract UserDao userDao();
+    public abstract UserDao userDao();
 
     public static synchronized LocalDatabase getInstance(Context context) {
         if (INSTANCE == null) {

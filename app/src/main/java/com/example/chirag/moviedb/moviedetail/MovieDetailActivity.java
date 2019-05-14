@@ -11,9 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -60,7 +62,8 @@ import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
 import static com.example.chirag.moviedb.data.Constant.YOUTUBE_THUMBNAIL_URL;
 import static com.example.chirag.moviedb.data.Constant.YOUTUBE_URL;
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View, NetworkChangeReceiver.ConnectionListener {
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View,
+        NetworkChangeReceiver.ConnectionListener {
 
     ImageView mImageViewAppBar;
     ImageView mImageViewPoster;
@@ -92,7 +95,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private List<Favourite> mFavouriteDb;
 
     private int mMovieId;
-
+    private ResultResponse mResponse;
     private String mMovieName;
     private String mEmailAddress;
     private String mContentType;
@@ -229,34 +232,44 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
-    public void getMovieInfoHome(int movieId, TMDB data) {
+    public void getMovieInfoHome(int movieId, ResultResponse data) {
         if (mContentType.equals(CONTENT_MOVIE)) {
             if (data != null) {
-                mTMDBInfo = data;
                 if (movieId == data.getId()) {
                     String movieReleaseDate = data.getReleaseDate();
-                    String movieLanguage = data.getOriginalLanguage();
+                    String movieLanguage = data.getOriginalLanguange();
                     double movieRating = 0;
-                    if (data.getVoteAverage() != null) {
-                        movieRating = data.getVoteAverage();
+                    if (data.getVoteAvg() != null) {
+                        movieRating = data.getVoteAvg();
                     }
-                    String movieOverview = data.getOverview();
+                    String movieOverview = data.getOverView();
                     String movieGenre;
-
-                    if (isConnected) {
-                        movieGenre = data.getGenresDetail();
-                    } else {
-                        movieGenre = data.getGenreInfo();
-                    }
+//                    List<String> genre = data.getGenre();
+//                    movieGenre = data.getGenre();
+//                    StringBuilder sb = new StringBuilder();
+//
+//                    // Appends characters one by one
+//                    for (String ch : data.getGenre()) {
+//                        sb.append(ch);
+//                    }
+//
+//                    // convert in string
+//                    String string = sb.toString();
 
                     StringBuilder builder = new StringBuilder();
-                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
+                    String imageBackDropString =
+                            builder.append(BACKDROP_IMAGE_URL).append(data.getBackDropPath()).toString();
 
                     builder = new StringBuilder();
-                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data.getPosterPath()).toString();
+                    String imagePosterString =
+                            builder.append(POSTER_IMAGE_URL).append(data.getPoster()).toString();
 
                     Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
                     Picasso.get().load(imagePosterString).into(mImageViewPoster);
+
+                    reviewDisplay(data);
+                    trailerDisplay(data);
+
                     if (movieReleaseDate == null) {
                         mTextViewReleaseDateLabel.setVisibility(View.GONE);
                         mTextViewReleaseDate.setVisibility(View.GONE);
@@ -266,7 +279,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         mTextViewReleaseDate.setText(movieReleaseDate);
                     }
                     mTextViewLanguage.setText(movieLanguage);
-                    mTextViewGenre.setText(movieGenre);
+//                    mTextViewGenre.setText(movieGenre);
+                    mTextViewGenre.setText("AMAZING");
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
                 } else {
@@ -280,88 +294,63 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }
     }
 
-    @Override
-    public void getTvInfoHome(int tvId, TMDB data) {
-        if (mContentType.equals(CONTENT_TV)) {
-            if (data != null) {
-                mTMDBInfo = data;
-                if (tvId == data.getId()) {
-                    String tvReleaseDate = data.getFirstAirDate();
-                    String tvLanguage = data.getOriginalLanguage();
-                    double tvRating = 0;
-                    if (data.getVoteAverage() != null) {
-                        tvRating = data.getVoteAverage();
-                    }
-                    String tvOverview = data.getOverview();
-                    String tvGenre;
+    private void reviewDisplay(ResultResponse data) {
 
-                    if (isConnected) {
-                        tvGenre = data.getGenresDetail();
+        if (data.getReviewText() != null && data.getReviewAuthor() != null
+                && data.getReviewText().size() != 0 && data.getReviewAuthor().size() != 0) {
+            mReviewCardView.setVisibility(View.VISIBLE);
+            mTextViewReview.setVisibility(View.VISIBLE);
+            for (int i = 0; i < data.getReviewAuthor().size(); i++) {
+
+                View parent = getLayoutInflater().inflate(R.layout.movie_review_details,
+                        mLinearLayoutReview, false);
+
+                TextView tvAuthor = parent.findViewById(R.id.movie_review_author);
+                final TextView tvContent = parent.findViewById(R.id.movie_review_content);
+
+                tvContent.setOnClickListener(view -> {
+                    if (isContentClicked) {
+                        tvContent.setMaxLines(2);
+                        isContentClicked = false;
                     } else {
-                        tvGenre = data.getGenreInfo();
+                        tvContent.setMaxLines(Integer.MAX_VALUE);
+                        isContentClicked = true;
                     }
-
-                    StringBuilder builder = new StringBuilder();
-                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data.getBackdropPath()).toString();
-
-                    builder = new StringBuilder();
-                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data.getPosterPath()).toString();
-
-                    Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
-                    Picasso.get().load(imagePosterString).into(mImageViewPoster);
-                    if (tvReleaseDate == null) {
-                        mTextViewReleaseDateLabel.setVisibility(View.GONE);
-                        mTextViewReleaseDate.setVisibility(View.GONE);
-                    } else {
-                        mTextViewReleaseDateLabel.setVisibility(View.VISIBLE);
-                        mTextViewReleaseDate.setVisibility(View.VISIBLE);
-                        mTextViewReleaseDate.setText(tvReleaseDate);
-                    }
-                    mTextViewLanguage.setText(tvLanguage);
-                    mTextViewGenre.setText(tvGenre);
-                    mTextViewRating.setText(String.valueOf(tvRating));
-                    mTextViewOverview.setText(tvOverview);
-
-                    mTextViewSimilarLabel.setText(R.string.season_information);
-                    if (isConnected) {
-                        for (final Season item : data.getSeasons()) {
-                            View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
-                            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
-                            String imageSeasonPosterString = POSTER_IMAGE_URL + item.getPosterPath();
-                            Picasso.get().load(imageSeasonPosterString).into(poster);
-                            mLinearLayoutSimilarMovies.addView(parent);
-                        }
-                    }
-                } else {
-
-                    Logger.i(getString(R.string.movie_error));
-                }
+                });
+                String author = getString(R.string.dash) + data.getReviewAuthor().get(i);
+                tvAuthor.setText(author);
+                tvContent.setText(data.getReviewText().get(i));
+                mLinearLayoutReview.addView(parent);
             }
+        } else {
+            mReviewCardView.setVisibility(View.GONE);
+            mTextViewReview.setVisibility(View.GONE);
+            Logger.i(getString(R.string.review_error));
         }
     }
 
-    @Override
-    public void getTrailerDetail(Trailer data) {
+    private void trailerDisplay(ResultResponse data) {
         if (mContentType.equals(CONTENT_MOVIE)) {
-            if (!data.getResults().isEmpty()) {
+            if (data.getTrailerKey() != null && data.getTrailerKey().size() != 0) {
                 mTrailerCardView.setVisibility(View.VISIBLE);
                 mTextViewTrailer.setVisibility(View.VISIBLE);
                 mLinearLayoutTrailer.removeAllViews();
-                for (final TrailerResponse item : data.getResults()) {
-                    View parent = getLayoutInflater().inflate(R.layout.movie_trailer_thumbnail, mLinearLayoutTrailer, false);
+                for (final String item : data.getTrailerKey()) {
+                    View parent = getLayoutInflater().inflate(R.layout.movie_trailer_thumbnail,
+                            mLinearLayoutTrailer, false);
                     ImageView thumbnail = parent.findViewById(R.id.trailer_imageview);
                     thumbnail.requestLayout();
                     thumbnail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String url = String.format(YOUTUBE_URL, item.getKey());
+                            String url = String.format(YOUTUBE_URL, item);
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                             startActivity(intent);
                         }
                     });
 
                     if (!isFinishing()) {
-                        String value = String.format(YOUTUBE_THUMBNAIL_URL, item.getKey());
+                        String value = String.format(YOUTUBE_THUMBNAIL_URL, item);
                         Picasso.get()
                                 .load(value)
                                 .fit()
@@ -381,46 +370,82 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     @Override
+    public void getTvInfoHome(int tvId, TMDB data) {
+//        if (mContentType.equals(CONTENT_TV)) {
+//            if (mResponse != null) {
+////                mTMDBInfo = data;
+//                if (tvId == data.getId()) {
+//                    String tvReleaseDate = data.getFirstAirDate();
+//                    String tvLanguage = data.getOriginalLanguage();
+//                    double tvRating = 0;
+//                    if (data.getVoteAverage() != null) {
+//                        tvRating = data.getVoteAverage();
+//                    }
+//                    String tvOverview = data.getOverview();
+//                    String tvGenre;
+//
+//                    if (isConnected) {
+//                        tvGenre = data.getGenresDetail();
+//                    } else {
+//                        tvGenre = data.getGenreInfo();
+//                    }
+//
+//                    StringBuilder builder = new StringBuilder();
+//                    String imageBackDropString = builder.append(BACKDROP_IMAGE_URL).append(data
+//                    .getBackdropPath()).toString();
+//
+//                    builder = new StringBuilder();
+//                    String imagePosterString = builder.append(POSTER_IMAGE_URL).append(data
+//                    .getPosterPath()).toString();
+//
+//                    Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
+//                    Picasso.get().load(imagePosterString).into(mImageViewPoster);
+//                    if (tvReleaseDate == null) {
+//                        mTextViewReleaseDateLabel.setVisibility(View.GONE);
+//                        mTextViewReleaseDate.setVisibility(View.GONE);
+//                    } else {
+//                        mTextViewReleaseDateLabel.setVisibility(View.VISIBLE);
+//                        mTextViewReleaseDate.setVisibility(View.VISIBLE);
+//                        mTextViewReleaseDate.setText(tvReleaseDate);
+//                    }
+//                    mTextViewLanguage.setText(tvLanguage);
+//                    mTextViewGenre.setText(tvGenre);
+//                    mTextViewRating.setText(String.valueOf(tvRating));
+//                    mTextViewOverview.setText(tvOverview);
+//
+//                    mTextViewSimilarLabel.setText(R.string.season_information);
+//                    if (isConnected) {
+//                        for (final Season item : data.getSeasons()) {
+//                            View parent = getLayoutInflater().inflate(R.layout
+//                            .movie_home_poster, mLinearLayoutSimilarMovies, false);
+//                            ImageView poster = parent.findViewById(R.id.movie_home_imageview);
+//                            String imageSeasonPosterString = POSTER_IMAGE_URL + item
+//                            .getPosterPath();
+//                            Picasso.get().load(imageSeasonPosterString).into(poster);
+//                            mLinearLayoutSimilarMovies.addView(parent);
+//                        }
+//                    }
+//                } else {
+//
+//                    Logger.i(getString(R.string.movie_error));
+//                }
+//            }
+//        }
+    }
+
+    @Override
+    public void getTrailerDetail(Trailer data12) {
+
+    }
+
+    @Override
     public void getResultFailure(String errorMessage) {
 
     }
 
     @Override
-    public void getReviewDetail(Reviews data) {
-        if (mContentType.equals(CONTENT_MOVIE)) {
-            if (!data.getResults().isEmpty()) {
-                mReviewCardView.setVisibility(View.VISIBLE);
-                mTextViewReview.setVisibility(View.VISIBLE);
-                for (ReviewResponse response : data.getResults()) {
+    public void getReviewDetail(Reviews data12) {
 
-                    View parent = getLayoutInflater().inflate(R.layout.movie_review_details, mLinearLayoutReview, false);
-
-                    TextView tvAuthor = parent.findViewById(R.id.movie_review_author);
-                    final TextView tvContent = parent.findViewById(R.id.movie_review_content);
-
-                    tvContent.setOnClickListener(view -> {
-                        if (isContentClicked) {
-                            tvContent.setMaxLines(2);
-                            isContentClicked = false;
-                        } else {
-                            tvContent.setMaxLines(Integer.MAX_VALUE);
-                            isContentClicked = true;
-                        }
-                    });
-                    String author = getString(R.string.dash) + response.getAuthor();
-                    tvAuthor.setText(author);
-                    tvContent.setText(response.getContent());
-                    mLinearLayoutReview.addView(parent);
-                }
-            } else {
-                mReviewCardView.setVisibility(View.GONE);
-                mTextViewReview.setVisibility(View.GONE);
-                Logger.i(getString(R.string.review_error));
-            }
-        } else {
-            mReviewCardView.setVisibility(View.GONE);
-            mTextViewReview.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -430,7 +455,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                 mTrailerCardView.setVisibility(View.VISIBLE);
                 mTextViewTrailer.setVisibility(View.VISIBLE);
                 for (final ResultResponse item : data.getResults()) {
-                    View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, mLinearLayoutSimilarMovies, false);
+                    View parent = getLayoutInflater().inflate(R.layout.movie_home_poster,
+                            mLinearLayoutSimilarMovies, false);
                     ImageView poster = parent.findViewById(R.id.movie_home_imageview);
                     String imagePosterString = POSTER_IMAGE_URL + item.getPoster();
                     Picasso.get().load(imagePosterString).into(poster);
@@ -460,25 +486,27 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void insertTMDBInfo() {
-        boolean exists = mFavouriteDb.stream().anyMatch(item -> mTMDBInfo.getId().equals(item.getId()));
-        if (!exists) {
-            mTMDBInfo.setUserEmail(mEmailAddress);
-
-            int id = mTMDBInfo.getId();
-            String poster = mTMDBInfo.getPosterPath();
-            String title = "";
-            if (mTMDBInfo.getOriginalTitle() != null || mTMDBInfo.getOriginalName() != null) {
-                if (mContentType.equals(CONTENT_MOVIE)) {
-                    title = mTMDBInfo.getOriginalTitle();
-                } else {
-                    title = mTMDBInfo.getOriginalName();
-                }
-            }
-            if (poster != null && title != null) {
-                Favourite favourite = new Favourite(id, mEmailAddress, poster, title, mContentType);
-                mPresenter.insertTMDB(favourite);
-            }
-        }
+//        boolean exists = mFavouriteDb.stream().anyMatch(item -> mTMDBInfo.getId().equals(item
+//        .getId()));
+//        if (!exists) {
+//            mTMDBInfo.setUserEmail(mEmailAddress);
+//
+//            int id = mTMDBInfo.getId();
+//            String poster = mTMDBInfo.getPosterPath();
+//            String title = "";
+//            if (mTMDBInfo.getOriginalTitle() != null || mTMDBInfo.getOriginalName() != null) {
+//                if (mContentType.equals(CONTENT_MOVIE)) {
+//                    title = mTMDBInfo.getOriginalTitle();
+//                } else {
+//                    title = mTMDBInfo.getOriginalName();
+//                }
+//            }
+//            if (poster != null && title != null) {
+//                Favourite favourite = new Favourite(id, mEmailAddress, poster, title,
+//                mContentType);
+//                mPresenter.insertTMDB(favourite);
+//            }
+//        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

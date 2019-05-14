@@ -167,7 +167,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
                                                 @Override
                                                 public void onClick (View view) {
                                                         mMovieId = item.getId();
-                                                        String movieName = item.getName();
+                                                        String movieName = item.getTitle();
                                                         startNewActivity(mMovieId, movieName);
                                                 }
                                         });

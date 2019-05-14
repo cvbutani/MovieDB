@@ -10,6 +10,7 @@ import java.util.List;
  * MovieDB
  * Created by Chirag on 18/10/18.
  */
+
 public class Result implements Serializable {
 
     @SerializedName("results")
@@ -22,14 +23,6 @@ public class Result implements Serializable {
     public Result() {
     }
 
-    /**
-     * @param results
-     */
-    public Result(List<ResultResponse> results) {
-        super();
-
-        this.results = results;
-    }
 
     public List<ResultResponse> getResults() {
         return results;

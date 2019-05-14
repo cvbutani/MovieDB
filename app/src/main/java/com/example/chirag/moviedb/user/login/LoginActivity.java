@@ -52,7 +52,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                 button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                                attemptLogin();
+//                                attemptLogin();
+                                Intent intent = new Intent(LoginActivity.this, DBHomeActivity.class);
+//                                intent.putExtra("EXTRA_EMAIL", emailAddress);
+                                startActivity(intent);
+
                         }
                 });
 

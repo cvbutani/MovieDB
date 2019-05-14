@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
@@ -30,8 +31,8 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
-        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).localDao());
+        RemoteService mRemoteService =
+                RemoteService.getInstance(LocalDatabase.getInstance(context).localDao());
 
         mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }
@@ -40,7 +41,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getMovieInfo(final int movieId) {
         mRepository.getMovieInfoData(movieId, new OnTaskCompletion.OnGetMovieInfoCompletion() {
             @Override
-            public void getMovieInfoSuccess(TMDB data) {
+            public void getMovieInfoSuccess(ResultResponse data) {
                 mCallback.getMovieInfoHome(movieId, data);
             }
 
@@ -100,7 +101,8 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getSimilarMovie(final int movieId) {
-        mRepository.getSimilarMoviesData(movieId, new OnTaskCompletion.OnGetSimilarMovieCompletion() {
+        mRepository.getSimilarMoviesData(movieId,
+                new OnTaskCompletion.OnGetSimilarMovieCompletion() {
             @Override
             public void getSimilarMovieSuccess(Result data) {
                 mCallback.getSimilarMovieDetail(data, movieId);
@@ -120,7 +122,8 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getFavouriteTMDB(String emailId) {
-        mRepository.getFavouriteTMDBData(emailId, new OnTaskCompletion.GetFavouriteTMDBCompletion() {
+        mRepository.getFavouriteTMDBData(emailId,
+                new OnTaskCompletion.GetFavouriteTMDBCompletion() {
             @Override
             public void getFavouriteTMDBSuccess(List<Favourite> data) {
                 mCallback.getFavouriteTMDBInfo(data);

@@ -20,8 +20,8 @@ public class UserAccountPresenter implements UserAccountContract.Presenter {
         LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
-        RemoteService mRemoteService = RemoteService.getInstance(new AppExecutors(),
-                LocalDatabase.getInstance(context).localDao());
+        RemoteService mRemoteService =
+                RemoteService.getInstance(LocalDatabase.getInstance(context).localDao());
 
         mRepository = Repository.getInstance(isConnected, mLocalService, mRemoteService);
     }

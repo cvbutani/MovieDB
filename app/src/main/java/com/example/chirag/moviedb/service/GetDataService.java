@@ -7,6 +7,8 @@ import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.Reviews;
 import com.example.chirag.moviedb.data.model.Trailer;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 import retrofit2.Call;
 import retrofit2.http.GET;

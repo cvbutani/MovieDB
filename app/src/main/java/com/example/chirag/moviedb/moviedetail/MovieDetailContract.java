@@ -1,6 +1,7 @@
 package com.example.chirag.moviedb.moviedetail;
 
 import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.Reviews;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface MovieDetailContract {
 
     interface View {
-        void getMovieInfoHome(int movieId, TMDB data);
+        void getMovieInfoHome(int movieId, ResultResponse data);
 
         void getTvInfoHome(int tvId, TMDB data);
 

@@ -7,6 +7,11 @@ import java.util.List;
  * Project - MovieDB
  */
 public interface IResultResponse {
+
+    Integer getPrimaryKey();
+
+    void setPrimaryKey(int primaryKey);
+
     Integer getId();
 
     String getPoster();
@@ -37,7 +42,7 @@ public interface IResultResponse {
 
     Integer getRunTime();
 
-    Double getVoteAvg();
+    Integer getVoteAvg();
 
     String getFirstAirDate();
 

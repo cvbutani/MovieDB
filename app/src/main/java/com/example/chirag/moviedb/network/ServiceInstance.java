@@ -1,7 +1,9 @@
 package com.example.chirag.moviedb.network;
 
 import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.remote.ResultDeserializer;
+import com.example.chirag.moviedb.data.remote.ResultResponseDeserializer;
 import com.example.chirag.moviedb.service.GetDataService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +28,7 @@ public class ServiceInstance {
 
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Result.class, new ResultDeserializer())
+                    .registerTypeAdapter(ResultResponse.class, new ResultResponseDeserializer())
                     .create();
 
             Retrofit retrofit = new retrofit2.Retrofit.Builder()
