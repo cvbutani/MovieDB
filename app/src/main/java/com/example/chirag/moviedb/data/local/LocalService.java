@@ -71,36 +71,6 @@ public class LocalService implements RepositoryContract {
     }
 
     @Override
-    public void getPopularMoviesRepo(OnTaskCompletion.OnGetMovieCompletion callback) {
-
-    }
-
-    @Override
-    public void getNowPlayingMoviesRepo(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-
-    }
-
-    @Override
-    public void getTopRatedMoviesRepo(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-
-    }
-
-    @Override
-    public void getUpcomingMoviesRepo(OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-
-    }
-
-    @Override
-    public void getTrailersRepo(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
-
-    }
-
-    @Override
-    public void getReviewsRepo(int movieId, OnTaskCompletion.OnGetReviewCompletion callback) {
-
-    }
-
-    @Override
     public void getSimilarMoviesRepo(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
 
     }

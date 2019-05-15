@@ -1,6 +1,9 @@
 package com.example.chirag.moviedb.dbtv;
 
 import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
+
+import java.util.List;
 
 /**
  * MovieDB
@@ -10,11 +13,11 @@ public interface DBTvContract {
 
     interface View {
 
-        void getPopularTvHome(Result data);
+        void getPopularTvHome(List<ResultResponse> data);
 
         void getResultFailure(String errorMessage);
 
-        void getTopRatedTvHome(Result data);
+        void getTopRatedTvHome(List<ResultResponse> data);
 
     }
 

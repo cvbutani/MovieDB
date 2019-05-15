@@ -25,6 +25,8 @@ import com.example.chirag.moviedb.moviedetail.MovieDetailActivity;
 import com.example.chirag.moviedb.util.NetworkChangeReceiver;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
@@ -127,7 +129,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
         }
 
         @Override
-        public void getPopularTvHome (Result data) {
+        public void getPopularTvHome (List<ResultResponse> data) {
                 setLayout(data, mLinearLayoutPopularTv, mTextViewPopularTv, "Popular TV Shows");
         }
 
@@ -137,7 +139,7 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
         }
 
         @Override
-        public void getTopRatedTvHome (Result data) {
+        public void getTopRatedTvHome (List<ResultResponse> data) {
                 setLayout(data, mLinearLayoutTopRatedTv, mTextViewTopRatedTv, "Top Rated TV Shows");
         }
 
@@ -150,14 +152,14 @@ public class DbTvFragment extends Fragment implements DBTvContract.View, Network
                 startActivity(intent);
         }
 
-        private void setLayout (Result data, LinearLayout layout, TextView textView, String title) {
+        private void setLayout (List<ResultResponse> data, LinearLayout layout, TextView textView, String title) {
                 if (isConnected) {
-                        if (data != null && !data.getResults().isEmpty()) {
+                        if (data != null && !data.isEmpty()) {
                                 popularTvCardView.setVisibility(View.VISIBLE);
                                 topRatedTvCardView.setVisibility(View.VISIBLE);
                                 layout.removeAllViews();
                                 textView.setText(title);
-                                for (final ResultResponse item : data.getResults()) {
+                                for (final ResultResponse item : data) {
                                         View parent = getLayoutInflater().inflate(R.layout.movie_home_poster, layout, false);
                                         ImageView poster = parent.findViewById(R.id.movie_home_imageview);
                                         String imagePosterString = POSTER_IMAGE_URL + item.getPoster();

@@ -19,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
@@ -49,7 +50,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     @Override
     public void getNowPlayingMovies() {
         mRepository
-                .getHomeScreenData(CONTENT_TYPE_NOW_PLAYING)
+                .getHomeScreenData(CONTENT_TYPE_NOW_PLAYING, CONTENT_MOVIE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
@@ -79,7 +80,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     @Override
     public void getPopularMovies() {
         mRepository
-                .getHomeScreenData(CONTENT_TYPE_POPULAR)
+                .getHomeScreenData(CONTENT_TYPE_POPULAR, CONTENT_MOVIE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
@@ -109,7 +110,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     @Override
     public void getTopRatedMovies() {
         mRepository
-                .getHomeScreenData(CONTENT_TYPE_TOP_RATED)
+                .getHomeScreenData(CONTENT_TYPE_TOP_RATED, CONTENT_MOVIE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
@@ -139,7 +140,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
     @Override
     public void getUpcomingMovies() {
         mRepository
-                .getHomeScreenData(CONTENT_TYPE_UPCOMING)
+                .getHomeScreenData(CONTENT_TYPE_UPCOMING, CONTENT_MOVIE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()

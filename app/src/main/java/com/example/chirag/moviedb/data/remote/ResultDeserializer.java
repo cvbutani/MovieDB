@@ -46,6 +46,7 @@ public class ResultDeserializer implements JsonDeserializer<Result> {
                 if (jsonMainArray.get(i) != null) {
                     response.mId = (int) getDoubleOrZero(element, "id");
                     response.mPoster = getStringOrEmpty(element, "poster_path");
+                    response.mTitle = getStringOrEmpty(element, "title");
                     responseList.add(response);
                 }
 

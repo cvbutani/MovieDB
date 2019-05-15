@@ -5,10 +5,23 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.model.Result;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
 import com.example.chirag.moviedb.util.AppExecutors;
+
+import java.util.List;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
 
 /**
  * MovieDB
@@ -34,32 +47,62 @@ public class DBTvPresenter implements DBTvContract.Presenter {
 
     @Override
     public void getPopularTv() {
-        mRepository.getPopularTvData(new OnTaskCompletion.OnGetPopularTvCompletion() {
-            @Override
-            public void getPopularTvSuccess(Result data) {
-                mCallback.getPopularTvHome(data);
-            }
+        mRepository
+                .getHomeScreenData(CONTENT_TYPE_POPULAR, CONTENT_TV)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<List<ResultResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getPopularTvFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(List<ResultResponse> resultResponses) {
+                        mCallback.getPopularTvHome(resultResponses);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
     public void getTopRatedTv() {
-        mRepository.getTopRatedTvData(new OnTaskCompletion.GetTopRatedTvCompletion() {
-            @Override
-            public void getTvTopRatedContentSuccess(Result data) {
-                mCallback.getTopRatedTvHome(data);
-            }
+        mRepository
+                .getHomeScreenData(CONTENT_TYPE_TOP_RATED, CONTENT_TV)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<List<ResultResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getTvTopRatedContentFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(List<ResultResponse> resultResponses) {
+                        mCallback.getTopRatedTvHome(resultResponses);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override

@@ -15,19 +15,8 @@ public interface RepositoryContract {
 
     void getTvInfoRepo(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback);
 
-    void getPopularMoviesRepo(final OnTaskCompletion.OnGetMovieCompletion callback);
-
-    void getNowPlayingMoviesRepo(final OnTaskCompletion.OnGetNowPlayingCompletion callback);
-
-    void getTopRatedMoviesRepo(final OnTaskCompletion.OnGetTopRatedMovieCompletion callback);
-
-    void getUpcomingMoviesRepo(final OnTaskCompletion.OnGetUpcomingMovieCompletion callback);
-
-    void getTrailersRepo(int movieId, final OnTaskCompletion.OnGetTrailerCompletion callback);
-
-    void getReviewsRepo(int movieId, final OnTaskCompletion.OnGetReviewCompletion callback);
-
-    void getSimilarMoviesRepo(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
+    void getSimilarMoviesRepo(int movieId,
+                              final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
 
     void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback);
 
@@ -37,11 +26,13 @@ public interface RepositoryContract {
 
     void insertUserSignInInfo(User user);
 
-    void getUserAccountInfo(String emailId, final OnTaskCompletion.GetUserAccountCompletion callback);
+    void getUserAccountInfo(String emailId,
+                            final OnTaskCompletion.GetUserAccountCompletion callback);
 
     void updateUserAccount(User user);
 
     void updateTMDBRepo(Favourite info);
 
-    void getFavouriteTMDBRepo(String emailId, final OnTaskCompletion.GetFavouriteTMDBCompletion callback);
+    void getFavouriteTMDBRepo(String emailId,
+                              final OnTaskCompletion.GetFavouriteTMDBCompletion callback);
 }

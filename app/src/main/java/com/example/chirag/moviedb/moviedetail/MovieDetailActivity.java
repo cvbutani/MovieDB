@@ -123,17 +123,17 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         });
 
         if (getIntent() != null) {
-            if (getIntent().hasExtra(EXTRA_ID)) {
+            if (getIntent().hasExtra(EXTRA_ID) && getIntent().getExtras() != null) {
                 mMovieId = getIntent().getExtras().getInt(EXTRA_ID);
             }
-            if (getIntent().hasExtra(EXTRA_TITLE)) {
+            if (getIntent().hasExtra(EXTRA_TITLE) && getIntent().getExtras() != null) {
                 mMovieName = getIntent().getExtras().getString(EXTRA_TITLE);
             }
-            if (getIntent().hasExtra(CONTENT_TYPE)) {
+            if (getIntent().hasExtra(CONTENT_TYPE) && getIntent().getExtras() != null) {
                 mContentType = getIntent().getExtras().getString(CONTENT_TYPE);
             }
             if (mEmailAddress == null) {
-                if (getIntent().hasExtra("EXTRA_EMAIL")) {
+                if (getIntent().hasExtra("EXTRA_EMAIL") && getIntent().getExtras() != null) {
                     mEmailAddress = getIntent().getExtras().getString("EXTRA_EMAIL");
                 }
             }

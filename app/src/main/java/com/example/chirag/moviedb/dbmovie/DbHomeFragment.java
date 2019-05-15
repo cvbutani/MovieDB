@@ -160,10 +160,10 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
                 setLayout(data, mLinearLayoutUpcoming);
         }
 
-        private void startNewActivity (int movieId) {
+        private void startNewActivity (int movieId, String movieName) {
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
                 intent.putExtra(EXTRA_ID, movieId);
-//                intent.putExtra(EXTRA_TITLE, movieName);
+                intent.putExtra(EXTRA_TITLE, movieName);
                 intent.putExtra("EXTRA_EMAIL", mUserEmail);
                 intent.putExtra(CONTENT_TYPE, CONTENT_MOVIE);
                 startActivity(intent);
@@ -190,8 +190,8 @@ public class DbHomeFragment extends Fragment implements DbHomeContract.View, Net
                                         @Override
                                         public void onClick (View view) {
                                                 mMovieId = item.getId();
-//                                                String movieName = item.getTitle();
-                                                startNewActivity(mMovieId);
+                                                String movieName = item.getTitle();
+                                                startNewActivity(mMovieId, movieName);
                                         }
                                 });
                                 layout.addView(parent);

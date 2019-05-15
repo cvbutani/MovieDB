@@ -50,8 +50,8 @@ public class Repository implements DataContract {
         }
     }
 
-    public Flowable<List<ResultResponse>> getHomeScreenData(String movieType) {
-        return mRemoteService.getMovieHomeScreenData(movieType);
+    public Flowable<List<ResultResponse>> getHomeScreenData(String movieType, String contentType) {
+        return mRemoteService.getMovieHomeScreenData(movieType, contentType);
     }
 
     public Flowable<ResultResponse> getMovieDetailData(int movieId) {
