@@ -9,7 +9,10 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
+import com.example.chirag.moviedb.util.DataType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,39 +31,56 @@ public class ResultResponse implements IResultResponse, Parcelable {
     @ColumnInfo(name = "primary_key")
     private int primaryKey;
 
+    @ColumnInfo(name = "id")
     public Integer mId;
+    @ColumnInfo(name = "poster")
     public String mPoster;
+    @ColumnInfo(name = "title")
     public String mTitle;
-    @Ignore
+
+    @ColumnInfo(name = "name")
     public List<String> mName;
+    @ColumnInfo(name = "type")
     public String mType;
+    @ColumnInfo(name = "content")
     public String mContent;
+    @ColumnInfo(name = "backdrop_path")
     public String mBackdropPath;
-    @Ignore
-    public List<Genre> mGenre;
+
+    @ColumnInfo(name = "genre")
+    public List<String> mGenre;
+    @ColumnInfo(name = "genre_info")
     public String mGenreInfo;
+    @ColumnInfo(name = "imdb_id")
     public String mImdbId;
+    @ColumnInfo(name = "language")
     public String mOriginalLanguange;
+    @ColumnInfo(name = "original_title")
     public String mOriginalTitle;
+    @ColumnInfo(name = "overview")
     public String mOverView;
+    @ColumnInfo(name = "release_date")
     public String mReleaseDate;
+    @ColumnInfo(name = "runtime")
     public Integer mRunTime;
+    @ColumnInfo(name = "vote_avg")
     public Integer mVoteAvg;
+    @ColumnInfo(name = "airdate")
     public String mFirstAirDate;
+    @ColumnInfo(name = "original_name")
     public String mOriginalName;
-    @Ignore
-    public List<Season> mSeasons;
+
+    @ColumnInfo(name = "seasons")
+    public List<String> mSeasons;
 
     //  Review
-    @Ignore
+    @ColumnInfo(name = "review_author")
     public List<String> mReviewAuthor;
-
-    @Ignore
+    @ColumnInfo(name = "review_text")
     public List<String> mReviewText;
 
     //  Trailer
-    @Ignore
-    @Nullable
+    @ColumnInfo(name = "trailer_key")
     public List<String> mKey;
 
     public ResultResponse() {
@@ -99,6 +119,8 @@ public class ResultResponse implements IResultResponse, Parcelable {
         mReviewAuthor = in.createStringArrayList();
         mReviewText = in.createStringArrayList();
         mKey = in.createStringArrayList();
+        mGenre = in.createStringArrayList();
+        mSeasons = in.createStringArrayList();
     }
 
     public static final Creator<ResultResponse> CREATOR = new Creator<ResultResponse>() {
@@ -159,7 +181,7 @@ public class ResultResponse implements IResultResponse, Parcelable {
     }
 
     @Override
-    public List<Genre> getGenre() {
+    public List<String> getGenre() {
         return mGenre;
     }
 
@@ -214,7 +236,7 @@ public class ResultResponse implements IResultResponse, Parcelable {
     }
 
     @Override
-    public List<Season> getSeasons() {
+    public List<String> getSeasons() {
         return mSeasons;
     }
 
@@ -276,5 +298,7 @@ public class ResultResponse implements IResultResponse, Parcelable {
         dest.writeStringList(mReviewAuthor);
         dest.writeStringList(mReviewText);
         dest.writeStringList(mKey);
+        dest.writeStringList(mGenre);
+        dest.writeStringList(mSeasons);
     }
 }

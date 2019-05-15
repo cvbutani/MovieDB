@@ -14,6 +14,16 @@ import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
+import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_UPCOMING;
+
 /**
  * MovieDB
  * Created by Chirag on 05/09/18.
@@ -38,63 +48,122 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     @Override
     public void getNowPlayingMovies() {
-        mRepository.getNowPlayingMoviesData(new OnTaskCompletion.OnGetNowPlayingCompletion() {
-            @Override
-            public void getNowPlayingMovieSuccess(List<ResultResponse> data) {
-                mCallback.getNowPlayingMovieHome(data);
-            }
+        mRepository
+                .getHomeScreenData(CONTENT_TYPE_NOW_PLAYING)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<List<ResultResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getNowPlayingMovieFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(List<ResultResponse> resultResponses) {
+                        mCallback.getNowPlayingMovieHome(resultResponses);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
     public void getPopularMovies() {
-        mRepository.getPopularMoviesData(new OnTaskCompletion.OnGetMovieCompletion() {
-            @Override
-            public void getPopularMovieSuccess(List<ResultResponse> data) {
-                mCallback.getPopularMovieHome(data);
-            }
+        mRepository
+                .getHomeScreenData(CONTENT_TYPE_POPULAR)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<List<ResultResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getPopularMovieFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
+                    }
 
-        });
+                    @Override
+                    public void onNext(List<ResultResponse> resultResponses) {
+                        mCallback.getPopularMovieHome(resultResponses);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
     public void getTopRatedMovies() {
-        mRepository.getTopRatedMoviesData(new OnTaskCompletion.OnGetTopRatedMovieCompletion() {
-            @Override
-            public void getTopRatedMovieSuccess(List<ResultResponse> data) {
-                mCallback.getTopRatedMovieHome(data);
-            }
+        mRepository
+                .getHomeScreenData(CONTENT_TYPE_TOP_RATED)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<List<ResultResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getTopRatedMovieFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(List<ResultResponse> resultResponses) {
+                        mCallback.getTopRatedMovieHome(resultResponses);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
     public void getUpcomingMovies() {
-        mRepository.getUpcomingMoviesData(new OnTaskCompletion.OnGetUpcomingMovieCompletion() {
-            @Override
-            public void getUpcomingMovieSuccess(List<ResultResponse> data) {
-                mCallback.getUpcomingMovieHome(data);
-            }
+        mRepository
+                .getHomeScreenData(CONTENT_TYPE_UPCOMING)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<List<ResultResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getUpcomingMovieFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(List<ResultResponse> resultResponses) {
+                        mCallback.getUpcomingMovieHome(resultResponses);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 

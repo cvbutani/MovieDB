@@ -2,10 +2,15 @@ package com.example.chirag.moviedb.data;
 
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
+
+import java.util.List;
+
+import io.reactivex.Flowable;
 
 
 /**
@@ -25,7 +30,8 @@ public class Repository implements DataContract {
     private Repository() {
     }
 
-    public static Repository getInstance(Boolean connection, LocalService localService, RemoteService remoteService) {
+    public static Repository getInstance(Boolean connection, LocalService localService,
+                                         RemoteService remoteService) {
         if (sRepository == null) {
             sRepository = new Repository();
             mRemoteService = remoteService;
@@ -33,15 +39,6 @@ public class Repository implements DataContract {
         }
         isConnected = true;
         return sRepository;
-    }
-
-    @Override
-    public void getMovieInfoData(int movieId, OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getMovieInfoRepo(movieId, callback);
-        } else {
-            mLocalService.getMovieInfoRepo(movieId, callback);
-        }
     }
 
     @Override
@@ -53,63 +50,18 @@ public class Repository implements DataContract {
         }
     }
 
-    @Override
-    public void getPopularMoviesData(OnTaskCompletion.OnGetMovieCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getPopularMoviesRepo(callback);
-        } else {
-            mLocalService.getPopularMoviesRepo(callback);
-        }
+    public Flowable<List<ResultResponse>> getHomeScreenData(String movieType) {
+        return mRemoteService.getMovieHomeScreenData(movieType);
+    }
+
+    public Flowable<ResultResponse> getMovieDetailData(int movieId) {
+        return mRemoteService.getMovieDetailData(movieId);
     }
 
     @Override
-    public void getNowPlayingMoviesData(OnTaskCompletion.OnGetNowPlayingCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getNowPlayingMoviesRepo(callback);
-        } else {
-            mLocalService.getNowPlayingMoviesRepo(callback);
-        }
-    }
-
-    @Override
-    public void getTopRatedMoviesData(OnTaskCompletion.OnGetTopRatedMovieCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getTopRatedMoviesRepo(callback);
-        } else {
-            mLocalService.getTopRatedMoviesRepo(callback);
-        }
-    }
-
-    @Override
-    public void getUpcomingMoviesData(OnTaskCompletion.OnGetUpcomingMovieCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getUpcomingMoviesRepo(callback);
-        } else {
-            mLocalService.getUpcomingMoviesRepo(callback);
-        }
-    }
-
-    @Override
-    public void getSimilarMoviesData(int movieId, OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+    public void getSimilarMoviesData(int movieId,
+                                     OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
         mRemoteService.getSimilarMoviesRepo(movieId, callback);
-    }
-
-    @Override
-    public void getTrailerListData(int movieId, OnTaskCompletion.OnGetTrailerCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getTrailersRepo(movieId, callback);
-        } else {
-            mLocalService.getTrailersRepo(movieId, callback);
-        }
-    }
-
-    @Override
-    public void getReviewsListData(int movieId, OnTaskCompletion.OnGetReviewCompletion callback) {
-        if (isConnected) {
-            mRemoteService.getReviewsRepo(movieId, callback);
-        } else {
-            mLocalService.getReviewsRepo(movieId, callback);
-        }
     }
 
     @Override
@@ -142,7 +94,8 @@ public class Repository implements DataContract {
     }
 
     @Override
-    public void getUserAccountInfo(String emailId, final OnTaskCompletion.GetUserAccountCompletion callback) {
+    public void getUserAccountInfo(String emailId,
+                                   final OnTaskCompletion.GetUserAccountCompletion callback) {
         mLocalService.getUserAccountInfo(emailId, callback);
     }
 
@@ -157,7 +110,8 @@ public class Repository implements DataContract {
     }
 
     @Override
-    public void getFavouriteTMDBData(String emailId, OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
+    public void getFavouriteTMDBData(String emailId,
+                                     OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
         mLocalService.getFavouriteTMDBRepo(emailId, callback);
     }
 

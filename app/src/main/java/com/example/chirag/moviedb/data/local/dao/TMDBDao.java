@@ -5,10 +5,15 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 import com.example.chirag.moviedb.data.model.Favourite;
+import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
@@ -24,23 +29,24 @@ import static androidx.room.OnConflictStrategy.REPLACE;
  */
 @Dao
 public interface TMDBDao {
-//
+    //
 //    /**
 //     * Select all movies from the movie table.
 //     *
 //     * @return all movies.
 //     */
-//    @Query("SELECT * FROM movie_id WHERE type= :value AND content= :key")
-//    List<ResultResponse> getMovieId(String value, String key);
-//
+    @Query("SELECT * FROM movie_id WHERE type= :value AND content= :key")
+    Single<List<ResultResponse>> getMovieId(String value, String key);
+
+    //
 //    /**
 //     * Select a movie by id.
 //     *
 //     * @param movieId the movie Id.
 //     * @return movie information with movieId.
 //     */
-//    @Query("SELECT * FROM movie_info WHERE id = :movieId ")
-//    TMDB getMovieInfo(int movieId);
+    @Query("SELECT * FROM movie_id WHERE id = :movieId ")
+    Flowable<ResultResponse> getMovieInfo(int movieId);
 //
 //    /**
 //     * Select all favourite movie/tv info by email Id.
@@ -78,20 +84,23 @@ public interface TMDBDao {
 //    void updateTMDBInfo(Favourite data);
 //
     /**
-     * Insert resultResponse in the database. If the movie already exists then it will still add it to database.
+     * Insert resultResponse in the database. If the movie already exists then it will still add
+     * it to database.
      *
      * @param movie the resultResponse to be inserted.
      */
 //    @Insert
 //    void insertMovieId(ResultResponse movie);
 //
-//    /**
-//     * Insert a movie in the database. If the movie already exists then it will still add it to database.
-//     *
-//     * @param movieInfo the movie to be inserted.
-//     */
-//    @Insert
-//    void insertMovieInfo(TMDB movieInfo);
+
+    /**
+     * Insert a movie in the database. If the movie already exists then it will still add it to
+     * database.
+     *
+     * @param movieInfo the movie to be inserted.
+     */
+    @Insert(onConflict = REPLACE)
+    void insertMovieInfo(ResultResponse movieInfo);
 //
 //    /**
 //     * Insert movie/tv reviews in database
@@ -112,16 +121,17 @@ public interface TMDBDao {
 //    @Query("DELETE FROM trailer WHERE movieId= :value")
 //    void deleteTrailers(int value);
 //
-//    /**
-//     * Delete all Result.
-//     */
-//    @Query("DELETE FROM movie_id WHERE type= :value")
-//    void deleteMovieId(String value);
-//
-//    /**
-//     * Delete all Result.
-//     */
-//    @Query("DELETE FROM movie_info WHERE id= :value")
-//    void deleteMovieInfo(int value);
+
+    /**
+     * Delete all Result.
+     */
+    @Query("DELETE FROM movie_id WHERE type= :value")
+    void deleteMovieId(String value);
+
+    /**
+     * Delete all Result.
+     */
+    @Query("DELETE FROM movie_id WHERE id= :value")
+    void deleteMovieInfo(int value);
 
 }

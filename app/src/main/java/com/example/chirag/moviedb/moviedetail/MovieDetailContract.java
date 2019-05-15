@@ -20,11 +20,7 @@ public interface MovieDetailContract {
 
         void getTvInfoHome(int tvId, TMDB data);
 
-        void getTrailerDetail(Trailer data);
-
         void getResultFailure(String errorMessage);
-
-        void getReviewDetail(Reviews data);
 
         void getSimilarMovieDetail(Result data, int movieId);
 
@@ -37,10 +33,6 @@ public interface MovieDetailContract {
         void getMovieInfo(int movieId);
 
         void getTvInfo(int tvId);
-
-        void getTrailer(int movieId);
-
-        void getReviews(int movieId);
 
         void getSimilarMovie(int movieId);
 

@@ -433,18 +433,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 //        }
     }
 
-    @Override
-    public void getTrailerDetail(Trailer data12) {
-
-    }
 
     @Override
     public void getResultFailure(String errorMessage) {
-
-    }
-
-    @Override
-    public void getReviewDetail(Reviews data12) {
 
     }
 

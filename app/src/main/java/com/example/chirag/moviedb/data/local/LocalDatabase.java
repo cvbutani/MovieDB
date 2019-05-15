@@ -4,6 +4,7 @@ package com.example.chirag.moviedb.data.local;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import android.content.Context;
 //
@@ -15,6 +16,7 @@ import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.ReviewResponse;
 import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.model.User;
+import com.example.chirag.moviedb.util.DataType;
 
 /**
  * MovieDB
@@ -23,6 +25,7 @@ import com.example.chirag.moviedb.data.model.User;
 @Database(entities = {ResultResponse.class, User.class},
         version = 1,
         exportSchema = false)
+@TypeConverters(DataType.class)
 public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;

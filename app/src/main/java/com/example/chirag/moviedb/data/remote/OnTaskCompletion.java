@@ -10,6 +10,8 @@ import com.example.chirag.moviedb.data.model.User;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 /**
  * MovieDB
  * Created by Chirag on 04/09/18.
@@ -20,6 +22,10 @@ public interface OnTaskCompletion {
         void getMovieInfoSuccess(ResultResponse data);
 
         void getMovieInfoFailure(String errorMessage);
+    }
+
+    interface OnGetMovieHomeDataCompletion {
+        Flowable<List<ResultResponse>> getMovieHomeDataSuccess(String movieType);
     }
 
     interface OnGetMovieCompletion {

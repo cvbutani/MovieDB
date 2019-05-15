@@ -17,6 +17,12 @@ import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
+
 /**
  * MovieDB
  * Created by Chirag on 15/09/18.
@@ -39,17 +45,32 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getMovieInfo(final int movieId) {
-        mRepository.getMovieInfoData(movieId, new OnTaskCompletion.OnGetMovieInfoCompletion() {
-            @Override
-            public void getMovieInfoSuccess(ResultResponse data) {
-                mCallback.getMovieInfoHome(movieId, data);
-            }
+        mRepository
+                .getMovieDetailData(movieId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toObservable()
+                .subscribe(new Observer<ResultResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            @Override
-            public void getMovieInfoFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onNext(ResultResponse resultResponse) {
+                        mCallback.getMovieInfoHome(movieId, resultResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mCallback.getResultFailure(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -68,51 +89,19 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void getTrailer(int movieId) {
-
-        mRepository.getTrailerListData(movieId, new OnTaskCompletion.OnGetTrailerCompletion() {
-            @Override
-            public void getTrailerItemSuccess(Trailer data) {
-                mCallback.getTrailerDetail(data);
-            }
-
-            @Override
-            public void getTrailerItemFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
-
-
-    @Override
-    public void getReviews(int movieId) {
-        mRepository.getReviewsListData(movieId, new OnTaskCompletion.OnGetReviewCompletion() {
-            @Override
-            public void getReviewResponseSuccess(Reviews data) {
-                mCallback.getReviewDetail(data);
-            }
-
-            @Override
-            public void getReviewResponseFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
-    }
-
-    @Override
     public void getSimilarMovie(final int movieId) {
         mRepository.getSimilarMoviesData(movieId,
                 new OnTaskCompletion.OnGetSimilarMovieCompletion() {
-            @Override
-            public void getSimilarMovieSuccess(Result data) {
-                mCallback.getSimilarMovieDetail(data, movieId);
-            }
+                    @Override
+                    public void getSimilarMovieSuccess(Result data) {
+                        mCallback.getSimilarMovieDetail(data, movieId);
+                    }
 
-            @Override
-            public void getSimilarMovieFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    @Override
+                    public void getSimilarMovieFailure(String errorMessage) {
+                        mCallback.getResultFailure(errorMessage);
+                    }
+                });
     }
 
     @Override
@@ -124,16 +113,16 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     public void getFavouriteTMDB(String emailId) {
         mRepository.getFavouriteTMDBData(emailId,
                 new OnTaskCompletion.GetFavouriteTMDBCompletion() {
-            @Override
-            public void getFavouriteTMDBSuccess(List<Favourite> data) {
-                mCallback.getFavouriteTMDBInfo(data);
-            }
+                    @Override
+                    public void getFavouriteTMDBSuccess(List<Favourite> data) {
+                        mCallback.getFavouriteTMDBInfo(data);
+                    }
 
-            @Override
-            public void getFavouriteTMDBFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+                    @Override
+                    public void getFavouriteTMDBFailure(String errorMessage) {
+                        mCallback.getResultFailure(errorMessage);
+                    }
+                });
     }
 
     @Override
@@ -141,8 +130,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         mCallback = view;
         getMovieInfo(id);
         getTvInfo(id);
-        getTrailer(id);
-        getReviews(id);
         getSimilarMovie(id);
         getFavouriteTMDB(emailId);
     }

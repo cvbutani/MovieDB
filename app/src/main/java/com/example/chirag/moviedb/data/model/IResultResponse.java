@@ -26,7 +26,7 @@ public interface IResultResponse {
 
     String getBackDropPath();
 
-    List<Genre> getGenre();
+    List<String> getGenre();
 
     String getGenreInfo();
 
@@ -48,7 +48,7 @@ public interface IResultResponse {
 
     String getOriginalName();
 
-    List<Season> getSeasons();
+    List<String> getSeasons();
 
     List<String> getReviewAuthor();
 
