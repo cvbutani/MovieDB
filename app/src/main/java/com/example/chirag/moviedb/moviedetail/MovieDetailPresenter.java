@@ -44,9 +44,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void getMovieInfo(final int movieId) {
+    public void getMovieInfo(final int movieId, String movieType,
+                             String contentType) {
         mRepository
-                .getMovieDetailData(movieId)
+                .getMovieDetailData(movieId, movieType,
+                        contentType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
@@ -126,10 +128,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     }
 
     @Override
-    public void attachView(MovieDetailContract.View view, int id, String emailId) {
+    public void attachView(MovieDetailContract.View view, int id, String emailId,
+                           String movieType, String contentType) {
         mCallback = view;
-        getMovieInfo(id);
         getTvInfo(id);
+        getMovieInfo(id, movieType, contentType);
         getSimilarMovie(id);
         getFavouriteTMDB(emailId);
     }

@@ -56,6 +56,7 @@ import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
+import static com.example.chirag.moviedb.data.Constant.MOVIE_TYPE;
 import static com.example.chirag.moviedb.data.Constant.POSTER_IMAGE_URL;
 import static com.example.chirag.moviedb.data.Constant.TYPE_MOBILE;
 import static com.example.chirag.moviedb.data.Constant.TYPE_WIFI;
@@ -99,6 +100,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     private String mMovieName;
     private String mEmailAddress;
     private String mContentType;
+    private String mMovieType;
 
     private boolean isContentClicked = false;
     private boolean appbarExpanded;
@@ -132,11 +134,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             if (getIntent().hasExtra(CONTENT_TYPE) && getIntent().getExtras() != null) {
                 mContentType = getIntent().getExtras().getString(CONTENT_TYPE);
             }
+            if (getIntent().hasExtra(MOVIE_TYPE) && getIntent().getExtras() != null) {
+                mMovieType = getIntent().getExtras().getString(MOVIE_TYPE);
+            }
             if (mEmailAddress == null) {
                 if (getIntent().hasExtra("EXTRA_EMAIL") && getIntent().getExtras() != null) {
                     mEmailAddress = getIntent().getExtras().getString("EXTRA_EMAIL");
                 }
             }
+
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -243,18 +249,18 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                         movieRating = data.getVoteAvg();
                     }
                     String movieOverview = data.getOverView();
-                    String movieGenre;
-//                    List<String> genre = data.getGenre();
-//                    movieGenre = data.getGenre();
-//                    StringBuilder sb = new StringBuilder();
-//
-//                    // Appends characters one by one
-//                    for (String ch : data.getGenre()) {
-//                        sb.append(ch);
-//                    }
-//
-//                    // convert in string
-//                    String string = sb.toString();
+                    StringBuilder movieGenre = new StringBuilder();
+                    if (data.getGenre() != null) {
+                        // Appends characters one by one
+                        for (int i = 0; i < data.getGenre().size(); i++) {
+                            movieGenre.append(data.getGenre().get(i));
+                            if (data.getGenre().size() != i++) {
+                                movieGenre.append(", ");
+                            }
+                        }
+                    } else {
+                        movieGenre.append("");
+                    }
 
                     StringBuilder builder = new StringBuilder();
                     String imageBackDropString =
@@ -280,7 +286,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
                     }
                     mTextViewLanguage.setText(movieLanguage);
 //                    mTextViewGenre.setText(movieGenre);
-                    mTextViewGenre.setText("AMAZING");
+                    mTextViewGenre.setText(movieGenre);
                     mTextViewRating.setText(String.valueOf(movieRating));
                     mTextViewOverview.setText(movieOverview);
                 } else {
@@ -526,6 +532,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
         mPresenter = new MovieDetailPresenter(context, isConnected);
-        mPresenter.attachView(this, mMovieId, mEmailAddress);
+        mPresenter.attachView(this, mMovieId, mEmailAddress, mMovieType, mContentType);
     }
 }

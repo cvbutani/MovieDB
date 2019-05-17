@@ -61,6 +61,9 @@ public class ResultResponseDeserializer implements JsonDeserializer<ResultRespon
             response.mId = (int) getDoubleOrZero(object, "id");
             response.mPoster = getStringOrEmpty(object, "poster_path");
             response.mTitle = getStringOrEmpty(object, "title");
+            if (response.mTitle == null) {
+                response.mTitle = getStringOrEmpty(object, "name");
+            }
             response.mBackdropPath = getStringOrEmpty(object, "backdrop_path");
             response.mImdbId = getStringOrEmpty(object, "imdb_id");
             response.mOriginalLanguange = getStringOrEmpty(object,
@@ -71,6 +74,27 @@ public class ResultResponseDeserializer implements JsonDeserializer<ResultRespon
             response.mRunTime = (int) getDoubleOrZero(object, "runtime");
             response.mVoteAvg = (int) getDoubleOrZero(object, "vote_average");
             response.mOriginalName = getStringOrEmpty(object, "original_name");
+            //  Genre
+            JsonArray genreArray = object.getAsJsonArray("genres");
+            if (genreArray != null) {
+                List<String> name = new ArrayList<>();
+                for (int j = 0; j < genreArray.size(); j++) {
+                    name.add(getStringOrEmpty(genreArray.get(j), "name"));
+                }
+                response.mName = name;
+            }
+            //  Season
+            JsonArray seasonArray = object.getAsJsonArray("seasons");
+            if (seasonArray != null) {
+                List<String> seasonPoster = new ArrayList<>();
+                List<String> seasonId = new ArrayList<>();
+                for (int j = 0; j < seasonArray.size(); j++) {
+                    seasonPoster.add(getStringOrEmpty(seasonArray.get(j), "poster_path"));
+                    seasonId.add(getStringOrEmpty(seasonArray.get(j), "id"));
+                }
+                response.mSeasons = seasonPoster;
+                response.mSeasonId = seasonId;
+            }
         }
         return response;
     }

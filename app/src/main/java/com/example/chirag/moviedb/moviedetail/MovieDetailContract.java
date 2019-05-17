@@ -30,7 +30,8 @@ public interface MovieDetailContract {
     }
 
     interface Presenter {
-        void getMovieInfo(int movieId);
+        void getMovieInfo(int movieId, String movieType,
+                          String contentType);
 
         void getTvInfo(int tvId);
 
@@ -40,7 +41,7 @@ public interface MovieDetailContract {
 
         void getFavouriteTMDB(String emailId);
 
-        void attachView(MovieDetailContract.View view, int movieId, String emailId);
+        void attachView(MovieDetailContract.View view, int movieId, String emailId, String movieType, String contentType);
     }
 
 }

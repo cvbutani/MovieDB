@@ -15,6 +15,7 @@ public class Constant {
         public static final String BASE_URL = "http://api.themoviedb.org/3/";
 
         public static final String CONTENT_TYPE = "content_type";
+        public static final String MOVIE_TYPE = "movie_type";
         public static final String CONTENT_MOVIE = "movie";
         public static final String CONTENT_TV = "tv";
 

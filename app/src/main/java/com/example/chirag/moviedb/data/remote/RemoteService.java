@@ -63,57 +63,61 @@ public class RemoteService implements RepositoryContract {
     @Override
     public void getMovieInfoRepo(int movieId,
                                  final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
-        mServiceApi
-                .getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE)
-                .flatMap(data ->
-                        Flowable.zip(
-                                Flowable.just(data),
-                                mServiceApi.getTrailerDataService(movieId,
-                                        TMDB_API_KEY),
-                                mServiceApi.getReviewDataService(movieId,
-                                        TMDB_API_KEY, LANGUAGE),
-                                this::mergeInfo
-                        )
-                )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSubscriber<ResultResponse>() {
-                    @Override
-                    public void onNext(ResultResponse resultResponse) {
-                        callback.getMovieInfoSuccess(resultResponse);
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        callback.getMovieInfoFailure(t.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+//        mServiceApi
+//                .getMovieTvInfoDataService(movieId,  TMDB_API_KEY, LANGUAGE)
+//                .flatMap(data ->
+//                        Flowable.zip(
+//                                Flowable.just(data),
+//                                mServiceApi.getTrailerDataService(movieId,
+//                                        TMDB_API_KEY),
+//                                mServiceApi.getReviewDataService(movieId,
+//                                        TMDB_API_KEY, LANGUAGE),
+//                                this::mergeInfo
+//                        )
+//                )
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new DisposableSubscriber<ResultResponse>() {
+//                    @Override
+//                    public void onNext(ResultResponse resultResponse) {
+//                        callback.getMovieInfoSuccess(resultResponse);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable t) {
+//                        callback.getMovieInfoFailure(t.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
 
     }
 
-    public Flowable<ResultResponse> getMovieDetailData(int movieId) {
+    public Flowable<ResultResponse> getMovieDetailData(int movieId, String movieType,
+                                                       String contentType) {
         return new NetworkBoundResource<ResultResponse, ResultResponse>() {
 
             @Override
             void saveCallResult(@NonNull ResultResponse item) {
-                mTMDBDao.deleteMovieInfo(movieId);
+                mTMDBDao.deleteMovieInfo(movieId, movieType, contentType);
+                item.mType = movieType;
+                item.mContent = contentType;
                 mTMDBDao.insertMovieInfo(item);
+
             }
 
             @Override
             protected Flowable<ResultResponse> loadFromDb() {
-                return mTMDBDao.getMovieInfo(movieId);
+                return mTMDBDao.getMovieInfo(movieId, movieType, contentType);
             }
 
             @Override
             protected Flowable<ResultResponse> createCall() {
                 return mServiceApi
-                        .getMovieInfoDataService(movieId, TMDB_API_KEY, LANGUAGE)
+                        .getMovieTvInfoDataService(movieId, contentType, TMDB_API_KEY, LANGUAGE)
                         .flatMap(data ->
                                 Flowable.zip(
                                         Flowable.just(data),
@@ -139,12 +143,15 @@ public class RemoteService implements RepositoryContract {
         }.asFlowable();
     }
 
-    public Flowable<List<ResultResponse>> getMovieHomeScreenData(String movieType, String contentType) {
+
+    public Flowable<List<ResultResponse>> getMovieHomeScreenData(String movieType,
+                                                                 String contentType) {
         return new NetworkBoundResource<List<ResultResponse>, Result>() {
             @Override
             void saveCallResult(@NonNull Result item) {
-                mTMDBDao.deleteMovieId(movieType);
+
                 for (final ResultResponse info : item.getResults()) {
+                    mTMDBDao.deleteMovieInfo(info.getId(), movieType, contentType);
                     info.mType = movieType;
                     info.mContent = contentType;
                     mTMDBDao.insertMovieInfo(info);
@@ -177,27 +184,7 @@ public class RemoteService implements RepositoryContract {
 
     @Override
     public void getTvInfoRepo(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback) {
-        mServiceApi.getTvInfoDataService(tvId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<TMDB>() {
-            @Override
-            public void onResponse(Call<TMDB> call, Response<TMDB> response) {
-                if (response.isSuccessful()) {
-                    TMDB tvInfo = response.body();
-                    if (tvInfo != null) {
-                        callback.getTvInfoSuccess(tvInfo);
-                        insertInfo(tvInfo);
-                    } else {
-                        callback.getTvInfoFailure("FAILURE");
-                    }
-                } else {
-                    callback.getTvInfoFailure("FAILURE");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<TMDB> call, Throwable t) {
-                callback.getTvInfoFailure(t.getMessage());
-            }
-        });
     }
 
     private ResultResponse mergeInfo(ResultResponse t1, ResultResponse t2, ResultResponse t3) {
@@ -322,39 +309,6 @@ public class RemoteService implements RepositoryContract {
     public void getFavouriteTMDBRepo(String emailId,
                                      OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
 
-    }
-
-    private void insertTmdbId(final Result item, final String movieType, final String content) {
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                if (!mTMDBDao.getMovieId(movieType, content).isEmpty()) {
-//                    mTMDBDao.deleteMovieId(movieType);
-//                }
-//                for (final ResultResponse info : item.getResults()) {
-//                    info.setType(movieType);
-//                    info.setContent(content);
-//                    mTMDBDao.insertMovieId(info);
-//                }
-//            }
-//        };
-//        mAppExecutors.getDiskIO().execute(runnable);
-
-
-    }
-
-    private void insertInfo(final TMDB item) {
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                if (mTMDBDao.getMovieInfo(item.getId()) != null) {
-//                    mTMDBDao.deleteMovieInfo(item.getId());
-//                }
-//                item.setGenreInfo(item.getGenresDetail());
-//                mTMDBDao.insertMovieInfo(item);
-//            }
-//        };
-//        mAppExecutors.getDiskIO().execute(runnable);
     }
 
 }

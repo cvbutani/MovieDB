@@ -29,9 +29,10 @@ public interface GetDataService {
             @Query("language") String language
     );
 
-    @GET("movie/{movie_id}")
-    Flowable<ResultResponse> getMovieInfoDataService(
+    @GET("{content_type}/{movie_id}")
+    Flowable<ResultResponse> getMovieTvInfoDataService(
             @Path("movie_id") int id,
+            @Path("content_type") String contentType,
             @Query("api_key") String apiKey,
             @Query("language") String language
     );

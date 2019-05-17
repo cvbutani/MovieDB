@@ -45,9 +45,10 @@ public interface TMDBDao {
 //     * @param movieId the movie Id.
 //     * @return movie information with movieId.
 //     */
-    @Query("SELECT * FROM movie_id WHERE id = :movieId ")
-    Flowable<ResultResponse> getMovieInfo(int movieId);
-//
+    @Query("SELECT * FROM movie_id WHERE id = :movieId AND type= :value AND content= :key")
+    Flowable<ResultResponse> getMovieInfo(int movieId, String value, String key);
+
+    //
 //    /**
 //     * Select all favourite movie/tv info by email Id.
 //     *
@@ -82,7 +83,6 @@ public interface TMDBDao {
 //     */
 //    @Insert(onConflict = REPLACE)
 //    void updateTMDBInfo(Favourite data);
-//
     /**
      * Insert resultResponse in the database. If the movie already exists then it will still add
      * it to database.
@@ -99,7 +99,7 @@ public interface TMDBDao {
      *
      * @param movieInfo the movie to be inserted.
      */
-    @Insert(onConflict = REPLACE)
+    @Insert
     void insertMovieInfo(ResultResponse movieInfo);
 //
 //    /**
@@ -131,7 +131,7 @@ public interface TMDBDao {
     /**
      * Delete all Result.
      */
-    @Query("DELETE FROM movie_id WHERE id= :value")
-    void deleteMovieInfo(int value);
+    @Query("DELETE FROM movie_id WHERE id= :id AND type= :value AND content= :key")
+    void deleteMovieInfo(int id, String value, String key);
 
 }

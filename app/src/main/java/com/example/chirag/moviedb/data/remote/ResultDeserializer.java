@@ -49,19 +49,7 @@ public class ResultDeserializer implements JsonDeserializer<Result> {
                     response.mTitle = getStringOrEmpty(element, "title");
                     responseList.add(response);
                 }
-
             }
-
-//        //  Genre
-//        JsonArray genreArray = object.getAsJsonArray("genres");
-//        if (genreArray != null) {
-//            List<String> name = new ArrayList<>();
-//            for (int j = 0; j < genreArray.size(); j++) {
-//                name.add(getStringOrEmpty(genreArray.get(j), "name"));
-//            }
-//            resultResponse.mName = name;
-//        }
-//        responseList.add(resultResponse);
         }
         result.setResults(responseList);
         return result;

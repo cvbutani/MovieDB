@@ -72,6 +72,8 @@ public class ResultResponse implements IResultResponse, Parcelable {
 
     @ColumnInfo(name = "seasons")
     public List<String> mSeasons;
+    @ColumnInfo(name = "season_id")
+    public List<String> mSeasonId;
 
     //  Review
     @ColumnInfo(name = "review_author")
