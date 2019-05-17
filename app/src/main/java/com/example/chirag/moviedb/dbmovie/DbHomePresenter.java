@@ -4,13 +4,9 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
-import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
 
@@ -37,7 +33,7 @@ public class DbHomePresenter implements DbHomeContract.Presenter {
 
     public DbHomePresenter(Context context, boolean isConnected) {
 
-        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+        LocalService mLocalService = LocalService.getInstance(
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
 

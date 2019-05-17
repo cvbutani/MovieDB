@@ -16,7 +16,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.widget.Toolbar;
@@ -33,14 +32,8 @@ import android.widget.Toast;
 import com.example.chirag.moviedb.R;
 
 import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.model.Season;
-import com.example.chirag.moviedb.data.model.TrailerResponse;
-import com.example.chirag.moviedb.data.model.ReviewResponse;
-import com.example.chirag.moviedb.data.model.Reviews;
-import com.example.chirag.moviedb.data.model.Trailer;
 
 import com.example.chirag.moviedb.util.NetworkChangeReceiver;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -52,7 +45,6 @@ import java.util.List;
 
 import static com.example.chirag.moviedb.data.Constant.BACKDROP_IMAGE_URL;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_ID;
 import static com.example.chirag.moviedb.data.Constant.EXTRA_TITLE;
@@ -92,7 +84,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     NetworkChangeReceiver mBroadCastReceiver;
 
     private Menu collapsedMenu;
-    private TMDB mTMDBInfo;
     private List<Favourite> mFavouriteDb;
 
     private int mMovieId;
@@ -272,7 +263,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
                     Picasso.get().load(imageBackDropString).into(mImageViewAppBar);
                     Picasso.get().load(imagePosterString).into(mImageViewPoster);
-
+//                    Glide.with(this)
+//                            .load(imagePosterString)
+//                            .apply(RequestOptions.circleCropTransform())
+//                            .into(mImageViewPoster);
+//
                     reviewDisplay(data);
                     trailerDisplay(data);
 
@@ -375,8 +370,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }
     }
 
-    @Override
-    public void getTvInfoHome(int tvId, TMDB data) {
+//    @Override
+//    public void getTvInfoHome(int tvId, TMDB data) {
 //        if (mContentType.equals(CONTENT_TV)) {
 //            if (mResponse != null) {
 ////                mTMDBInfo = data;
@@ -437,7 +432,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 //                }
 //            }
 //        }
-    }
+//    }
 
 
     @Override

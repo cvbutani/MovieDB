@@ -10,11 +10,7 @@ import android.content.Context;
 //
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;
 import com.example.chirag.moviedb.data.local.dao.UserDao;
-import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.model.ReviewResponse;
-import com.example.chirag.moviedb.data.model.TrailerResponse;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.util.DataType;
 

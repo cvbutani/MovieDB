@@ -8,7 +8,6 @@ import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.util.AppExecutors;
 
 public class UserAccountPresenter implements UserAccountContract.Presenter {
 
@@ -17,7 +16,7 @@ public class UserAccountPresenter implements UserAccountContract.Presenter {
     private Repository mRepository;
 
     UserAccountPresenter(Context context, boolean isConnected) {
-        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+        LocalService mLocalService = LocalService.getInstance(
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
         RemoteService mRemoteService =

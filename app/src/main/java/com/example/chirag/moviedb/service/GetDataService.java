@@ -1,13 +1,7 @@
 package com.example.chirag.moviedb.service;
 
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.model.Reviews;
-import com.example.chirag.moviedb.data.model.Trailer;
-
-import java.util.List;
 
 import io.reactivex.Flowable;
 import retrofit2.Call;
@@ -37,19 +31,19 @@ public interface GetDataService {
             @Query("language") String language
     );
 
-    @GET("tv/{tv_id}")
-    Call<TMDB> getTvInfoDataService(
-            @Path("tv_id") int id,
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
-
-    @GET("genre/{content_type}/list")
-    Call<Genre> getGenreDataService(
-            @Path("content_type") String contentType,
-            @Query("api_key") String apiKey,
-            @Query("language") String language
-    );
+//    @GET("tv/{tv_id}")
+//    Call<TMDB> getTvInfoDataService(
+//            @Path("tv_id") int id,
+//            @Query("api_key") String apiKey,
+//            @Query("language") String language
+//    );
+//
+//    @GET("genre/{content_type}/list")
+//    Call<Genre> getGenreDataService(
+//            @Path("content_type") String contentType,
+//            @Query("api_key") String apiKey,
+//            @Query("language") String language
+//    );
 
     @GET("movie/{movie_id}/videos")
     Flowable<ResultResponse> getTrailerDataService(

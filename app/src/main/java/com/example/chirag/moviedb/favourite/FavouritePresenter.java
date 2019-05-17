@@ -5,13 +5,7 @@ import android.content.Context;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
-import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.TMDB;
-import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.util.AppExecutors;
-
-import java.util.List;
 
 /**
  * MovieDB
@@ -24,7 +18,7 @@ public class FavouritePresenter implements FavouriteContract.Presenter {
     private Repository mRepository;
 
     FavouritePresenter(Context context, boolean isConnected) {
-        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+        LocalService mLocalService = LocalService.getInstance(
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
         RemoteService mRemoteService =
@@ -35,18 +29,18 @@ public class FavouritePresenter implements FavouriteContract.Presenter {
 
     @Override
     public void getFavouriteTMDB(String emailId) {
-        mRepository.getFavouriteTMDBData(emailId,
-                new OnTaskCompletion.GetFavouriteTMDBCompletion() {
-            @Override
-            public void getFavouriteTMDBSuccess(List<Favourite> data) {
-                mCallback.getFavouriteTMDBInfo(data);
-            }
-
-            @Override
-            public void getFavouriteTMDBFailure(String errorMessage) {
-                mCallback.getFavouriteTMDBFailure(errorMessage);
-            }
-        });
+//        mRepository.getFavouriteTMDBData(emailId,
+//                new OnTaskCompletion.GetFavouriteTMDBCompletion() {
+//            @Override
+//            public void getFavouriteTMDBSuccess(List<Favourite> data) {
+//                mCallback.getFavouriteTMDBInfo(data);
+//            }
+//
+//            @Override
+//            public void getFavouriteTMDBFailure(String errorMessage) {
+//                mCallback.getFavouriteTMDBFailure(errorMessage);
+//            }
+//        });
     }
 
     @Override

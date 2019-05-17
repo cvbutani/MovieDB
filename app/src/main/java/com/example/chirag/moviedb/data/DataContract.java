@@ -1,7 +1,5 @@
 package com.example.chirag.moviedb.data;
 
-import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.User;
 import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 
@@ -11,14 +9,6 @@ import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
  */
 public interface DataContract {
 
-    void getTvInfoData(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback);
-
-    void getSimilarMoviesData(int movieId, final OnTaskCompletion.OnGetSimilarMovieCompletion callback);
-
-    void getPopularTvData(final OnTaskCompletion.OnGetPopularTvCompletion callback);
-
-    void getTopRatedTvData(final OnTaskCompletion.GetTopRatedTvCompletion callback);
-
     void getUserSignInInfo(final OnTaskCompletion.GetUserSignInCompletion callback);
 
     void insertUserSignInInfo(User user);
@@ -26,8 +16,4 @@ public interface DataContract {
     void getUserAccountInfo(String emailId, final OnTaskCompletion.GetUserAccountCompletion callback);
 
     void updateUserAccount(User user);
-
-    void updateTMDBData(Favourite info);
-
-    void getFavouriteTMDBData(String emailId, final OnTaskCompletion.GetFavouriteTMDBCompletion callback);
 }

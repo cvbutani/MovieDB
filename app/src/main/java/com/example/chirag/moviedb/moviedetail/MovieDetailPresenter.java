@@ -6,22 +6,13 @@ import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
 import com.example.chirag.moviedb.data.model.Favourite;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.model.TMDB;
-import com.example.chirag.moviedb.data.model.Result;
-import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.data.model.Reviews;
-import com.example.chirag.moviedb.data.model.Trailer;
-import com.example.chirag.moviedb.util.AppExecutors;
-
-import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * MovieDB
@@ -34,7 +25,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     private MovieDetailContract.View mCallback;
 
     MovieDetailPresenter(Context context, boolean isConnected) {
-        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+        LocalService mLocalService = LocalService.getInstance(
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
         RemoteService mRemoteService =
@@ -77,54 +68,55 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void getTvInfo(final int tvId) {
-        mRepository.getTvInfoData(tvId, new OnTaskCompletion.OnGetTvInfoCompletion() {
-            @Override
-            public void getTvInfoSuccess(TMDB data) {
-                mCallback.getTvInfoHome(tvId, data);
-            }
-
-            @Override
-            public void getTvInfoFailure(String errorMessage) {
-                mCallback.getResultFailure(errorMessage);
-            }
-        });
+//        mRepository.getTvInfoData(tvId, new OnTaskCompletion.OnGetTvInfoCompletion() {
+//            @Override
+//            public void getTvInfoSuccess(TMDB data) {
+//                mCallback.getTvInfoHome(tvId, data);
+//            }
+//
+//            @Override
+//            public void getTvInfoFailure(String errorMessage) {
+//                mCallback.getResultFailure(errorMessage);
+//            }
+//        });
     }
 
     @Override
     public void getSimilarMovie(final int movieId) {
-        mRepository.getSimilarMoviesData(movieId,
-                new OnTaskCompletion.OnGetSimilarMovieCompletion() {
-                    @Override
-                    public void getSimilarMovieSuccess(Result data) {
-                        mCallback.getSimilarMovieDetail(data, movieId);
-                    }
-
-                    @Override
-                    public void getSimilarMovieFailure(String errorMessage) {
-                        mCallback.getResultFailure(errorMessage);
-                    }
-                });
+//        mRepository.getSimilarMoviesData(movieId,
+//                new OnTaskCompletion.OnGetSimilarMovieCompletion() {
+//                    @Override
+//                    public void getSimilarMovieSuccess(Result data) {
+//                        mCallback.getSimilarMovieDetail(data, movieId);
+//                    }
+//
+//                    @Override
+//                    public void getSimilarMovieFailure(String errorMessage) {
+//                        mCallback.getResultFailure(errorMessage);
+//                    }
+//                });
     }
 
     @Override
     public void insertTMDB(Favourite data) {
-        mRepository.updateTMDBData(data);
+//        mRepository.updateTMDBData(data);
     }
 
     @Override
     public void getFavouriteTMDB(String emailId) {
-        mRepository.getFavouriteTMDBData(emailId,
-                new OnTaskCompletion.GetFavouriteTMDBCompletion() {
-                    @Override
-                    public void getFavouriteTMDBSuccess(List<Favourite> data) {
-                        mCallback.getFavouriteTMDBInfo(data);
-                    }
-
-                    @Override
-                    public void getFavouriteTMDBFailure(String errorMessage) {
-                        mCallback.getResultFailure(errorMessage);
-                    }
-                });
+//        mRepository.getFavouriteTMDBData(emailId,
+//                new OnTaskCompleti
+//                on.GetFavouriteTMDBCompletion() {
+//                    @Override
+//                    public void getFavouriteTMDBSuccess(List<Favourite> data) {
+//                        mCallback.getFavouriteTMDBInfo(data);
+//                    }
+//
+//                    @Override
+//                    public void getFavouriteTMDBFailure(String errorMessage) {
+//                        mCallback.getResultFailure(errorMessage);
+//                    }
+//                });
     }
 
     @Override

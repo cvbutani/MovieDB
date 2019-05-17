@@ -44,6 +44,9 @@ dependencies {
 
     implementation deps.orhanobut.logger
 
+    implementation deps.bumptech.glide
+    annotationProcessor deps.bumptech.glideCompiler
+
     annotationProcessor deps.androidx.roomCompiler
 
     testImplementation deps.androidx.junit

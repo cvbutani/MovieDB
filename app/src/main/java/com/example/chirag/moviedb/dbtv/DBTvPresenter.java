@@ -4,12 +4,9 @@ import android.content.Context;
 
 import com.example.chirag.moviedb.data.local.LocalDatabase;
 import com.example.chirag.moviedb.data.local.LocalService;
-import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.remote.OnTaskCompletion;
 import com.example.chirag.moviedb.data.Repository;
 import com.example.chirag.moviedb.data.remote.RemoteService;
-import com.example.chirag.moviedb.util.AppExecutors;
 
 import java.util.List;
 
@@ -18,7 +15,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TV;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
 import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
@@ -35,7 +31,7 @@ public class DBTvPresenter implements DBTvContract.Presenter {
 
     public DBTvPresenter(Context context, boolean isConnected) {
 
-        LocalService mLocalService = LocalService.getInstance(new AppExecutors(),
+        LocalService mLocalService = LocalService.getInstance(
                 LocalDatabase.getInstance(context).localDao(),
                 LocalDatabase.getInstance(context).userDao());
 

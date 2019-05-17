@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.example.chirag.moviedb.data.RepositoryContract;
 import com.example.chirag.moviedb.data.local.dao.TMDBDao;
-import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 import com.example.chirag.moviedb.data.model.User;
@@ -15,21 +13,8 @@ import com.example.chirag.moviedb.service.GetDataService;
 import java.util.List;
 
 import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DisposableSubscriber;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import static com.example.chirag.moviedb.data.Constant.CONTENT_MOVIE;
 import static com.example.chirag.moviedb.data.Constant.LANGUAGE;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_NOW_PLAYING;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_POPULAR;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_TOP_RATED;
-import static com.example.chirag.moviedb.data.Constant.CONTENT_TYPE_UPCOMING;
 import static com.example.chirag.moviedb.data.Constant.TMDB_API_KEY;
 
 /**
@@ -44,7 +29,7 @@ public class RemoteService implements RepositoryContract {
 
     private TMDBDao mTMDBDao;
 
-    RemoteService(@NonNull TMDBDao TMDBDao) {
+    private RemoteService(@NonNull TMDBDao TMDBDao) {
         mTMDBDao = TMDBDao;
         mServiceApi = ServiceInstance.getServiceInstance();
     }
@@ -60,9 +45,9 @@ public class RemoteService implements RepositoryContract {
         return INSTANCE;
     }
 
-    @Override
-    public void getMovieInfoRepo(int movieId,
-                                 final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
+//    @Override
+//    public void getMovieInfoRepo(int movieId,
+//                                 final OnTaskCompletion.OnGetMovieInfoCompletion callback) {
 //        mServiceApi
 //                .getMovieTvInfoDataService(movieId,  TMDB_API_KEY, LANGUAGE)
 //                .flatMap(data ->
@@ -93,8 +78,7 @@ public class RemoteService implements RepositoryContract {
 //
 //                    }
 //                });
-
-    }
+//    }
 
     public Flowable<ResultResponse> getMovieDetailData(int movieId, String movieType,
                                                        String contentType) {
@@ -182,11 +166,6 @@ public class RemoteService implements RepositoryContract {
         }.asFlowable();
     }
 
-    @Override
-    public void getTvInfoRepo(int tvId, final OnTaskCompletion.OnGetTvInfoCompletion callback) {
-
-    }
-
     private ResultResponse mergeInfo(ResultResponse t1, ResultResponse t2, ResultResponse t3) {
 
         t1.mKey = t2.getTrailerKey();
@@ -197,87 +176,30 @@ public class RemoteService implements RepositoryContract {
         return t1;
     }
 
-    @Override
-    public void getSimilarMoviesRepo(int movieId,
-                                     final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
-        mServiceApi.getSimilarMovieDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Result item = response.body();
-                    if (item != null && item.getResults() != null) {
-                        callback.getSimilarMovieSuccess(item);
-                    } else {
-                        callback.getSimilarMovieFailure("FAILURE");
-                    }
-                } else {
-                    callback.getSimilarMovieFailure("FAILURE");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                callback.getSimilarMovieFailure(t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void getPopularTvRepo(final OnTaskCompletion.OnGetPopularTvCompletion callback) {
-        //  NEED TO VERIFY RESULT RESPONSE AND API CALL FOR TV CONTENT.
-//        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_POPULAR, TMDB_API_KEY,
-//                LANGUAGE).map(Result::getResults)
-//                .flatMapIterable(data -> data)
-//                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-//                        LANGUAGE))
-//                .flatMap(data -> Flowable.zip(
-//                        Flowable.just(data),
-//                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-//                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-//                        this::addTrailerInfo))
-//                .toList()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
-//                    @Override
-//                    public void onSuccess(List<ResultResponse> resultResponses) {
-//
+//    @Override
+//    public void getSimilarMoviesRepo(int movieId,
+//                                     final OnTaskCompletion.OnGetSimilarMovieCompletion callback) {
+//        mServiceApi.getSimilarMovieDataService(movieId, TMDB_API_KEY, LANGUAGE).enqueue(new Callback<Result>() {
+//            @Override
+//            public void onResponse(Call<Result> call, Response<Result> response) {
+//                if (response.isSuccessful()) {
+//                    Result item = response.body();
+//                    if (item != null && item.getResults() != null) {
+//                        callback.getSimilarMovieSuccess(item);
+//                    } else {
+//                        callback.getSimilarMovieFailure("FAILURE");
 //                    }
+//                } else {
+//                    callback.getSimilarMovieFailure("FAILURE");
+//                }
+//            }
 //
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//                });
-    }
-
-    @Override
-    public void getTopRatedTvRepo(final OnTaskCompletion.GetTopRatedTvCompletion callback) {
-//        mServiceApi.getContentDataService(CONTENT_TV, CONTENT_TYPE_TOP_RATED, TMDB_API_KEY,
-//                LANGUAGE).map(Result::getResults)
-//                .flatMapIterable(data -> data)
-//                .flatMap(item -> mServiceApi.getMovieInfoDataService(item.mId, TMDB_API_KEY,
-//                        LANGUAGE))
-//                .flatMap(data -> Flowable.zip(
-//                        Flowable.just(data),
-//                        mServiceApi.getTrailerDataService(data.mId, TMDB_API_KEY),
-//                        mServiceApi.getReviewDataService(data.mId, TMDB_API_KEY, LANGUAGE),
-//                        this::addTrailerInfo))
-//                .toList()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new DisposableSingleObserver<List<ResultResponse>>() {
-//                    @Override
-//                    public void onSuccess(List<ResultResponse> resultResponses) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//                });
-    }
+//            @Override
+//            public void onFailure(Call<Result> call, Throwable t) {
+//                callback.getSimilarMovieFailure(t.getMessage());
+//            }
+//        });
+//    }
 
     @Override
     public void getUserSignInInfo(OnTaskCompletion.GetUserSignInCompletion callback) {
@@ -299,16 +221,4 @@ public class RemoteService implements RepositoryContract {
     public void updateUserAccount(User user) {
         // Used in Local Data Storage
     }
-
-    @Override
-    public void updateTMDBRepo(Favourite info) {
-        // Used in Local Data Storage
-    }
-
-    @Override
-    public void getFavouriteTMDBRepo(String emailId,
-                                     OnTaskCompletion.GetFavouriteTMDBCompletion callback) {
-
-    }
-
 }

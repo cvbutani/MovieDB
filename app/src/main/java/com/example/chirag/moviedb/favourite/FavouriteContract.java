@@ -1,7 +1,6 @@
 package com.example.chirag.moviedb.favourite;
 
 import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.TMDB;
 
 import java.util.List;
 

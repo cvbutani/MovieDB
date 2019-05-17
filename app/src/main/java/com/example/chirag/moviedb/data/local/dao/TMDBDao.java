@@ -2,26 +2,14 @@ package com.example.chirag.moviedb.data.local.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
-import com.example.chirag.moviedb.data.model.Favourite;
-import com.example.chirag.moviedb.data.model.Result;
-import com.example.chirag.moviedb.data.model.ReviewResponse;
-import com.example.chirag.moviedb.data.model.TMDB;
 import com.example.chirag.moviedb.data.model.ResultResponse;
-import com.example.chirag.moviedb.data.model.TrailerResponse;
 
 import java.util.List;
-
-import static androidx.room.OnConflictStrategy.REPLACE;
 
 /**
  * MovieDB

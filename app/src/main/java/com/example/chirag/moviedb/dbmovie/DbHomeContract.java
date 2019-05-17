@@ -1,8 +1,6 @@
 package com.example.chirag.moviedb.dbmovie;
 
 
-import com.example.chirag.moviedb.data.model.Genre;
-import com.example.chirag.moviedb.data.model.Result;
 import com.example.chirag.moviedb.data.model.ResultResponse;
 
 import java.util.List;
