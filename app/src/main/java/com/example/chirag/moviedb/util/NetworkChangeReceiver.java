@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.example.chirag.moviedb.data.Constant;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -44,7 +43,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if ((mActiveNetwork != null) && (mActiveNetwork.isConnectedOrConnecting())) {
                         if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getType() == TYPE_WIFI) {
                                 mCallBack.connectionInfo(context, true, TYPE_WIFI);
-                        } else if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getType() == Constant.TYPE_MOBILE) {
+                        } else if (mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getType() == TYPE_MOBILE) {
                                 mCallBack.connectionInfo(context, true, TYPE_MOBILE);
                         }
                 } else {
